@@ -67,12 +67,20 @@ const getDefaultTimeline = (quoteNumber) => [
   },
 ];
 
-// Get Client Portal data by accessCode or quoteId
+// Get Client Portal data by access code only (never bare Mongo ObjectId)
 export const getClientPortalData = asyncHandler(async (req, res) => {
   const { code } = req.params;
+  if (!code || code.trim().length < 4) {
+    throw new ApiError(400, 'Access code is required');
+  }
+
+  // Reject pure ObjectId lookups — portal links must use accessCode / quoteNumber
+  if (/^[0-9a-fA-F]{24}$/.test(code)) {
+    throw new ApiError(404, 'Quote not found or invalid client access link');
+  }
 
   let quote = await Quote.findOne({
-    $or: [{ accessCode: code }, { quoteNumber: code }, { _id: code.match(/^[0-9a-fA-F]{24}$/) ? code : null }],
+    $or: [{ accessCode: code }, { quoteNumber: code }],
   }).populate({
     path: 'lead',
     select: 'fullName email phone propertyType service location',
@@ -129,7 +137,6 @@ export const getClientPortalData = asyncHandler(async (req, res) => {
       200,
       {
         quote: formatQuote(quote),
-        rawQuote: quote,
         project: {
           id: project._id,
           title: project.title,
@@ -145,12 +152,20 @@ export const getClientPortalData = asyncHandler(async (req, res) => {
   );
 });
 
+function requireAccessCode(quote, accessCode) {
+  if (!accessCode || String(accessCode).trim() !== String(quote.accessCode || '').trim()) {
+    throw new ApiError(403, 'Valid client access code is required');
+  }
+}
+
 // Accept quote via Client Portal
 export const acceptQuote = asyncHandler(async (req, res) => {
   const { id } = req.params;
+  const { accessCode } = req.body;
 
   const quote = await Quote.findById(id).populate('lead');
   if (!quote) throw new ApiError(404, 'Quote not found');
+  requireAccessCode(quote, accessCode);
 
   quote.status = 'accepted';
   quote.acceptedAt = new Date();
@@ -166,10 +181,11 @@ export const acceptQuote = asyncHandler(async (req, res) => {
 // Reject quote via Client Portal
 export const rejectQuote = asyncHandler(async (req, res) => {
   const { id } = req.params;
-  const { reason } = req.body;
+  const { reason, accessCode } = req.body;
 
   const quote = await Quote.findById(id);
   if (!quote) throw new ApiError(404, 'Quote not found');
+  requireAccessCode(quote, accessCode);
 
   quote.status = 'rejected';
   quote.rejectionReason = reason || 'Client opted not to proceed';

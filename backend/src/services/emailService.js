@@ -87,3 +87,20 @@ export async function sendJobApplicationAlert(application) {
     html: wrapHtml(subject, `<p><strong>${application.fullName}</strong> applied for <strong>${application.position}</strong>.</p><p>Email: ${application.email}<br>Phone: ${application.phone}</p>`),
   });
 }
+
+export async function sendQuoteToClient({ quote, lead, portalUrl, companyName = 'AURA Interiors' }) {
+  if (!lead?.email) return false;
+  const subject = `Your quotation ${quote.quoteNumber} from ${companyName}`;
+  const total = `${(quote.grandTotal || 0).toLocaleString()} ${quote.currency || 'AED'}`;
+  const text = `Hi ${lead.fullName},\n\nYour quotation ${quote.quoteNumber} is ready.\nTotal: ${total}\nAccess code: ${quote.accessCode || quote.quoteNumber}\nPortal: ${portalUrl}\n\n— ${companyName}`;
+  const html = wrapHtml(
+    subject,
+    `<p>Hi <strong>${lead.fullName}</strong>,</p>
+     <p>Your quotation <strong>${quote.quoteNumber}</strong> is ready for review.</p>
+     <p><strong>Grand total:</strong> ${total}</p>
+     <p><strong>Client access code:</strong> ${quote.accessCode || quote.quoteNumber}</p>
+     <p><a href="${portalUrl}" style="display:inline-block;background:#C4795A;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Open Client Portal</a></p>
+     <p>You can accept the quote and pay securely from the portal.</p>`
+  );
+  return sendMail({ to: lead.email, subject, text, html });
+}

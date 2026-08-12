@@ -28,3 +28,9 @@ export const deleteOpening = asyncHandler(async (req, res) => {
   if (!opening) throw new ApiError(404, 'Job opening not found');
   res.status(200).json(new ApiResponse(200, null, 'Job opening deleted'));
 });
+
+export const reorderOpenings = asyncHandler(async (req, res) => {
+  const { applyReorder } = await import('../utils/reorder.js');
+  await applyReorder(JobOpening, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Job openings reordered'));
+});

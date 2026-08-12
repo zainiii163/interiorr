@@ -80,16 +80,29 @@ export default function AdminReviews() {
 
   const [syncingGoogle, setSyncingGoogle] = useState(false);
 
-  const handleSyncGoogle = async () => {
+  const handleSyncGoogle = async (demo = false) => {
     setSyncingGoogle(true);
     try {
-      const res = await apiFetch('/reviews/sync-google', { method: 'POST' });
+      const res = await apiFetch(`/reviews/sync-google${demo ? '?demo=true' : ''}`, { method: 'POST' });
       if (res.success) {
-        alert(res.message || 'Google Business reviews synced successfully!');
+        alert(res.message || 'Reviews synced successfully!');
         fetchReviews();
       }
     } catch (err) {
-      alert('Failed to sync Google reviews: ' + err.message);
+      const useDemo = window.confirm(
+        `${err.message}\n\nLoad curated demo Google-style reviews for local testing?`
+      );
+      if (useDemo) {
+        try {
+          const res = await apiFetch('/reviews/sync-google?demo=true', { method: 'POST' });
+          if (res.success) {
+            alert(res.message || 'Demo reviews loaded');
+            fetchReviews();
+          }
+        } catch (e2) {
+          alert(e2.message);
+        }
+      }
     } finally {
       setSyncingGoogle(false);
     }
@@ -104,7 +117,7 @@ export default function AdminReviews() {
         </div>
         <div className="flex items-center space-x-3">
           <button
-            onClick={handleSyncGoogle}
+            onClick={() => handleSyncGoogle(false)}
             disabled={syncingGoogle}
             className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-900 hover:bg-stone-800 text-white flex items-center space-x-2 shadow-md transition disabled:opacity-50"
           >

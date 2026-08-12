@@ -1,9 +1,10 @@
 import app from './app.js';
 import { connectDB } from './config/db.js';
-import { env } from './config/env.js';
+import { env, assertProductionSecrets } from './config/env.js';
 import { logIntegrationStatus } from './config/integrations.js';
 
 async function start() {
+  assertProductionSecrets();
   await connectDB();
   logIntegrationStatus();
   app.listen(env.port, () => {

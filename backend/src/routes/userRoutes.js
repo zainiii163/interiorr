@@ -4,6 +4,9 @@ import { protect, authorize } from '../middleware/auth.js';
 
 const router = Router();
 
+// Lightweight assignee list for CRM (managers + admins)
+router.get('/directory', protect, authorize('admin', 'manager'), user.listDirectory);
+
 router.use(protect, authorize('admin'));
 
 router.get('/', user.listUsers);

@@ -95,8 +95,11 @@ export default function AdminLogin() {
           </button>
         </form>
 
-        <div className="pt-4 border-t border-stone-900 text-center text-[11px] text-stone-500">
-          Default Credentials: <code className="text-stone-300">admin@interior.com</code> / <code className="text-stone-300">Admin@123</code>
+        <div className="pt-4 border-t border-stone-900 text-[11px] text-stone-500 space-y-1.5">
+          <p className="text-center font-semibold text-stone-400">Demo accounts (after seed)</p>
+          <p><span className="text-stone-400">Admin:</span> <code className="text-stone-300">admin@interior.com</code> / <code className="text-stone-300">Admin@123</code></p>
+          <p><span className="text-stone-400">Manager:</span> <code className="text-stone-300">manager@interior.com</code> / <code className="text-stone-300">Manager@123</code></p>
+          <p><span className="text-stone-400">Editor:</span> <code className="text-stone-300">editor@interior.com</code> / <code className="text-stone-300">Editor@123</code></p>
         </div>
 
       </div>

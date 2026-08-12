@@ -42,6 +42,7 @@ const siteSettingSchema = new mongoose.Schema(
     aboutSubtitle: { type: String, default: '' },
     aboutBody: { type: String, default: '' },
     aboutBullets: [{ type: String }],
+    certifications: [{ type: String }],
     aboutImage: { type: String, default: '' },
     mission: { type: String, default: '' },
     vision: { type: String, default: '' },

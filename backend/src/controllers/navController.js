@@ -31,3 +31,9 @@ export const deleteNavItem = asyncHandler(async (req, res) => {
   if (!item) throw new ApiError(404, 'Navigation link not found');
   res.status(200).json(new ApiResponse(200, null, 'Navigation link deleted'));
 });
+
+export const reorderNavItems = asyncHandler(async (req, res) => {
+  const { applyReorder } = await import('../utils/reorder.js');
+  await applyReorder(NavItem, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Navigation reordered'));
+});

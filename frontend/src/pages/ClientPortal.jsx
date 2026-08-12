@@ -62,13 +62,15 @@ export default function ClientPortal() {
     if (!data?.quote) return;
     setIsProcessingPayment(true);
     try {
-      // First ensure quote is marked as accepted
-      await apiFetch(`/client/quote/${data.quote._id}/accept`, { method: 'POST' });
+      const accessCode = data.quote.accessCode || activeCode;
+      await apiFetch(`/client/quote/${data.quote._id}/accept`, {
+        method: 'POST',
+        body: JSON.stringify({ accessCode }),
+      });
 
-      // Trigger Stripe payment checkout session
       const payRes = await apiFetch('/payments/create-checkout-session', {
         method: 'POST',
-        body: JSON.stringify({ quoteId: data.quote._id }),
+        body: JSON.stringify({ quoteId: data.quote._id, accessCode }),
       });
 
       if (payRes.success && payRes.data?.url) {
@@ -88,7 +90,10 @@ export default function ClientPortal() {
     try {
       await apiFetch(`/client/quote/${data.quote._id}/reject`, {
         method: 'POST',
-        body: JSON.stringify({ reason: rejectReason }),
+        body: JSON.stringify({
+          reason: rejectReason,
+          accessCode: data.quote.accessCode || activeCode,
+        }),
       });
       setRejectModalOpen(false);
       fetchPortalData(activeCode);
@@ -101,11 +106,10 @@ export default function ClientPortal() {
     if (!data?.quote) return;
     setDownloadingPDF(true);
     try {
-      const response = await fetch(`/api/v1/quotes/${data.quote._id}/pdf`, {
-        headers: {
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      const accessCode = encodeURIComponent(data.quote.accessCode || activeCode);
+      const response = await fetch(
+        `/api/v1/quotes/${data.quote._id}/pdf?accessCode=${accessCode}`
+      );
 
       if (!response.ok) {
         throw new Error('Failed to generate PDF');
@@ -135,10 +139,12 @@ export default function ClientPortal() {
         <div className="max-w-7xl mx-auto flex items-center justify-between">
           <Link to="/" className="flex items-center space-x-3">
             <div className="w-9 h-9 rounded-full bg-[#C4795A] text-white flex items-center justify-center font-serif font-bold text-lg shadow-md">
-              A
+              {(settings?.companyName || 'A').charAt(0)}
             </div>
             <div>
-              <span className="font-serif font-bold text-xl tracking-wide text-white">AURA</span>
+              <span className="font-serif font-bold text-xl tracking-wide text-white">
+                {(settings?.companyName || 'AURA').split(' ')[0]}
+              </span>
               <span className="block text-[9px] uppercase tracking-widest text-[#C4795A] font-semibold">
                 CLIENT PORTAL
               </span>

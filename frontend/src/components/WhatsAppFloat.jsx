@@ -7,9 +7,12 @@ export default function WhatsAppFloat() {
   const whatsappNum = settings.whatsapp?.replace(/\+/g, '').replace(/\s+/g, '');
   if (!whatsappNum) return null;
 
+  const brand = encodeURIComponent(settings.companyName || 'our studio');
+  const message = `Hello%20${brand},%20I%20would%20like%20to%20inquire%20about%20a%20renovation%20project.`;
+
   return (
     <a
-      href={`https://wa.me/${whatsappNum}?text=Hello%20Aura%20Interiors,%20I%20would%20like%20to%20inquire%20about%20a%20renovation%20project.`}
+      href={`https://wa.me/${whatsappNum}?text=${message}`}
       target="_blank"
       rel="noreferrer"
       aria-label="Chat with us on WhatsApp"
@@ -17,7 +20,7 @@ export default function WhatsAppFloat() {
     >
       <WhatsAppIcon className="w-7 h-7" />
       <span className="absolute right-16 bg-stone-900 text-white text-xs font-semibold px-3 py-1.5 rounded-lg opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap shadow-md pointer-events-none">
-        Chat on WhatsApp (+971)
+        Chat on WhatsApp
       </span>
     </a>
   );

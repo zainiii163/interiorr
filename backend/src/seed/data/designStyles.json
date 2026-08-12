@@ -1,13 +1,79 @@
 [
-  { "name": "Contemporary", "tagline": "Sleek, current, polished", "traits": ["clean lines", "neutral palette", "modern materials"], "order": 1 },
-  { "name": "Minimalist", "tagline": "Less is more", "traits": ["open space", "simple forms", "clarity"], "order": 2 },
-  { "name": "Neoclassical", "tagline": "Timeless elegance", "traits": ["symmetry", "ornament", "luxury"], "order": 3 },
-  { "name": "Mediterranean", "tagline": "Warm coastal living", "traits": ["terracotta", "arches", "natural light"], "order": 4 },
-  { "name": "Japandi", "tagline": "Japanese meets Scandinavian", "traits": ["warm wood", "minimal", "calm"], "order": 5 },
-  { "name": "Arabian", "tagline": "Heritage-inspired luxury", "traits": ["pattern", "craft", "hospitality"], "order": 6 },
-  { "name": "Farmhouse", "tagline": "Relaxed rustic charm", "traits": ["wood", "textures", "comfort"], "order": 7 },
-  { "name": "Industrial", "tagline": "Raw urban character", "traits": ["metal", "concrete", "exposed"], "order": 8 },
-  { "name": "Ultra Luxury", "tagline": "Opulence without compromise", "traits": ["bespoke", "premium materials", "detail"], "order": 9 },
-  { "name": "Boho Chic", "tagline": "Layered and expressive", "traits": ["textiles", "color", "eclectic"], "order": 10 },
-  { "name": "Wellness", "tagline": "Spaces that restore", "traits": ["biophilic", "calm tones", "air quality"], "order": 11 }
+  {
+    "name": "Contemporary",
+    "tagline": "Sleek, current, polished, fluid and elevated",
+    "description": "Contemporary design reflects the present moment, blending clean lines, open spaces, and a sophisticated mix of materials. Neutral palettes are layered with subtle contrasts, while glass, metal, and natural textures create depth. The result is a polished, ever-adapting aesthetic that feels fresh and effortlessly modern.",
+    "traits": ["clean lines", "neutral palette", "modern materials"],
+    "order": 1
+  },
+  {
+    "name": "Minimalist",
+    "tagline": "Less is more",
+    "description": "Minimalist interiors strip away excess so light, proportion, and material quality can lead. Open plans, hidden storage, and a restrained palette create calm Dubai living without feeling cold — every piece earns its place.",
+    "traits": ["open space", "simple forms", "clarity"],
+    "order": 2
+  },
+  {
+    "name": "Neoclassical",
+    "tagline": "Timeless elegance",
+    "description": "Neoclassical interiors bring symmetry, moulding, and refined ornament into modern villas. Marble, brass, and tailored upholstery create a formal yet livable luxury that photographs beautifully and ages well.",
+    "traits": ["symmetry", "ornament", "luxury"],
+    "order": 3
+  },
+  {
+    "name": "Mediterranean",
+    "tagline": "Warm coastal living",
+    "description": "Mediterranean rooms lean on terracotta, arches, plaster, and abundant natural light. Ideal for waterfront apartments and garden villas, the style feels holiday-ready year round without sacrificing durability.",
+    "traits": ["terracotta", "arches", "natural light"],
+    "order": 4
+  },
+  {
+    "name": "Japandi",
+    "tagline": "Japanese meets Scandinavian",
+    "description": "Japandi mixes Japanese restraint with Scandinavian warmth — pale woods, low furniture, and tactile textiles. It is a favourite for apartments that need to feel larger, quieter, and more considered.",
+    "traits": ["warm wood", "minimal", "calm"],
+    "order": 5
+  },
+  {
+    "name": "Arabian",
+    "tagline": "Heritage-inspired luxury",
+    "description": "Arabian interiors honour craft, pattern, and hospitality. Mashrabiya screens, carved joinery, and rich textiles are executed with contemporary proportions so the home feels rooted and current at once.",
+    "traits": ["pattern", "craft", "hospitality"],
+    "order": 6
+  },
+  {
+    "name": "Farmhouse",
+    "tagline": "Relaxed rustic charm",
+    "description": "Farmhouse living brings timber, stone, and comfortable seating into Dubai villas. Open kitchens, generous islands, and tactile finishes make family spaces that feel collected rather than staged.",
+    "traits": ["wood", "textures", "comfort"],
+    "order": 7
+  },
+  {
+    "name": "Industrial",
+    "tagline": "Raw urban character",
+    "description": "Industrial interiors celebrate concrete, metal, and exposed structure. Perfect for lofts, offices, and F&B, the look is balanced with warm lighting and custom joinery so it stays liveable, not unfinished.",
+    "traits": ["metal", "concrete", "exposed"],
+    "order": 8
+  },
+  {
+    "name": "Ultra Luxury",
+    "tagline": "Opulence without compromise",
+    "description": "Ultra luxury is bespoke at every layer — stone, metalwork, lighting, and millwork designed as one composition. We execute palatial villas and penthouses with museum-level detailing and discreet technology.",
+    "traits": ["bespoke", "premium materials", "detail"],
+    "order": 9
+  },
+  {
+    "name": "Boho Chic",
+    "tagline": "Layered and expressive",
+    "description": "Boho chic layers textiles, colour, and collected objects over a calm architectural base. We keep the bones clean so the look can evolve, while joinery and lighting hold the composition together.",
+    "traits": ["textiles", "color", "eclectic"],
+    "order": 10
+  },
+  {
+    "name": "Wellness",
+    "tagline": "Spaces that restore",
+    "description": "Wellness interiors prioritise air quality, biophilic materials, acoustic comfort, and circadian lighting. Ideal after a full renovation — healthier rooms that still look like a designed home, not a clinic.",
+    "traits": ["biophilic", "calm tones", "air quality"],
+    "order": 11
+  }
 ]

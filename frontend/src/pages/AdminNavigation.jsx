@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, GripVertical } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import DragReorderList from '../components/admin/DragReorderList';
 
 const KNOWN_ROUTES = [
   { label: 'Home', path: '/' },
@@ -111,6 +112,21 @@ export default function AdminNavigation() {
     }
   };
 
+  const handleReorder = async (nextItems) => {
+    setItems(nextItems);
+    try {
+      await apiFetch('/navigation/reorder', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          items: nextItems.map((item, order) => ({ id: item._id, order })),
+        }),
+      });
+    } catch (err) {
+      alert(err.message);
+      fetchItems();
+    }
+  };
+
   const addChild = () => {
     setFormData((prev) => ({
       ...prev,
@@ -159,52 +175,40 @@ export default function AdminNavigation() {
         <p><strong>Custom mega:</strong> Use &quot;Custom links&quot; to manually add sub-items with optional preview images.</p>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-xs text-stone-700">
-          <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b">
-            <tr>
-              <th className="py-3.5 px-4">Label</th>
-              <th className="py-3.5 px-4">Path</th>
-              <th className="py-3.5 px-4">Type</th>
-              <th className="py-3.5 px-4">Order</th>
-              <th className="py-3.5 px-4">Status</th>
-              <th className="py-3.5 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-stone-100">
-            {items.length > 0 ? items.map((item) => (
-              <tr key={item._id} className="hover:bg-stone-50">
-                <td className="py-3.5 px-4 font-bold text-stone-900">{item.label}</td>
-                <td className="py-3.5 px-4 font-mono text-[11px] text-stone-500 truncate max-w-[140px]">{item.path}</td>
-                <td className="py-3.5 px-4">
+      <div className="space-y-2">
+        <p className="text-[11px] text-stone-500">Drag rows to reorder menu items.</p>
+        {items.length > 0 ? (
+          <DragReorderList
+            items={items}
+            onReorder={handleReorder}
+            renderItem={(item) => (
+              <div className="flex items-center justify-between gap-3 text-xs py-1">
+                <div className="min-w-0">
+                  <div className="font-bold text-stone-900">{item.label}</div>
+                  <div className="font-mono text-[11px] text-stone-500 truncate">{item.path}</div>
+                </div>
+                <div className="flex items-center gap-2 shrink-0">
                   {item.menuType === 'mega' ? (
                     <span className="px-2 py-1 rounded-full text-[10px] font-bold uppercase bg-purple-100 text-purple-800">
-                      Mega · {item.megaMenuSource}
+                      Mega
                     </span>
                   ) : (
                     <span className="text-stone-400">Link</span>
                   )}
-                </td>
-                <td className="py-3.5 px-4">{item.order}</td>
-                <td className="py-3.5 px-4">
                   <span className={`px-2 py-1 rounded-full text-[10px] font-bold uppercase ${item.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600'}`}>
                     {item.isActive ? 'Visible' : 'Hidden'}
                   </span>
-                </td>
-                <td className="py-3.5 px-4 text-right space-x-2">
-                  <button onClick={() => openEdit(item)} className="p-1.5 rounded bg-stone-100 hover:bg-stone-200"><Edit className="w-3.5 h-3.5" /></button>
+                  <button type="button" onClick={() => openEdit(item)} className="p-1.5 rounded bg-stone-100 hover:bg-stone-200"><Edit className="w-3.5 h-3.5" /></button>
                   {isAdmin && (
-                    <button onClick={() => handleDelete(item._id)} className="p-1.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-700"><Trash2 className="w-3.5 h-3.5" /></button>
+                    <button type="button" onClick={() => handleDelete(item._id)} className="p-1.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-700"><Trash2 className="w-3.5 h-3.5" /></button>
                   )}
-                </td>
-              </tr>
-            )) : (
-              <tr>
-                <td colSpan="6" className="py-8 text-center text-stone-400">No navigation links yet.</td>
-              </tr>
+                </div>
+              </div>
             )}
-          </tbody>
-        </table>
+          />
+        ) : (
+          <div className="py-8 text-center text-stone-400 text-xs bg-white rounded-2xl border border-stone-200">No navigation links yet.</div>
+        )}
       </div>
 
       {showModal && (

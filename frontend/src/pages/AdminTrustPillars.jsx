@@ -6,6 +6,7 @@ import { useAuth } from '../context/AuthContext';
 const emptyForm = {
   title: '',
   description: '',
+  highlights: '',
   icon: 'ShieldCheck',
   section: 'promise',
   order: 0,
@@ -42,6 +43,7 @@ export default function AdminTrustPillars() {
     setFormData({
       title: pillar.title,
       description: pillar.description || '',
+      highlights: (pillar.highlights || []).join('\n'),
       icon: pillar.icon || 'ShieldCheck',
       section: pillar.section || 'promise',
       order: pillar.order || 0,
@@ -51,11 +53,18 @@ export default function AdminTrustPillars() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const payload = {
+      ...formData,
+      highlights: String(formData.highlights || '')
+        .split('\n')
+        .map((s) => s.trim())
+        .filter(Boolean),
+    };
     try {
       if (editId) {
-        await apiFetch(`/trust-pillars/${editId}`, { method: 'PUT', body: JSON.stringify(formData) });
+        await apiFetch(`/trust-pillars/${editId}`, { method: 'PUT', body: JSON.stringify(payload) });
       } else {
-        await apiFetch('/trust-pillars', { method: 'POST', body: JSON.stringify(formData) });
+        await apiFetch('/trust-pillars', { method: 'POST', body: JSON.stringify(payload) });
       }
       setShowModal(false);
       fetchPillars();
@@ -79,7 +88,7 @@ export default function AdminTrustPillars() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-3xl font-bold text-stone-900">Trust Pillars</h1>
-          <p className="text-xs text-stone-500 mt-1">Promise grid items shown on the homepage</p>
+          <p className="text-xs text-stone-500 mt-1">Homepage promise, expertise, and delivery-process cards</p>
         </div>
         <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
           <Plus className="w-4 h-4" />
@@ -132,12 +141,17 @@ export default function AdminTrustPillars() {
                 <label className="block font-bold mb-1">Description</label>
                 <textarea rows={3} value={formData.description} onChange={(e) => setFormData({ ...formData, description: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
               </div>
+              <div>
+                <label className="block font-bold mb-1">Highlights (one per line)</label>
+                <textarea rows={4} value={formData.highlights} onChange={(e) => setFormData({ ...formData, highlights: e.target.value })} className="w-full px-3 py-2 border rounded-xl" placeholder="Shown when an expertise card is selected" />
+              </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold mb-1">Section</label>
                   <select value={formData.section} onChange={(e) => setFormData({ ...formData, section: e.target.value })} className="w-full px-3 py-2 border rounded-xl">
                     <option value="promise">Promise (homepage grid)</option>
                     <option value="expertise">Expertise (what we do)</option>
+                    <option value="process">Process (how we deliver)</option>
                   </select>
                 </div>
                 <div>

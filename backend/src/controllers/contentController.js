@@ -1,3 +1,4 @@
+import crypto from 'crypto';
 import { Review } from '../models/Review.js';
 import { Partner } from '../models/Partner.js';
 import { DesignStyle } from '../models/DesignStyle.js';
@@ -9,6 +10,7 @@ import { Lead } from '../models/Lead.js';
 import { Project } from '../models/Project.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { Material } from '../models/Material.js';
+import { Service } from '../models/Service.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -16,6 +18,7 @@ import { slugify } from '../utils/slugify.js';
 import { uploadImageBuffer, toDataUrl } from '../services/uploadService.js';
 import { isCloudinaryConfigured } from '../config/cloudinary.js';
 import { generateQuotePDF } from '../services/pdfService.js';
+import { applyReorder } from '../utils/reorder.js';
 import {
   formatReview,
   formatDesignStyle,
@@ -87,6 +90,11 @@ export const deletePartner = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, null, 'Partner deleted'));
 });
 
+export const reorderPartners = asyncHandler(async (req, res) => {
+  await applyReorder(Partner, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Partners reordered'));
+});
+
 // Design styles
 export const listDesignStyles = asyncHandler(async (req, res) => {
   const filter = req.user ? {} : { isActive: true };
@@ -97,7 +105,7 @@ export const listDesignStyles = asyncHandler(async (req, res) => {
 export const getDesignStyleBySlug = asyncHandler(async (req, res) => {
   const style = await DesignStyle.findOne({ slug: req.params.slug, isActive: true }).populate(
     'relatedProjects',
-    'title slug coverImage category'
+    'title slug coverImage category location'
   );
   if (!style) throw new ApiError(404, 'Design style not found');
   res.status(200).json(new ApiResponse(200, formatDesignStyle(style)));
@@ -124,6 +132,11 @@ export const deleteDesignStyle = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, null, 'Design style deleted'));
 });
 
+export const reorderDesignStyles = asyncHandler(async (req, res) => {
+  await applyReorder(DesignStyle, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Design styles reordered'));
+});
+
 // Trust pillars
 export const listTrustPillars = asyncHandler(async (req, res) => {
   const filter = {};
@@ -147,6 +160,11 @@ export const deleteTrustPillar = asyncHandler(async (req, res) => {
   const pillar = await TrustPillar.findByIdAndDelete(req.params.id);
   if (!pillar) throw new ApiError(404, 'Trust pillar not found');
   res.status(200).json(new ApiResponse(200, null, 'Trust pillar deleted'));
+});
+
+export const reorderTrustPillars = asyncHandler(async (req, res) => {
+  await applyReorder(TrustPillar, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Trust pillars reordered'));
 });
 
 // Settings
@@ -193,6 +211,7 @@ export const createQuote = asyncHandler(async (req, res) => {
   const quote = await Quote.create({
     ...parsed,
     quoteNumber,
+    accessCode: 'P-' + crypto.randomBytes(4).toString('hex').toUpperCase(),
     lineItems,
     subtotal,
     tax,
@@ -245,6 +264,14 @@ export const exportQuotePDF = asyncHandler(async (req, res) => {
   const quote = await Quote.findById(req.params.id).populate('lead', 'fullName email phone');
   if (!quote) throw new ApiError(404, 'Quote not found');
 
+  // Staff with Bearer token, or client with matching accessCode
+  if (!req.user) {
+    const accessCode = req.query.accessCode || req.headers['x-access-code'];
+    if (!accessCode || String(accessCode).trim() !== String(quote.accessCode || '').trim()) {
+      throw new ApiError(403, 'Valid client access code or admin login is required');
+    }
+  }
+
   const quoteData = {
     quoteNumber: quote.quoteNumber,
     leadName: quote.lead?.fullName || 'Client',
@@ -270,10 +297,52 @@ export const exportQuotePDF = asyncHandler(async (req, res) => {
   res.send(pdfBuffer);
 });
 
+export const emailQuoteToClient = asyncHandler(async (req, res) => {
+  const quote = await Quote.findById(req.params.id).populate('lead', 'fullName email phone');
+  if (!quote) throw new ApiError(404, 'Quote not found');
+  if (!quote.lead?.email) throw new ApiError(400, 'Lead has no email address');
+
+  if (!quote.accessCode) {
+    quote.accessCode = 'P-' + crypto.randomBytes(4).toString('hex').toUpperCase();
+    await quote.save();
+  }
+
+  const settings = await SiteSetting.findOne();
+  const origin =
+    req.body?.frontendOrigin ||
+    req.headers.origin ||
+    'http://localhost:5173';
+  const portalUrl = `${origin}/portal/${quote.accessCode}`;
+
+  const { sendQuoteToClient } = await import('../services/emailService.js');
+  const sent = await sendQuoteToClient({
+    quote,
+    lead: quote.lead,
+    portalUrl,
+    companyName: settings?.companyName || 'AURA Interiors',
+  });
+
+  if (quote.status === 'draft') {
+    quote.status = 'sent';
+    await quote.save();
+  }
+
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      { sent, portalUrl, accessCode: quote.accessCode, quote: formatQuote(quote) },
+      sent
+        ? 'Quote emailed to client'
+        : 'SMTP not configured — portal link generated; email was skipped'
+    )
+  );
+});
+
 // Media
 export const listMedia = asyncHandler(async (req, res) => {
   const filter = {};
   if (req.query.placement) filter.placement = req.query.placement;
+  if (req.query.type) filter.type = req.query.type;
   const media = await Media.find(filter).sort({ order: 1 });
   res.status(200).json(new ApiResponse(200, media));
 });
@@ -296,6 +365,11 @@ export const deleteMedia = asyncHandler(async (req, res) => {
   const media = await Media.findByIdAndDelete(req.params.id);
   if (!media) throw new ApiError(404, 'Media not found');
   res.status(200).json(new ApiResponse(200, null, 'Media deleted'));
+});
+
+export const reorderMedia = asyncHandler(async (req, res) => {
+  await applyReorder(Media, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Media reordered'));
 });
 
 // Materials
@@ -356,6 +430,11 @@ export const deleteMaterial = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, null, 'Material deleted'));
 });
 
+export const reorderMaterials = asyncHandler(async (req, res) => {
+  await applyReorder(Material, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'Materials reordered'));
+});
+
 // Upload image (Cloudinary when configured, otherwise data URL stub)
 export const uploadImage = asyncHandler(async (req, res) => {
   if (!req.file) throw new ApiError(400, 'No file uploaded');
@@ -389,21 +468,56 @@ export const uploadImage = asyncHandler(async (req, res) => {
 export const getDashboardStats = asyncHandler(async (req, res) => {
   const startOfDay = new Date();
   startOfDay.setHours(0, 0, 0, 0);
+  const role = req.user?.role || 'editor';
 
-  const [leadsToday, openLeads, totalProjects, quotesCount, applicationsNew, recentLeads] =
+  if (role === 'editor') {
+    const [servicesActive, projectsPublished, projectsDraft, mediaCount, reviewsCount, materialsCount] =
+      await Promise.all([
+        Service.countDocuments({ isActive: true }),
+        Project.countDocuments({ isPublished: true }),
+        Project.countDocuments({ isPublished: false }),
+        Media.countDocuments(),
+        Review.countDocuments(),
+        Material.countDocuments({ isActive: { $ne: false } }),
+      ]);
+
+    res.status(200).json(
+      new ApiResponse(200, {
+        role: 'editor',
+        dashboardType: 'content',
+        servicesActive,
+        projectsPublished,
+        projectsDraft,
+        mediaCount,
+        reviewsCount,
+        materialsCount,
+        recentLeads: [],
+      })
+    );
+    return;
+  }
+
+  const leadFilter = {};
+  // Managers see full pipeline; optional future: filter by assignedTo only
+
+  const [leadsToday, openLeads, totalProjects, quotesCount, applicationsNew, recentLeads, myLeads] =
     await Promise.all([
-      Lead.countDocuments({ createdAt: { $gte: startOfDay } }),
-      Lead.countDocuments({ status: { $in: ['new', 'contacted', 'quoted'] } }),
+      Lead.countDocuments({ ...leadFilter, createdAt: { $gte: startOfDay } }),
+      Lead.countDocuments({ ...leadFilter, status: { $in: ['new', 'contacted', 'quoted'] } }),
       Project.countDocuments({ isPublished: true }),
       Quote.countDocuments(),
       JobApplication.countDocuments({ status: 'new' }),
-      Lead.find().sort({ createdAt: -1 }).limit(5).populate('service', 'title'),
+      Lead.find(leadFilter).sort({ createdAt: -1 }).limit(5).populate('service', 'title'),
+      Lead.countDocuments({ assignedTo: req.user._id, status: { $in: ['new', 'contacted', 'quoted'] } }),
     ]);
 
   res.status(200).json(
     new ApiResponse(200, {
+      role,
+      dashboardType: 'crm',
       leadsToday,
       openLeads,
+      myOpenLeads: myLeads,
       totalProjects,
       quotesCount,
       applicationsNew,

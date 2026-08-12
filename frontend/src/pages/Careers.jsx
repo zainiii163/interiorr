@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Briefcase, MapPin, Send, CheckCircle2 } from 'lucide-react';
-import { apiFetch } from '../services/api';
+import { Briefcase, MapPin, Send, CheckCircle2, Upload } from 'lucide-react';
+import { apiFetch, getAuthToken } from '../services/api';
 import { useSite } from '../context/SiteContext';
+
+const API_BASE = import.meta.env.VITE_API_URL || '/api/v1';
 
 export default function Careers() {
   const { settings } = useSite();
@@ -10,6 +12,7 @@ export default function Careers() {
   const [formData, setFormData] = useState({
     fullName: '', email: '', phone: '', experience: '', resumeUrl: '', coverLetter: '',
   });
+  const [resumeFile, setResumeFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
@@ -19,6 +22,8 @@ export default function Careers() {
       if (res.success && res.data.length) {
         setOpenings(res.data);
         setSelectedPosition(res.data[0].title);
+      } else {
+        setSelectedPosition('General Application');
       }
     }).catch(console.error);
   }, []);
@@ -29,14 +34,32 @@ export default function Careers() {
     setSuccessMsg('');
     setErrorMsg('');
     try {
-      const res = await apiFetch('/job-applications', {
+      const body = new FormData();
+      body.append('fullName', formData.fullName);
+      body.append('email', formData.email);
+      body.append('phone', formData.phone);
+      body.append('position', selectedPosition);
+      body.append('experience', formData.experience || '');
+      body.append('coverLetter', formData.coverLetter || '');
+      if (formData.resumeUrl) body.append('resumeUrl', formData.resumeUrl);
+      if (resumeFile) body.append('resume', resumeFile);
+
+      const headers = {};
+      const token = getAuthToken();
+      if (token) headers.Authorization = `Bearer ${token}`;
+
+      const res = await fetch(`${API_BASE}/job-applications`, {
         method: 'POST',
-        body: JSON.stringify({ ...formData, position: selectedPosition }),
+        body,
+        headers,
+        credentials: 'include',
       });
-      if (res.success) {
-        setSuccessMsg(res.message || 'Application submitted successfully.');
-        setFormData({ fullName: '', email: '', phone: '', experience: '', resumeUrl: '', coverLetter: '' });
-      }
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Submission failed');
+
+      setSuccessMsg(data.message || 'Application submitted successfully.');
+      setFormData({ fullName: '', email: '', phone: '', experience: '', resumeUrl: '', coverLetter: '' });
+      setResumeFile(null);
     } catch (err) {
       setErrorMsg(err.message || 'Submission failed.');
     } finally {
@@ -72,64 +95,88 @@ export default function Careers() {
               ))}
             </div>
           ) : (
-            <p className="text-stone-500">No open positions at the moment. Check back soon or submit a general application below.</p>
+            <p className="text-stone-500">No open positions at the moment. You can still submit a general application below.</p>
           )}
         </div>
 
-        {openings.length > 0 && (
-          <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-8">
-            <div className="flex items-center space-x-2 mb-6">
-              <Briefcase className="w-5 h-5 text-[#C4795A]" />
-              <h2 className="font-serif text-2xl font-bold text-stone-900">Apply Online</h2>
+        <div className="bg-white rounded-2xl border border-stone-200 shadow-sm p-8">
+          <div className="flex items-center space-x-2 mb-6">
+            <Briefcase className="w-5 h-5 text-[#C4795A]" />
+            <h2 className="font-serif text-2xl font-bold text-stone-900">Apply Online</h2>
+          </div>
+
+          {successMsg && (
+            <div className="mb-6 p-4 rounded-xl bg-emerald-50 text-emerald-800 text-sm flex items-center space-x-2">
+              <CheckCircle2 className="w-5 h-5 shrink-0" /><span>{successMsg}</span>
             </div>
+          )}
+          {errorMsg && <div className="mb-6 p-4 rounded-xl bg-rose-50 text-rose-800 text-sm">{errorMsg}</div>}
 
-            {successMsg && (
-              <div className="mb-6 p-4 rounded-xl bg-emerald-50 text-emerald-800 text-sm flex items-center space-x-2">
-                <CheckCircle2 className="w-5 h-5 shrink-0" /><span>{successMsg}</span>
-              </div>
-            )}
-            {errorMsg && <div className="mb-6 p-4 rounded-xl bg-rose-50 text-rose-800 text-sm">{errorMsg}</div>}
-
-            <form onSubmit={handleSubmit} className="space-y-5 text-sm">
-              <div>
-                <label className="block font-semibold text-stone-700 mb-1">Position *</label>
+          <form onSubmit={handleSubmit} className="space-y-5 text-sm">
+            <div>
+              <label className="block font-semibold text-stone-700 mb-1">Position *</label>
+              {openings.length > 0 ? (
                 <select value={selectedPosition} onChange={(e) => setSelectedPosition(e.target.value)} className="w-full px-4 py-3 border border-stone-200 rounded-xl" required>
                   {openings.map((j) => <option key={j._id} value={j.title}>{j.title}</option>)}
                 </select>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-                <div>
-                  <label className="block font-semibold text-stone-700 mb-1">Full Name *</label>
-                  <input type="text" required value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
-                </div>
-                <div>
-                  <label className="block font-semibold text-stone-700 mb-1">Phone *</label>
-                  <input type="tel" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
-                </div>
+              ) : (
+                <input
+                  type="text"
+                  required
+                  value={selectedPosition}
+                  onChange={(e) => setSelectedPosition(e.target.value)}
+                  placeholder="e.g. General Application / Interior Architect"
+                  className="w-full px-4 py-3 border border-stone-200 rounded-xl"
+                />
+              )}
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
+              <div>
+                <label className="block font-semibold text-stone-700 mb-1">Full Name *</label>
+                <input type="text" required value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
               </div>
               <div>
-                <label className="block font-semibold text-stone-700 mb-1">Email *</label>
-                <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+                <label className="block font-semibold text-stone-700 mb-1">Phone *</label>
+                <input type="tel" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
               </div>
-              <div>
-                <label className="block font-semibold text-stone-700 mb-1">Experience</label>
-                <input type="text" value={formData.experience} onChange={(e) => setFormData({ ...formData, experience: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
-              </div>
-              <div>
-                <label className="block font-semibold text-stone-700 mb-1">Resume URL</label>
-                <input type="url" value={formData.resumeUrl} onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
-              </div>
-              <div>
-                <label className="block font-semibold text-stone-700 mb-1">Cover Letter</label>
-                <textarea rows={4} value={formData.coverLetter} onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
-              </div>
-              <button type="submit" disabled={loading} className="btn-terracotta px-8 py-3 rounded-xl font-semibold text-sm flex items-center space-x-2 disabled:opacity-60">
-                <Send className="w-4 h-4" />
-                <span>{loading ? 'Submitting…' : 'Submit Application'}</span>
-              </button>
-            </form>
-          </div>
-        )}
+            </div>
+            <div>
+              <label className="block font-semibold text-stone-700 mb-1">Email *</label>
+              <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+            </div>
+            <div>
+              <label className="block font-semibold text-stone-700 mb-1">Experience</label>
+              <input type="text" value={formData.experience} onChange={(e) => setFormData({ ...formData, experience: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" placeholder="e.g. 5 years residential fit-out" />
+            </div>
+            <div>
+              <label className="block font-semibold text-stone-700 mb-1">Upload Resume (PDF / Word)</label>
+              <label className="flex items-center gap-3 px-4 py-3 border border-dashed border-stone-300 rounded-xl cursor-pointer hover:border-[#C4795A] transition">
+                <Upload className="w-4 h-4 text-[#C4795A]" />
+                <span className="text-stone-600 text-xs">
+                  {resumeFile ? resumeFile.name : 'Choose file (max 8MB)'}
+                </span>
+                <input
+                  type="file"
+                  accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+                  className="hidden"
+                  onChange={(e) => setResumeFile(e.target.files?.[0] || null)}
+                />
+              </label>
+            </div>
+            <div>
+              <label className="block font-semibold text-stone-700 mb-1">Or Resume / Portfolio URL</label>
+              <input type="url" value={formData.resumeUrl} onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" placeholder="https://drive.google.com/..." />
+            </div>
+            <div>
+              <label className="block font-semibold text-stone-700 mb-1">Cover Letter</label>
+              <textarea rows={4} value={formData.coverLetter} onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+            </div>
+            <button type="submit" disabled={loading} className="btn-terracotta px-8 py-3 rounded-xl font-semibold text-sm flex items-center space-x-2 disabled:opacity-60">
+              <Send className="w-4 h-4" />
+              <span>{loading ? 'Submitting…' : 'Submit Application'}</span>
+            </button>
+          </form>
+        </div>
       </section>
     </div>
   );

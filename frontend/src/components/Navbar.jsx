@@ -159,11 +159,14 @@ export default function Navbar() {
     'text-[10px] xl:text-[11px] 2xl:text-xs font-semibold tracking-[0.12em] 2xl:tracking-widest uppercase transition-all duration-200 whitespace-nowrap';
 
   const renderDesktopNavLinks = () => {
-    const staticLinks = [
-      { _id: 'static-materials', label: 'Materials', path: '/materials', menuType: 'link' },
-    ];
-    
-    const allLinks = [...navLinks, ...staticLinks];
+    const extras = [];
+    if (!navLinks.some((l) => l.path === '/commercial')) {
+      extras.push({ _id: 'static-commercial', label: 'Commercial', path: '/commercial', menuType: 'link' });
+    }
+    if (!navLinks.some((l) => l.path === '/materials')) {
+      extras.push({ _id: 'static-materials', label: 'Materials', path: '/materials', menuType: 'link' });
+    }
+    const allLinks = [...navLinks, ...extras];
     
     return allLinks.map((link) => {
       const isMega = isMegaMenuItem(link);
@@ -279,6 +282,16 @@ export default function Navbar() {
                 />
               );
             })}
+            {(!navLinks.some((l) => l.path === '/commercial')) && (
+            <Link
+              to="/commercial"
+              onClick={() => setIsOpen(false)}
+              className="block text-lg font-semibold text-stone-300 hover:text-[#C4795A] py-3 px-4 rounded-xl hover:bg-white/5 transition uppercase tracking-wide"
+            >
+              Commercial
+            </Link>
+            )}
+            {(!navLinks.some((l) => l.path === '/materials')) && (
             <Link
               to="/materials"
               onClick={() => setIsOpen(false)}
@@ -286,6 +299,7 @@ export default function Navbar() {
             >
               Materials
             </Link>
+            )}
             <div className="pt-6 border-t border-stone-800 space-y-3">
               {user && (
                 <Link

@@ -54,9 +54,13 @@ export default function Contact() {
       <section className="bg-stone-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">Connect With Us</span>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">Contact Aura Interiors</h1>
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">
+            Contact {settings.companyName || 'Us'}
+          </h1>
           <p className="text-stone-300 mt-3 max-w-2xl mx-auto text-sm">
-            Visit our Dubai Design District studio or drop us a message below.
+            {settings.address
+              ? `Visit our studio at ${settings.address} or send a message below.`
+              : 'Visit our Dubai studio or drop us a message below.'}
           </p>
         </div>
       </section>

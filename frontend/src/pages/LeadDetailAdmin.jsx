@@ -1,10 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, Send, CheckCircle2 } from 'lucide-react';
+import { useParams, Link, useNavigate } from 'react-router-dom';
+import { ArrowLeft, Send, CheckCircle2, Trash2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { useAuth } from '../context/AuthContext';
 
 export default function LeadDetailAdmin() {
   const { id } = useParams();
+  const navigate = useNavigate();
+  const { isAdmin } = useAuth();
   const [lead, setLead] = useState(null);
   const [status, setStatus] = useState('New');
   const [assignedTo, setAssignedTo] = useState('');
@@ -34,10 +37,10 @@ export default function LeadDetailAdmin() {
 
   const fetchUsers = async () => {
     try {
-      const res = await apiFetch('/users');
+      const res = await apiFetch('/users/directory');
       if (res.success) setUsers(res.data || []);
     } catch (e) {
-      console.error('Error loading users:', e);
+      console.error('Error loading staff directory:', e);
     }
   };
 
@@ -93,6 +96,16 @@ export default function LeadDetailAdmin() {
         setNoteContent('');
         setLead(res.data);
       }
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const handleDeleteLead = async () => {
+    if (!window.confirm('Permanently delete this lead and related notes?')) return;
+    try {
+      await apiFetch(`/leads/${id}`, { method: 'DELETE' });
+      navigate('/admin/leads');
     } catch (e) {
       alert(e.message);
     }
@@ -242,13 +255,23 @@ export default function LeadDetailAdmin() {
               ))}
             </div>
 
-            <div className="pt-4 border-t border-stone-100">
+            <div className="pt-4 border-t border-stone-100 space-y-2">
               <Link
                 to={`/admin/quotes?leadId=${lead._id}`}
                 className="w-full btn-terracotta text-center py-2.5 rounded-xl text-xs font-semibold block shadow-md"
               >
                 Create Official Quotation
               </Link>
+              {isAdmin && (
+                <button
+                  type="button"
+                  onClick={handleDeleteLead}
+                  className="w-full py-2.5 rounded-xl text-xs font-semibold border border-rose-200 text-rose-600 hover:bg-rose-50 flex items-center justify-center gap-2"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                  Delete Lead
+                </button>
+              )}
             </div>
           </div>
         </div>

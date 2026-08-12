@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useRef } from 'react';
 import { apiFetch, setAuthToken, getAuthToken, refreshAccessToken } from '../services/api';
+import { canAccessPath, roleLabel } from '../utils/roles';
 
 const AuthContext = createContext();
 
@@ -15,7 +16,6 @@ export const AuthProvider = ({ children }) => {
 
   const scheduleTokenRefresh = () => {
     if (refreshTimer.current) clearInterval(refreshTimer.current);
-    // Refresh every 12 minutes (access token expires in 15m)
     refreshTimer.current = setInterval(async () => {
       if (!getAuthToken()) return;
       try {
@@ -88,10 +88,33 @@ export const AuthProvider = ({ children }) => {
     setUser(null);
   };
 
-  const isAdmin = user?.role === 'admin';
+  const role = user?.role;
+  const isAdmin = role === 'admin';
+  const isManager = role === 'manager';
+  const isEditor = role === 'editor';
+  const canManageCrm = isAdmin || isManager;
+  const canManageCms = isAdmin || isEditor;
+  const canViewAnalytics = isAdmin || isManager;
+  const canAccess = (pathname) => (role ? canAccessPath(role, pathname) : false);
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, isAdmin }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        loading,
+        login,
+        logout,
+        role,
+        roleLabel: roleLabel(role),
+        isAdmin,
+        isManager,
+        isEditor,
+        canManageCrm,
+        canManageCms,
+        canViewAnalytics,
+        canAccess,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );

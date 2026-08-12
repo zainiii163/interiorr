@@ -3,6 +3,7 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { sendJobApplicationAlert } from '../services/emailService.js';
+import { uploadRawBuffer, saveResumeLocally } from '../services/uploadService.js';
 
 const STATUS_TO_FRONTEND = {
   new: 'New',
@@ -21,12 +22,27 @@ function formatApplication(app) {
   return { ...obj, status: STATUS_TO_FRONTEND[obj.status] || obj.status };
 }
 
+async function resolveResumeUrl(req) {
+  if (req.file) {
+    const cloud = await uploadRawBuffer(req.file.buffer, {
+      folder: 'interior/resumes',
+      filename: req.file.originalname,
+      mimetype: req.file.mimetype,
+    });
+    if (cloud?.secure_url) return cloud.secure_url;
+    return saveResumeLocally(req.file);
+  }
+  return req.body.resumeUrl || '';
+}
+
 export const createApplication = asyncHandler(async (req, res) => {
-  const { fullName, email, phone, position, experience, resumeUrl, coverLetter } = req.body;
+  const { fullName, email, phone, position, experience, coverLetter } = req.body;
 
   if (!fullName || !email || !phone || !position) {
     throw new ApiError(400, 'Full name, email, phone, and position are required');
   }
+
+  const resumeUrl = await resolveResumeUrl(req);
 
   const application = await JobApplication.create({
     fullName,

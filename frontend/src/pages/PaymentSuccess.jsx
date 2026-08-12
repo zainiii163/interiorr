@@ -100,7 +100,7 @@ export default function PaymentSuccess() {
 
             <div className="flex flex-col sm:flex-row gap-3 pt-2">
               <Link
-                to={`/portal/${paymentInfo?.quote?.accessCode || quoteId}`}
+                to={`/portal/${paymentInfo?.quote?.accessCode || paymentInfo?.quote?.quoteNumber || ''}`}
                 className="flex-1 py-3 bg-[#C4795A] hover:bg-[#b06749] text-white font-bold text-xs rounded-xl shadow-lg flex items-center justify-center space-x-2 transition"
               >
                 <span>View Project Timeline</span>

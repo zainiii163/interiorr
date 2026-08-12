@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import { ChevronRight } from 'lucide-react';
-import ScrollReveal from '../../components/ui/ScrollReveal';
-import { apiFetch } from '../../services/api';
+import ScrollReveal from '../components/ui/ScrollReveal';
+import { apiFetch } from '../services/api';
 
 const categories = [
   { id: 'all', name: 'All Materials' },
@@ -244,16 +245,13 @@ export default function MaterialsPage() {
                     {selectedMaterial.inStock ? '✓ In Stock' : '✗ Out of Stock'}
                   </div>
                 </div>
-                <button
-                  onClick={() => {
-                    setSelectedMaterial(null);
-                    // Navigate to consultation page with material pre-selected
-                    window.location.href = '/book-consultation';
-                  }}
+                <Link
+                  to={`/consultation?material=${encodeURIComponent(selectedMaterial.name || selectedMaterial.slug || '')}`}
+                  onClick={() => setSelectedMaterial(null)}
                   className="btn-terracotta px-6 py-3 rounded-xl font-semibold"
                 >
                   Get Quote for This Material
-                </button>
+                </Link>
               </div>
             </div>
           </div>

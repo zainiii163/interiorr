@@ -6,9 +6,11 @@ const userSchema = new mongoose.Schema(
     name: { type: String, required: true, trim: true },
     email: { type: String, required: true, unique: true, lowercase: true, trim: true },
     password: { type: String, required: true, minlength: 8, select: false },
-    role: { type: String, enum: ['admin', 'editor'], default: 'editor' },
+    role: { type: String, enum: ['admin', 'manager', 'editor'], default: 'editor' },
     isActive: { type: Boolean, default: true },
     refreshToken: { type: String, select: false },
+    failedLoginAttempts: { type: Number, default: 0 },
+    lockUntil: { type: Date, default: null },
   },
   { timestamps: true }
 );

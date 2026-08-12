@@ -14,11 +14,12 @@ import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import DesignStyles from './pages/DesignStyles';
 import StyleDetail from './pages/StyleDetail';
-import Materials from './pages/public/MaterialsPage';
+import Materials from './pages/Materials';
 import Reviews from './pages/Reviews';
 import Contact from './pages/Contact';
 import Consultation from './pages/Consultation';
 import Careers from './pages/Careers';
+import Commercial from './pages/Commercial';
 import ClientPortal from './pages/ClientPortal';
 import PaymentSuccess from './pages/PaymentSuccess';
 
@@ -69,6 +70,7 @@ function App() {
               <Route path="/consultation" element={<Consultation />} />
               <Route path="/book-consultation" element={<Navigate to="/consultation" replace />} />
               <Route path="/careers" element={<Careers />} />
+              <Route path="/commercial" element={<Commercial />} />
               <Route path="*" element={<NotFound />} />
             </Route>
 

@@ -2,6 +2,7 @@ import { Outlet } from 'react-router-dom';
 import Navbar from './Navbar';
 import Footer from './Footer';
 import WhatsAppFloat from './WhatsAppFloat';
+import HelpFloat from './HelpFloat';
 import SeoHead from './SeoHead';
 
 export default function PublicLayout() {
@@ -13,6 +14,7 @@ export default function PublicLayout() {
         <Outlet />
       </main>
       <Footer />
+      <HelpFloat />
       <WhatsAppFloat />
     </>
   );

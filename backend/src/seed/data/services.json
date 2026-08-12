@@ -156,5 +156,22 @@
     "category": "fitout",
     "icon": "HardHat",
     "order": 20
+  },
+  {
+    "title": "Office Fit-Out",
+    "shortDescription": "Brand-aligned offices, clinics, and co-working spaces with partitions, joinery, and MEP.",
+    "category": "fitout",
+    "icon": "Building2",
+    "isFeatured": true,
+    "order": 21,
+    "features": ["4–8 week typical office programme", "Authority-ready drawings", "Custom workstations & joinery"]
+  },
+  {
+    "title": "Windows & Doors",
+    "shortDescription": "Aluminium, timber, and glass doors and windows specified and installed as part of the fit-out.",
+    "category": "fitout",
+    "icon": "PanelTop",
+    "order": 22,
+    "features": ["Developer-compliant specs", "Acoustic and thermal options", "Coordinated with joinery"]
   }
 ]

@@ -1,5 +1,6 @@
 import { Review } from '../models/Review.js';
 import { SiteSetting } from '../models/SiteSetting.js';
+import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { formatReview } from '../utils/legacyFormat.js';
@@ -120,8 +121,20 @@ export const syncGoogleReviews = asyncHandler(async (req, res) => {
     }
   }
 
-  // Fallback / standard sync engine
+  // Demo fallback only when explicitly requested (?demo=true) — never silently invent Google reviews
   if (syncedCount === 0) {
+    const allowDemo = req.query.demo === 'true' || req.body?.demo === true;
+    if (!allowDemo) {
+      settings.lastGoogleSyncAt = new Date();
+      await settings.save();
+      throw new ApiError(
+        400,
+        apiKey && placeId
+          ? 'Google Places returned no reviews. Check Place ID / API permissions.'
+          : 'Google Places API is not configured. Add keys in Site Settings, or retry with demo=true to load sample reviews.'
+      );
+    }
+    sourceMode = 'demo';
     for (const item of mockGoogleReviews) {
       await Review.findOneAndUpdate(
         { googleReviewId: item.googleReviewId },

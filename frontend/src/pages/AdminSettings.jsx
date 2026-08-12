@@ -27,13 +27,19 @@ export default function AdminSettings() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState('');
+  const [integrations, setIntegrations] = useState(null);
 
   const fetchSettings = async () => {
     try {
-      const res = await apiFetch('/settings');
+      const [res, intRes] = await Promise.all([
+        apiFetch('/settings'),
+        apiFetch('/integrations/status').catch(() => null),
+      ]);
       if (res.success && res.data) {
         setSettings(res.data);
       }
+      if (intRes?.success && intRes.data) setIntegrations(intRes.data);
+      else if (intRes && !intRes.success && intRes.data) setIntegrations(intRes);
     } catch (e) {
       console.error(e);
     } finally {
@@ -230,6 +236,7 @@ export default function AdminSettings() {
             <input type="text" placeholder="About title" value={settings.aboutTitle || ''} onChange={(e) => handleChange('aboutTitle', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="About body" value={settings.aboutBody || ''} onChange={(e) => handleChange('aboutBody', e.target.value)} disabled={!isAdmin} rows={3} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <input type="text" placeholder="About bullets (comma-separated)" value={(settings.aboutBullets || []).join(', ')} onChange={(e) => handleChange('aboutBullets', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
+            <input type="text" placeholder="Certifications (comma-separated)" value={(settings.certifications || []).join(', ')} onChange={(e) => handleChange('certifications', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <input type="text" placeholder="About image URL" value={settings.aboutImage || ''} onChange={(e) => handleChange('aboutImage', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="Mission" value={settings.mission || ''} onChange={(e) => handleChange('mission', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="Vision" value={settings.vision || ''} onChange={(e) => handleChange('vision', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
@@ -273,6 +280,7 @@ export default function AdminSettings() {
           <div className="space-y-3">
             <input type="text" placeholder="Default page title" value={settings.seo?.defaultTitle || ''} onChange={(e) => setSettings((p) => ({ ...p, seo: { ...p.seo, defaultTitle: e.target.value } }))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="Default meta description" value={settings.seo?.defaultDescription || ''} onChange={(e) => setSettings((p) => ({ ...p, seo: { ...p.seo, defaultDescription: e.target.value } }))} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
+            <input type="text" placeholder="OG image URL" value={settings.seo?.ogImage || ''} onChange={(e) => setSettings((p) => ({ ...p, seo: { ...p.seo, ogImage: e.target.value } }))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
           </div>
         </div>
 
@@ -298,13 +306,22 @@ export default function AdminSettings() {
             <div className="sm:col-span-2">
               <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
                 Google Places API Key
+                {settings.googleApiKeyConfigured && !settings.googleApiKey && (
+                  <span className="ml-2 font-normal normal-case text-emerald-600">
+                    (configured — leave blank to keep)
+                  </span>
+                )}
               </label>
               <input
                 type="password"
                 value={settings.googleApiKey || ''}
                 onChange={(e) => handleChange('googleApiKey', e.target.value)}
                 disabled={!isAdmin}
-                placeholder="AIza..."
+                placeholder={
+                  settings.googleApiKeyConfigured
+                    ? '•••••••• (enter new key to replace)'
+                    : 'AIza...'
+                }
                 className="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm disabled:bg-stone-50"
               />
             </div>
@@ -328,6 +345,34 @@ export default function AdminSettings() {
             )}
           </div>
         </div>
+
+        {integrations && (
+          <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm">
+            <h2 className="font-serif text-lg font-bold text-stone-900 mb-2">Integration Health</h2>
+            <p className="text-xs text-stone-500 mb-4">
+              Live status from backend environment (SMTP, Stripe, Cloudinary, Google Places).
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {Object.entries(integrations)
+                .filter(([key]) => key !== 'mongodb')
+                .map(([key, item]) => (
+                  <div
+                    key={key}
+                    className={`p-3 rounded-xl border text-xs ${
+                      item.configured
+                        ? 'bg-emerald-50 border-emerald-200 text-emerald-900'
+                        : 'bg-amber-50 border-amber-200 text-amber-900'
+                    }`}
+                  >
+                    <div className="font-bold">
+                      {item.configured ? 'Ready' : 'Needs setup'} · {item.label}
+                    </div>
+                    <div className="mt-1 opacity-80">{item.hint}</div>
+                  </div>
+                ))}
+            </div>
+          </div>
+        )}
 
         <div className="flex items-center gap-3 pt-2">
           {isAdmin && (

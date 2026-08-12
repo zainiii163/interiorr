@@ -12,11 +12,11 @@ const leadLimiter = rateLimit({
 });
 
 router.post('/', leadLimiter, lead.createLead);
-router.get('/', protect, lead.listLeads);
-router.get('/:id', protect, lead.getLead);
-router.patch('/:id', protect, lead.updateLead);
-router.put('/:id', protect, lead.updateLead);
-router.post('/:id/notes', protect, lead.addLeadNote);
+router.get('/', protect, authorize('admin', 'manager'), lead.listLeads);
+router.get('/:id', protect, authorize('admin', 'manager'), lead.getLead);
+router.patch('/:id', protect, authorize('admin', 'manager'), lead.updateLead);
+router.put('/:id', protect, authorize('admin', 'manager'), lead.updateLead);
+router.post('/:id/notes', protect, authorize('admin', 'manager'), lead.addLeadNote);
 router.delete('/:id', protect, authorize('admin'), lead.deleteLead);
 
 export default router;

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Plus, Trash2, FileText, Download, Loader2 } from 'lucide-react';
+import { Plus, Trash2, FileText, Download, Loader2, Mail } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,6 +14,7 @@ export default function AdminQuotes() {
   const [showModal, setShowModal] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState(null);
   const [downloadingPDF, setDownloadingPDF] = useState(null);
+  const [emailingId, setEmailingId] = useState(null);
 
   const [formData, setFormData] = useState({
     leadId: leadIdParam,
@@ -43,6 +44,12 @@ export default function AdminQuotes() {
   useEffect(() => {
     fetchQuotesAndLeads();
   }, []);
+
+  useEffect(() => {
+    if (!leadIdParam) return;
+    setFormData((prev) => ({ ...prev, leadId: leadIdParam }));
+    setShowModal(true);
+  }, [leadIdParam]);
 
   const handleAddItem = () => {
     setFormData(prev => ({
@@ -112,6 +119,28 @@ export default function AdminQuotes() {
       fetchQuotesAndLeads();
     } catch (e) {
       alert(e.message);
+    }
+  };
+
+  const handleEmailQuote = async (quote) => {
+    if (!quote?.leadEmail && !quote?.lead?.email) {
+      alert('This quote has no client email on the linked lead.');
+      return;
+    }
+    setEmailingId(quote._id);
+    try {
+      const res = await apiFetch(`/quotes/${quote._id}/email`, {
+        method: 'POST',
+        body: JSON.stringify({ frontendOrigin: window.location.origin }),
+      });
+      if (res.success) {
+        alert(res.message + (res.data?.portalUrl ? `\n${res.data.portalUrl}` : ''));
+        fetchQuotesAndLeads();
+      }
+    } catch (e) {
+      alert(e.message);
+    } finally {
+      setEmailingId(null);
     }
   };
 
@@ -258,7 +287,7 @@ export default function AdminQuotes() {
           </thead>
           <tbody className="divide-y divide-stone-100 font-medium">
             {quotes.map((q) => {
-              const portalUrl = `${window.location.origin}/portal/${q.accessCode || q.quoteNumber || q._id}`;
+              const portalUrl = `${window.location.origin}/portal/${q.accessCode || q.quoteNumber}`;
               return (
                 <tr key={q._id} className="hover:bg-stone-50 transition">
                   <td className="py-3.5 px-4">
@@ -300,6 +329,15 @@ export default function AdminQuotes() {
                       title="Copy Client Portal Access Link"
                     >
                       Client Portal Link
+                    </button>
+                    <button
+                      onClick={() => handleEmailQuote(q)}
+                      disabled={emailingId === q._id}
+                      className="px-2.5 py-1 rounded-lg bg-stone-900 hover:bg-stone-800 text-white font-bold text-[11px] disabled:opacity-50 inline-flex items-center gap-1"
+                      title="Email quote + portal link to client"
+                    >
+                      {emailingId === q._id ? <Loader2 className="w-3 h-3 animate-spin" /> : <Mail className="w-3 h-3" />}
+                      Email
                     </button>
                     <button
                       onClick={() => handleDownloadPDF(q._id, q.quoteNumber)}

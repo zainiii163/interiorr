@@ -87,7 +87,7 @@ export default function AdminUsers() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-3xl font-bold text-stone-900">User Management</h1>
-          <p className="text-xs text-stone-500 mt-1">Admin and editor accounts for the staff portal</p>
+          <p className="text-xs text-stone-500 mt-1">Admin, manager, and editor accounts for the staff portal</p>
         </div>
         <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
           <Plus className="w-4 h-4" />
@@ -168,8 +168,9 @@ export default function AdminUsers() {
                 <div>
                   <label className="block font-bold mb-1">Role</label>
                   <select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })} className="w-full px-3 py-2 border rounded-xl">
-                    <option value="editor">Editor</option>
-                    <option value="admin">Admin</option>
+                    <option value="editor">Editor (CMS)</option>
+                    <option value="manager">Manager (Sales & Ops)</option>
+                    <option value="admin">Admin (Full Access)</option>
                   </select>
                 </div>
                 <div>

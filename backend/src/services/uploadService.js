@@ -42,6 +42,39 @@ export function toDataUrl(file) {
   return `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
 }
 
+export async function uploadRawBuffer(buffer, { folder = 'interior/resumes', filename, mimetype } = {}) {
+  if (!ensureConfigured()) return null;
+
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      {
+        folder,
+        resource_type: 'raw',
+        public_id: filename ? filename.replace(/\.[^.]+$/, '') : undefined,
+        format: mimetype === 'application/pdf' ? 'pdf' : undefined,
+      },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    stream.end(buffer);
+  });
+}
+
+export async function saveResumeLocally(file) {
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  const { fileURLToPath } = await import('url');
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const dir = path.join(__dirname, '..', '..', 'uploads', 'resumes');
+  await fs.mkdir(dir, { recursive: true });
+  const safe = `${Date.now()}-${(file.originalname || 'resume').replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+  const full = path.join(dir, safe);
+  await fs.writeFile(full, file.buffer);
+  return `/uploads/resumes/${safe}`;
+}
+
 export function getUploadMode() {
   return isCloudinaryConfigured() ? 'cloudinary' : 'local';
 }

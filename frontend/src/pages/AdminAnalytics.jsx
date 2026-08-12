@@ -37,12 +37,26 @@ export default function AdminAnalytics() {
     return (
       <div className="py-24 text-center space-y-4 text-stone-500">
         <div className="w-10 h-10 border-4 border-[#C4795A] border-t-transparent rounded-full animate-spin mx-auto"></div>
-        <p className="text-xs font-semibold">Generating Executive Analytics Report...</p>
+        <p className="text-xs font-semibold">Loading live analytics from the database...</p>
       </div>
     );
   }
 
-  const { revenue, funnel, propertyTypes, reviews, quoteStatusCounts, monthlyData } = data || {};
+  if (!data) {
+    return (
+      <div className="py-16 text-center space-y-3">
+        <p className="text-sm text-rose-600 font-semibold">Unable to load analytics.</p>
+        <button
+          onClick={handleRefresh}
+          className="text-xs font-semibold text-[#C4795A] hover:underline"
+        >
+          Try again
+        </button>
+      </div>
+    );
+  }
+
+  const { revenue, funnel, propertyTypes, reviews, quoteStatusCounts, monthlyData } = data;
 
   return (
     <div className="space-y-8 font-sans">
@@ -128,7 +142,7 @@ export default function AdminAnalytics() {
             </div>
           </div>
           <div className="font-serif text-2xl font-bold text-stone-900">
-            {reviews?.averageRating || 4.9} / 5.0
+            {reviews?.averageRating || 0} / 5.0
           </div>
           <div className="text-stone-500 text-xs flex items-center space-x-1">
             <ShieldCheck className="w-3.5 h-3.5 text-blue-500" />
@@ -188,13 +202,13 @@ export default function AdminAnalytics() {
                 <BarChart3 className="w-5 h-5 text-[#C4795A]" />
                 <span>Monthly Revenue Trends (AED)</span>
               </h2>
-              <p className="text-xs text-stone-500">6-Month billing performance overview</p>
+              <p className="text-xs text-stone-500">Last 6 calendar months · real quote totals only</p>
             </div>
           </div>
 
           <div className="h-64 flex items-end justify-between gap-3 pt-6 px-2 border-b border-stone-200">
             {monthlyData?.map((item, idx) => {
-              const maxRev = Math.max(...(monthlyData.map(m => m.revenueAED) || [200000]), 200000);
+              const maxRev = Math.max(...(monthlyData.map((m) => m.revenueAED) || [0]), 1);
               const heightPct = Math.round((item.revenueAED / maxRev) * 100);
 
               return (
@@ -266,7 +280,7 @@ export default function AdminAnalytics() {
         <div className="bg-white p-6 rounded-3xl border border-stone-200 shadow-sm space-y-4">
           <h3 className="font-serif text-lg font-bold text-stone-900 flex items-center space-x-2">
             <Star className="w-4 h-4 text-amber-500 fill-amber-400" />
-            <span>Google Reviews Sync</span>
+            <span>Integrations Status</span>
           </h3>
           <div className="space-y-3 pt-2 text-xs">
             <div className="p-3 bg-stone-50 rounded-xl flex justify-between items-center">
@@ -277,9 +291,33 @@ export default function AdminAnalytics() {
               <span className="text-stone-500 font-medium">Direct Platform Reviews:</span>
               <span className="font-bold font-mono text-stone-900">{reviews?.directCount || 0}</span>
             </div>
-            <div className="p-3 bg-emerald-50 text-emerald-900 rounded-xl flex items-center space-x-2 font-semibold">
-              <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
-              <span>Auto-Sync Engine Active & Healthy</span>
+            <div className="p-3 bg-stone-50 rounded-xl flex justify-between items-center">
+              <span className="text-stone-500 font-medium">Stripe Payments:</span>
+              <span className="font-bold font-mono text-stone-900">
+                {data?.integrations?.stripeConfigured ? 'Configured' : 'Sandbox / unset'}
+              </span>
+            </div>
+            <div
+              className={`p-3 rounded-xl flex items-center space-x-2 font-semibold ${
+                data?.integrations?.googleConfigured
+                  ? 'bg-emerald-50 text-emerald-900'
+                  : 'bg-amber-50 text-amber-900'
+              }`}
+            >
+              <CheckCircle2
+                className={`w-4 h-4 shrink-0 ${
+                  data?.integrations?.googleConfigured ? 'text-emerald-600' : 'text-amber-600'
+                }`}
+              />
+              <span>
+                {data?.integrations?.googleConfigured
+                  ? `Google Places connected${
+                      data?.integrations?.lastGoogleSyncAt
+                        ? ` · last sync ${new Date(data.integrations.lastGoogleSyncAt).toLocaleString()}`
+                        : ''
+                    }`
+                  : 'Google Places API not configured — sync uses demo reviews'}
+              </span>
             </div>
           </div>
         </div>

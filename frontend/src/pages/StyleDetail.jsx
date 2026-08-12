@@ -25,6 +25,8 @@ export default function StyleDetail() {
   if (loading) return <div className="pt-32 text-center py-20 font-serif text-xl">Loading Style...</div>;
   if (!style) return <div className="pt-32 text-center py-20 font-serif text-xl">Style Not Found</div>;
 
+  const related = (style.relatedProjects || []).filter((p) => p && (p.slug || p._id));
+
   return (
     <div className="page-offset pb-20">
       <section className="relative h-[55vh] flex items-center justify-center bg-stone-900 text-white overflow-hidden">
@@ -40,7 +42,7 @@ export default function StyleDetail() {
         <div className="bg-white p-8 sm:p-12 rounded-2xl border border-stone-200 shadow-sm space-y-6">
           <h2 className="font-serif text-3xl font-bold text-stone-900">Design Philosophy</h2>
           <p className="text-stone-700 leading-relaxed text-base">{style.description}</p>
-          
+
           {style.characteristics && style.characteristics.length > 0 && (
             <div className="pt-6 border-t border-stone-100">
               <h3 className="font-serif text-xl font-bold text-stone-900 mb-4">Key Style Characteristics</h3>
@@ -56,9 +58,42 @@ export default function StyleDetail() {
           )}
         </div>
 
+        {related.length > 0 && (
+          <div className="space-y-6">
+            <div>
+              <h2 className="font-serif text-2xl font-bold text-stone-900">Projects in this style</h2>
+              <p className="text-stone-500 text-sm mt-1">Real portfolio work matching this aesthetic</p>
+            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+              {related.map((project) => (
+                <Link
+                  key={project._id || project.slug}
+                  to={`/projects/${project.slug}`}
+                  className="group rounded-2xl overflow-hidden border border-stone-200 bg-white shadow-sm hover:shadow-md transition"
+                >
+                  <div className="aspect-[16/10] overflow-hidden bg-stone-100">
+                    <img
+                      src={project.coverImage || project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition duration-500"
+                    />
+                  </div>
+                  <div className="p-4 flex items-center justify-between gap-3">
+                    <div>
+                      <h3 className="font-serif font-bold text-stone-900">{project.title}</h3>
+                      <p className="text-xs text-stone-500 mt-0.5">{project.location}</p>
+                    </div>
+                    <ArrowRight className="w-4 h-4 text-[#C4795A] shrink-0" />
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        )}
+
         <div className="text-center">
           <Link
-            to="/book-consultation"
+            to={`/consultation?style=${encodeURIComponent(style.name || style.slug || '')}`}
             className="btn-terracotta inline-block px-8 py-3.5 rounded-xl font-semibold text-sm shadow-xl"
           >
             Design My Home in {style.name} Style

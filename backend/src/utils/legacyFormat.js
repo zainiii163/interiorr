@@ -104,11 +104,15 @@ export function formatSettings(settings) {
   const obj = toPlain(settings);
   const stats = obj.stats || {};
   const social = obj.socialLinks || {};
+  const hasGoogleKey = Boolean(obj.googleApiKey && String(obj.googleApiKey).trim());
+  // Never expose the raw API key on public/admin GET responses
+  delete obj.googleApiKey;
   return {
     ...obj,
     companyName: obj.companyName || 'Interior Platform',
     socialLinks: social,
     socialMedia: social,
+    googleApiKeyConfigured: hasGoogleKey,
     statistics: {
       yearsExperience: stats.yearsExperience ?? 0,
       completedProjects: stats.projectsCompleted ?? 0,
@@ -119,6 +123,7 @@ export function formatSettings(settings) {
     seo: obj.seo || {},
     heroTrustBadges: obj.heroTrustBadges || [],
     aboutBullets: obj.aboutBullets || [],
+    certifications: obj.certifications || [],
     skills: obj.skills || [],
   };
 }
@@ -139,6 +144,11 @@ export function parseSettingsInput(body = {}) {
     payload.socialLinks = payload.socialMedia;
     delete payload.socialMedia;
   }
+  // Empty / placeholder key must not wipe a stored secret
+  if (!payload.googleApiKey || !String(payload.googleApiKey).trim()) {
+    delete payload.googleApiKey;
+  }
+  delete payload.googleApiKeyConfigured;
   return payload;
 }
 

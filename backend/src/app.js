@@ -1,4 +1,6 @@
 import express from 'express';
+import path from 'path';
+import { fileURLToPath } from 'url';
 import cors from 'cors';
 import helmet from 'helmet';
 import cookieParser from 'cookie-parser';
@@ -8,7 +10,11 @@ import routes from './routes/index.js';
 import { notFound, errorHandler } from './middleware/errorHandler.js';
 import { handleStripeWebhook } from './controllers/paymentController.js';
 
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
+
+// Needed behind Vercel/proxies so rate-limit and secure cookies see real client IPs
+app.set('trust proxy', 1);
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: 'cross-origin' } }));
 app.use(
@@ -31,6 +37,8 @@ app.use(express.json({ limit: '2mb' }));
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(mongoSanitize());
+
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')));
 
 app.use('/api/v1', routes);
 

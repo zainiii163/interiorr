@@ -3,36 +3,140 @@
     "title": "Experienced Planners",
     "description": "Custom proposals with a detailed scope of work tailored to your vision.",
     "icon": "ClipboardList",
+    "section": "promise",
     "order": 1
   },
   {
     "title": "Planned Installation",
     "description": "Average 8–10 weeks for full home renovation with quality delivery.",
     "icon": "CalendarCheck",
+    "section": "promise",
     "order": 2
   },
   {
     "title": "Warranty",
     "description": "Up to 10 years on kitchens, wardrobes and cabinets. 1 year workmanship warranty.",
     "icon": "ShieldCheck",
+    "section": "promise",
     "order": 3
   },
   {
     "title": "Best Price Guarantee",
     "description": "Transparent pricing on sanitaryware, tiles and appliances — no hidden costs.",
     "icon": "BadgeDollarSign",
+    "section": "promise",
     "order": 4
   },
   {
     "title": "Free Design Services",
     "description": "Basic 2D & 3D designs included for confirmed projects.",
     "icon": "PencilRuler",
+    "section": "promise",
     "order": 5
   },
   {
     "title": "Authority Approvals",
     "description": "In-house team for community NOCs and authority approvals.",
     "icon": "FileCheck2",
+    "section": "promise",
+    "order": 6
+  },
+  {
+    "title": "Carpentry & Joinery",
+    "description": "We work with designers, homeowners, businesses and developers from our in-house Al Quoz factory.",
+    "icon": "Hammer",
+    "section": "expertise",
+    "order": 1,
+    "highlights": [
+      "25+ years of joinery experience",
+      "75 skilled carpenters and painters",
+      "3rd generation skilled craftsmen",
+      "15,000 sq. ft. facility in Al Quoz",
+      "Value engineering for every budget"
+    ]
+  },
+  {
+    "title": "Turnkey Fit-Outs",
+    "description": "From palaces to studios, hotels to retail — one-stop design, procurement, permits and execution.",
+    "icon": "Building2",
+    "section": "expertise",
+    "order": 2,
+    "highlights": [
+      "Full design-to-handover delivery",
+      "Certified engineers on every project",
+      "Residential, commercial and retail",
+      "Procurement and permit management",
+      "Dedicated project manager"
+    ]
+  },
+  {
+    "title": "Decorative Finishes",
+    "description": "In-house artisans for microcement, terrazzo, decorative paints and specialty wall treatments.",
+    "icon": "Paintbrush",
+    "section": "expertise",
+    "order": 3,
+    "highlights": [
+      "Decorative paints and specialty walls",
+      "Microcement and terrazzo",
+      "Trained in-house applicators",
+      "Luxury residential and hospitality",
+      "Coordinated with joinery and MEP"
+    ]
+  },
+  {
+    "title": "Design Hub",
+    "description": "We collaborate with leading designers and connect them to our exclusive VIP clientele across Dubai.",
+    "icon": "Users",
+    "section": "expertise",
+    "order": 4,
+    "highlights": [
+      "Partner programme for interior designers",
+      "VIP client introductions",
+      "Technical drawings and BOQ support",
+      "Joinery shop drawings from our factory",
+      "White-label execution when required"
+    ]
+  },
+  {
+    "title": "Standard Pricing",
+    "description": "Quotations are itemized with standard pricing — clear scope, no hidden costs.",
+    "icon": "Receipt",
+    "section": "process",
+    "order": 1
+  },
+  {
+    "title": "Material Selection",
+    "description": "Visit the experience center for kitchens, wardrobes, tiles, sanitaryware, and flooring.",
+    "icon": "Package",
+    "section": "process",
+    "order": 2
+  },
+  {
+    "title": "NOCs & Authority Approvals",
+    "description": "In-house team for community, building management, and municipality approvals.",
+    "icon": "FileCheck2",
+    "section": "process",
+    "order": 3
+  },
+  {
+    "title": "Build With the Best",
+    "description": "Licensed technicians and engineers execute and update throughout the project.",
+    "icon": "HardHat",
+    "section": "process",
+    "order": 4
+  },
+  {
+    "title": "Free Designs",
+    "description": "Basic 2D and 3D drawings included for confirmed projects. Premium design available.",
+    "icon": "Palette",
+    "section": "process",
+    "order": 5
+  },
+  {
+    "title": "Warranty",
+    "description": "Up to 10 years on kitchens, wardrobes and cabinets. 1-year workmanship warranty.",
+    "icon": "ShieldCheck",
+    "section": "process",
     "order": 6
   }
 ]

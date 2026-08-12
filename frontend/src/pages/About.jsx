@@ -104,6 +104,26 @@ export default function About() {
           </div>
         </div>
 
+        {(settings.certifications || []).length > 0 && (
+          <div className="mt-20">
+            <h3 className="font-serif text-2xl font-bold text-stone-900 mb-2">Licenses & Certifications</h3>
+            <p className="text-stone-600 text-sm mb-6 max-w-2xl">
+              Authority-ready delivery for Dubai residences and commercial spaces.
+            </p>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {settings.certifications.map((cert) => (
+                <div
+                  key={cert}
+                  className="flex items-center gap-3 p-4 rounded-xl bg-stone-50 border border-stone-200 text-sm text-stone-800"
+                >
+                  <CheckCircle2 className="w-5 h-5 text-[#5C7A6B] shrink-0" />
+                  <span>{cert}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {skills.length > 0 && (
           <div className="mt-20">
             <h3 className="font-serif text-2xl font-bold text-stone-900 mb-6">

@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, CheckCircle, XCircle } from 'lucide-react';
+import { Plus, Edit, Trash2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ImageUploadField from '../components/admin/ImageUploadField';
+import DragReorderList from '../components/admin/DragReorderList';
 
 export default function AdminServices() {
   const { isAdmin } = useAuth();
@@ -91,13 +92,28 @@ export default function AdminServices() {
     }
   };
 
+  const handleReorder = async (nextItems) => {
+    setServices(nextItems);
+    try {
+      await apiFetch('/services/reorder', {
+        method: 'PATCH',
+        body: JSON.stringify({
+          items: nextItems.map((item, order) => ({ id: item._id, order })),
+        }),
+      });
+    } catch (e) {
+      alert(e.message);
+      fetchServices();
+    }
+  };
+
   return (
     <div className="space-y-6">
       
       <div className="flex items-center justify-between">
         <div>
           <h1 className="font-serif text-3xl font-bold text-stone-900">Services Catalog Management</h1>
-          <p className="text-xs text-stone-500 mt-1">Configure active renovation and fit-out service offerings</p>
+          <p className="text-xs text-stone-500 mt-1">Drag to reorder · configure renovation and fit-out offerings</p>
         </div>
         <button
           onClick={handleOpenCreate}
@@ -108,45 +124,33 @@ export default function AdminServices() {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
-        <table className="w-full text-left text-xs text-stone-700">
-          <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
-            <tr>
-              <th className="py-3.5 px-4">Service Name</th>
-              <th className="py-3.5 px-4">Category</th>
-              <th className="py-3.5 px-4">Short Description</th>
-              <th className="py-3.5 px-4">Status</th>
-              <th className="py-3.5 px-4 text-right">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="divide-y divide-stone-100 font-medium">
-            {services.map((serv) => (
-              <tr key={serv._id} className="hover:bg-stone-50 transition">
-                <td className="py-3.5 px-4 font-bold text-stone-900">{serv.name}</td>
-                <td className="py-3.5 px-4 text-stone-600">{serv.category}</td>
-                <td className="py-3.5 px-4 text-stone-500 max-w-xs truncate">{serv.shortDescription}</td>
-                <td className="py-3.5 px-4">
-                  <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
-                    serv.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600'
-                  }`}>
-                    {serv.isActive ? 'Active' : 'Inactive'}
-                  </span>
-                </td>
-                <td className="py-3.5 px-4 text-right space-x-2">
-                  <button onClick={() => handleOpenEdit(serv)} className="p-1.5 rounded bg-stone-100 hover:bg-stone-200 text-stone-700">
-                    <Edit className="w-3.5 h-3.5" />
-                  </button>
-                  {isAdmin && (
-                  <button onClick={() => handleDelete(serv._id)} className="p-1.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-700">
-                    <Trash2 className="w-3.5 h-3.5" />
-                  </button>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+      <DragReorderList
+        items={services}
+        onReorder={handleReorder}
+        renderItem={(serv) => (
+          <div className="flex items-center justify-between gap-3 text-xs py-1">
+            <div className="min-w-0">
+              <div className="font-bold text-stone-900">{serv.name}</div>
+              <div className="text-stone-500 truncate">{serv.category} · {serv.shortDescription}</div>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                serv.isActive ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600'
+              }`}>
+                {serv.isActive ? 'Active' : 'Inactive'}
+              </span>
+              <button type="button" onClick={() => handleOpenEdit(serv)} className="p-1.5 rounded bg-stone-100 hover:bg-stone-200 text-stone-700">
+                <Edit className="w-3.5 h-3.5" />
+              </button>
+              {isAdmin && (
+                <button type="button" onClick={() => handleDelete(serv._id)} className="p-1.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-700">
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              )}
+            </div>
+          </div>
+        )}
+      />
 
       {/* Modal */}
       {showModal && (

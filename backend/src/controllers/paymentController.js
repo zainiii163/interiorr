@@ -12,14 +12,24 @@ async function getStripe() {
   return new Stripe(env.stripe.secretKey);
 }
 
+async function assertQuoteAccess(quote, accessCode) {
+  if (!quote) throw new ApiError(404, 'Quote not found');
+  if (!accessCode || String(accessCode).trim() !== String(quote.accessCode || '').trim()) {
+    throw new ApiError(403, 'Valid client access code is required');
+  }
+}
+
 export const createCheckoutSession = asyncHandler(async (req, res) => {
-  const { quoteId } = req.body;
+  const { quoteId, accessCode } = req.body;
   if (!quoteId) throw new ApiError(400, 'Quote ID is required');
 
   const quote = await Quote.findById(quoteId).populate('lead');
-  if (!quote) throw new ApiError(404, 'Quote not found');
+  await assertQuoteAccess(quote, accessCode);
 
-  const clientOrigin = req.headers.origin || env.frontendUrl || 'http://localhost:5173';
+  const clientOrigin =
+    env.frontendUrl && env.frontendUrl !== 'same-origin'
+      ? env.frontendUrl
+      : req.headers.origin || 'http://localhost:5173';
   const stripe = await getStripe();
 
   if (stripe) {
@@ -55,10 +65,11 @@ export const createCheckoutSession = asyncHandler(async (req, res) => {
         client_reference_id: quote._id.toString(),
         metadata: {
           quoteNumber: quote.quoteNumber,
+          accessCode: quote.accessCode || '',
           leadId: quote.lead?._id?.toString() || '',
         },
         success_url: `${clientOrigin}/payment/success?quoteId=${quote._id}&session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${clientOrigin}/portal/${quote.accessCode || quote._id}?payment=cancelled`,
+        cancel_url: `${clientOrigin}/portal/${quote.accessCode}?payment=cancelled`,
       });
 
       quote.paymentStatus = 'pending';
@@ -94,16 +105,55 @@ export const createCheckoutSession = asyncHandler(async (req, res) => {
 
 export const confirmPayment = asyncHandler(async (req, res) => {
   const { quoteId, sessionId } = req.body;
-  if (!quoteId) throw new ApiError(400, 'Quote ID is required');
+  if (!quoteId || !sessionId) throw new ApiError(400, 'Quote ID and session ID are required');
 
   const quote = await Quote.findById(quoteId).populate('lead');
   if (!quote) throw new ApiError(404, 'Quote not found');
+
+  if (quote.paymentStatus === 'paid') {
+    res.status(200).json(
+      new ApiResponse(200, {
+        quote: formatQuote(quote),
+        paymentDetails: {
+          paidAmount: quote.grandTotal,
+          currency: quote.currency || 'AED',
+          transactionRef: quote.stripePaymentIntentId,
+          paidAt: quote.paidAt,
+        },
+      }, 'Payment already confirmed')
+    );
+    return;
+  }
+
+  if (!quote.stripeCheckoutSessionId || quote.stripeCheckoutSessionId !== sessionId) {
+    throw new ApiError(403, 'Invalid or mismatched payment session');
+  }
+
+  const stripe = await getStripe();
+  if (stripe && !String(sessionId).startsWith('cs_sandbox_')) {
+    try {
+      const session = await stripe.checkout.sessions.retrieve(sessionId);
+      if (session.payment_status !== 'paid' && session.status !== 'complete') {
+        throw new ApiError(402, 'Payment not completed yet');
+      }
+      if (session.client_reference_id && session.client_reference_id !== quote._id.toString()) {
+        throw new ApiError(403, 'Session does not match this quote');
+      }
+      quote.stripePaymentIntentId = session.payment_intent || sessionId;
+    } catch (err) {
+      if (err instanceof ApiError) throw err;
+      throw new ApiError(400, 'Unable to verify Stripe session');
+    }
+  } else if (!String(sessionId).startsWith('cs_sandbox_')) {
+    throw new ApiError(403, 'Invalid sandbox session');
+  } else {
+    quote.stripePaymentIntentId = `pi_sandbox_${Date.now()}`;
+  }
 
   quote.status = 'accepted';
   quote.paymentStatus = 'paid';
   quote.paidAt = new Date();
   quote.acceptedAt = quote.acceptedAt || new Date();
-  quote.stripePaymentIntentId = sessionId || `pi_sandbox_${Date.now()}`;
   await quote.save();
 
   if (quote.lead) {
@@ -147,6 +197,7 @@ export const handleStripeWebhook = asyncHandler(async (req, res) => {
           quote.paymentStatus = 'paid';
           quote.paidAt = new Date();
           quote.stripePaymentIntentId = session.payment_intent;
+          quote.stripeCheckoutSessionId = session.id;
           await quote.save();
 
           if (quote.lead) {

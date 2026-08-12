@@ -6,6 +6,7 @@ import { apiFetch } from '../services/api';
 export default function AdminLeads() {
   const [leads, setLeads] = useState([]);
   const [statusFilter, setStatusFilter] = useState('');
+  const [typeFilter, setTypeFilter] = useState('');
   const [search, setSearch] = useState('');
   const [loading, setLoading] = useState(true);
 
@@ -14,6 +15,7 @@ export default function AdminLeads() {
     try {
       let queryStr = '?limit=50';
       if (statusFilter) queryStr += `&status=${statusFilter}`;
+      if (typeFilter) queryStr += `&leadType=${typeFilter}`;
       if (search) queryStr += `&search=${encodeURIComponent(search)}`;
       
       const res = await apiFetch(`/leads${queryStr}`);
@@ -27,9 +29,14 @@ export default function AdminLeads() {
 
   useEffect(() => {
     fetchLeads();
-  }, [statusFilter, search]);
+  }, [statusFilter, typeFilter, search]);
 
   const statuses = ['New', 'Contacted', 'Quoted', 'Won', 'Lost'];
+  const types = [
+    { id: '', label: 'All Types' },
+    { id: 'consultation', label: 'Consultation' },
+    { id: 'contact', label: 'Contact' },
+  ];
 
   return (
     <div className="space-y-6">
@@ -55,7 +62,21 @@ export default function AdminLeads() {
           />
         </div>
 
-        <div className="flex items-center space-x-2 overflow-x-auto w-full md:w-auto">
+        <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 overflow-x-auto w-full md:w-auto">
+          <div className="flex items-center space-x-2">
+            {types.map((t) => (
+              <button
+                key={t.id || 'all-types'}
+                onClick={() => setTypeFilter(t.id)}
+                className={`px-3 py-1.5 rounded-lg text-xs font-semibold whitespace-nowrap ${
+                  typeFilter === t.id ? 'bg-stone-800 text-white' : 'bg-stone-100 text-stone-600 hover:bg-stone-200'
+                }`}
+              >
+                {t.label}
+              </button>
+            ))}
+          </div>
+          <div className="flex items-center space-x-2">
           <button
             onClick={() => setStatusFilter('')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold ${
@@ -75,6 +96,7 @@ export default function AdminLeads() {
               {st}
             </button>
           ))}
+          </div>
         </div>
 
       </div>

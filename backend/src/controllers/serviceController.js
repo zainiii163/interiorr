@@ -4,6 +4,7 @@ import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { slugify } from '../utils/slugify.js';
 import { formatService, parseServiceInput } from '../utils/legacyFormat.js';
+import { applyReorder } from '../utils/reorder.js';
 
 export const listServices = asyncHandler(async (req, res) => {
   const filter = {};
@@ -46,8 +47,6 @@ export const deleteService = asyncHandler(async (req, res) => {
 });
 
 export const reorderServices = asyncHandler(async (req, res) => {
-  const { items } = req.body;
-  if (!Array.isArray(items)) throw new ApiError(400, 'items array required');
-  await Promise.all(items.map((item) => Service.findByIdAndUpdate(item.id, { order: item.order })));
+  await applyReorder(Service, req.body.items);
   res.status(200).json(new ApiResponse(200, null, 'Services reordered'));
 });

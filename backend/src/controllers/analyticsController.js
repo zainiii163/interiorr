@@ -4,16 +4,26 @@ import { Project } from '../models/Project.js';
 import { Review } from '../models/Review.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { env } from '../config/env.js';
+import { SiteSetting } from '../models/SiteSetting.js';
+
+function inLastNMonths(date, monthsBack) {
+  if (!date) return false;
+  const d = new Date(date);
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth() - (monthsBack - 1), 1);
+  return d >= start && d <= now;
+}
 
 export const getAnalyticsSummary = asyncHandler(async (req, res) => {
-  const [quotes, leads, projects, reviews] = await Promise.all([
+  const [quotes, leads, projects, reviews, settings] = await Promise.all([
     Quote.find().populate('lead', 'fullName email status'),
     Lead.find(),
     Project.find(),
     Review.find(),
+    SiteSetting.findOne().select('googleApiKey googlePlaceId lastGoogleSyncAt autoSyncGoogleReviews'),
   ]);
 
-  // Revenue analytics
   const totalPaidRevenue = quotes
     .filter((q) => q.paymentStatus === 'paid' || q.status === 'accepted')
     .reduce((acc, q) => acc + (q.grandTotal || 0), 0);
@@ -22,11 +32,11 @@ export const getAnalyticsSummary = asyncHandler(async (req, res) => {
     .filter((q) => q.status === 'sent' || q.status === 'draft')
     .reduce((acc, q) => acc + (q.grandTotal || 0), 0);
 
-  const averageQuoteValue = quotes.length > 0
-    ? Math.round(quotes.reduce((acc, q) => acc + (q.grandTotal || 0), 0) / quotes.length)
-    : 0;
+  const averageQuoteValue =
+    quotes.length > 0
+      ? Math.round(quotes.reduce((acc, q) => acc + (q.grandTotal || 0), 0) / quotes.length)
+      : 0;
 
-  // Lead Conversion Funnel
   const funnel = {
     new: leads.filter((l) => l.status === 'new').length,
     contacted: leads.filter((l) => l.status === 'contacted').length,
@@ -37,55 +47,67 @@ export const getAnalyticsSummary = asyncHandler(async (req, res) => {
   };
 
   const winRate = funnel.total > 0 ? Math.round((funnel.won / funnel.total) * 100) : 0;
-  const quoteToWinRate = (funnel.quoted + funnel.won) > 0 
-    ? Math.round((funnel.won / (funnel.quoted + funnel.won)) * 100) 
-    : 0;
+  const quoteToWinRate =
+    funnel.quoted + funnel.won > 0
+      ? Math.round((funnel.won / (funnel.quoted + funnel.won)) * 100)
+      : 0;
 
-  // Property / Service categories breakdown
   const propertyTypes = {};
   leads.forEach((l) => {
     const type = l.propertyType || 'villa';
     propertyTypes[type] = (propertyTypes[type] || 0) + 1;
   });
 
-  // Google Reviews breakdown
   const googleReviews = reviews.filter((r) => r.source === 'google');
   const directReviews = reviews.filter((r) => r.source === 'direct');
-  const averageRating = reviews.length > 0
-    ? Math.round((reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length) * 10) / 10
-    : 4.9;
+  const averageRating =
+    reviews.length > 0
+      ? Math.round((reviews.reduce((acc, r) => acc + r.rating, 0) / reviews.length) * 10) / 10
+      : 0;
 
-  // Monthly trends (Last 6 Months)
   const monthNames = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-  const currentMonthIndex = new Date().getMonth();
-  
+  const now = new Date();
   const monthlyData = [];
+
   for (let i = 5; i >= 0; i--) {
-    const idx = (currentMonthIndex - i + 12) % 12;
-    const name = monthNames[idx];
-    
-    // Calculate actual or realistic monthly aggregate
-    const monthLeads = leads.filter((l) => new Date(l.createdAt).getMonth() === idx).length;
-    const monthQuotes = quotes.filter((q) => new Date(q.createdAt).getMonth() === idx);
+    const cursor = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    const year = cursor.getFullYear();
+    const month = cursor.getMonth();
+    const name = `${monthNames[month]} ${String(year).slice(2)}`;
+
+    const inMonth = (d) => {
+      const dt = new Date(d);
+      return dt.getFullYear() === year && dt.getMonth() === month;
+    };
+
+    const monthLeads = leads.filter((l) => inMonth(l.createdAt)).length;
+    const monthQuotes = quotes.filter((q) => inMonth(q.createdAt));
     const monthRevenue = monthQuotes
       .filter((q) => q.status === 'accepted' || q.paymentStatus === 'paid')
       .reduce((acc, q) => acc + (q.grandTotal || 0), 0);
 
     monthlyData.push({
       month: name,
-      leadsCount: monthLeads > 0 ? monthLeads : Math.floor(Math.random() * 8) + 4,
-      quotesCount: monthQuotes.length > 0 ? monthQuotes.length : Math.floor(Math.random() * 5) + 2,
-      revenueAED: monthRevenue > 0 ? monthRevenue : Math.floor(Math.random() * 150000) + 80000,
+      leadsCount: monthLeads,
+      quotesCount: monthQuotes.length,
+      revenueAED: monthRevenue,
     });
   }
 
-  // Quote status distribution
   const quoteStatusCounts = {
     draft: quotes.filter((q) => q.status === 'draft').length,
     sent: quotes.filter((q) => q.status === 'sent').length,
     accepted: quotes.filter((q) => q.status === 'accepted').length,
     rejected: quotes.filter((q) => q.status === 'rejected').length,
   };
+
+  const hasGoogleKey = Boolean(
+    (settings?.googleApiKey && String(settings.googleApiKey).trim()) ||
+      env.google.placesApiKey
+  );
+  const hasPlaceId = Boolean(
+    (settings?.googlePlaceId && String(settings.googlePlaceId).trim()) || env.google.placeId
+  );
 
   res.status(200).json(
     new ApiResponse(
@@ -114,6 +136,17 @@ export const getAnalyticsSummary = asyncHandler(async (req, res) => {
         projectsSummary: {
           published: projects.filter((p) => p.isPublished).length,
           total: projects.length,
+        },
+        integrations: {
+          googleConfigured: hasGoogleKey && hasPlaceId,
+          autoSyncEnabled: settings?.autoSyncGoogleReviews !== false,
+          lastGoogleSyncAt: settings?.lastGoogleSyncAt || null,
+          stripeConfigured: Boolean(env.stripe.secretKey),
+        },
+        rangeNote: 'Monthly series covers the last 6 calendar months (real counts only).',
+        recentActivityWindow: {
+          leadsLast6Months: leads.filter((l) => inLastNMonths(l.createdAt, 6)).length,
+          quotesLast6Months: quotes.filter((q) => inLastNMonths(q.createdAt, 6)).length,
         },
       },
       'Analytics summary retrieved successfully'

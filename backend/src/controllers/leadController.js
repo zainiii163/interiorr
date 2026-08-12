@@ -68,6 +68,7 @@ export const listLeads = asyncHandler(async (req, res) => {
 
   if (req.query.status) filter.status = normalizeLeadStatusFilter(req.query.status);
   if (req.query.service) filter.service = req.query.service;
+  if (req.query.leadType) filter.leadType = req.query.leadType;
 
   if (req.query.search) {
     const term = req.query.search.trim();

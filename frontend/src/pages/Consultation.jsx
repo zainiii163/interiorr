@@ -6,6 +6,8 @@ import { apiFetch } from '../services/api';
 export default function Consultation() {
   const [searchParams] = useSearchParams();
   const initialService = searchParams.get('service') || '';
+  const materialHint = searchParams.get('material') || '';
+  const styleHint = searchParams.get('style') || '';
 
   const [activeServices, setActiveServices] = useState([]);
   const [formData, setFormData] = useState({
@@ -15,7 +17,12 @@ export default function Consultation() {
     propertyType: 'Villa',
     service: initialService || '',
     location: '',
-    message: '',
+    message: [
+      materialHint ? `Interested in material: ${materialHint}.` : '',
+      styleHint ? `Preferred design style: ${styleHint}.` : '',
+    ]
+      .filter(Boolean)
+      .join(' '),
     preferredContactMethod: 'WhatsApp'
   });
 
@@ -88,7 +95,8 @@ export default function Consultation() {
         </div>
       </section>
 
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
         
         {submittedLead ? (
           <div className="bg-white p-10 rounded-2xl border border-stone-200 shadow-xl text-center space-y-6">
@@ -267,6 +275,30 @@ export default function Consultation() {
           </div>
         )}
 
+          <aside className="space-y-4">
+            <div className="p-6 rounded-2xl bg-stone-900 text-white">
+              <Calendar className="w-6 h-6 text-[#C4795A] mb-3" />
+              <h3 className="font-serif text-lg font-bold mb-2">What happens next</h3>
+              <p className="text-sm text-stone-300 leading-relaxed">
+                A planner contacts you within 2 hours, then we schedule a free site visit and prepare a detailed scope of work.
+              </p>
+            </div>
+            {[
+              { icon: ShieldCheck, title: 'Warranty', body: 'Up to 10 years on kitchens, wardrobes and cabinets.' },
+              { icon: CheckCircle2, title: 'Free basic design', body: '2D and 3D drawings included for confirmed projects.' },
+              { icon: ArrowRight, title: 'Job applications', body: 'Apply via Careers — inquiry forms are not used for hiring.' },
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="p-6 rounded-2xl bg-white border border-stone-200">
+                  <Icon className="w-5 h-5 text-[#5C7A6B] mb-2" />
+                  <h3 className="font-serif font-bold text-stone-900">{item.title}</h3>
+                  <p className="text-xs text-stone-600 mt-1">{item.body}</p>
+                </div>
+              );
+            })}
+          </aside>
+        </div>
       </section>
 
     </div>

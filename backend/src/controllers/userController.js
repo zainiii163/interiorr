@@ -13,6 +13,24 @@ function formatUser(user) {
   };
 }
 
+export const listDirectory = asyncHandler(async (req, res) => {
+  const users = await User.find({ isActive: true })
+    .select('name email role')
+    .sort({ name: 1 });
+  res.status(200).json(
+    new ApiResponse(
+      200,
+      users.map((u) => ({
+        _id: u._id,
+        id: u._id,
+        name: u.name,
+        email: u.email,
+        role: u.role,
+      }))
+    )
+  );
+});
+
 export const listUsers = asyncHandler(async (req, res) => {
   const users = await User.find().select('-password -refreshToken').sort({ createdAt: -1 });
   res.status(200).json(new ApiResponse(200, users.map(formatUser)));
@@ -30,6 +48,10 @@ export const createUser = asyncHandler(async (req, res) => {
 
   const exists = await User.findOne({ email: email.toLowerCase() });
   if (exists) throw new ApiError(400, 'User with this email already exists');
+
+  if (role && !['admin', 'manager', 'editor'].includes(role)) {
+    throw new ApiError(400, 'Role must be admin, manager, or editor');
+  }
 
   const active = status ? status === 'active' : isActive !== false;
 
@@ -52,7 +74,12 @@ export const updateUser = asyncHandler(async (req, res) => {
 
   if (name) user.name = name;
   if (email) user.email = email.toLowerCase();
-  if (role) user.role = role;
+  if (role) {
+    if (!['admin', 'manager', 'editor'].includes(role)) {
+      throw new ApiError(400, 'Role must be admin, manager, or editor');
+    }
+    user.role = role;
+  }
   if (status !== undefined) user.isActive = status === 'active';
   else if (isActive !== undefined) user.isActive = isActive;
   if (password) {

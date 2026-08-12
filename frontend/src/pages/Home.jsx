@@ -6,10 +6,13 @@ import { apiFetch } from '../services/api';
 import HeroSection from '../components/home/HeroSection';
 import ExpertisePillars from '../components/home/ExpertisePillars';
 import PromiseGrid from '../components/home/PromiseGrid';
+import ProcessGrid from '../components/home/ProcessGrid';
 import ProjectShowcase from '../components/home/ProjectShowcase';
 import FeatureSplit from '../components/home/FeatureSplit';
 import VideoShowcase from '../components/home/VideoShowcase';
 import SkillsSection from '../components/home/SkillsSection';
+import HomeConsultation from '../components/home/HomeConsultation';
+import DesignStyleExplorer from '../components/home/DesignStyleExplorer';
 import Marquee from '../components/ui/Marquee';
 import ScrollReveal from '../components/ui/ScrollReveal';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
@@ -23,6 +26,7 @@ export default function Home() {
   const [partners, setPartners] = useState([]);
   const [expertisePillars, setExpertisePillars] = useState([]);
   const [promisePillars, setPromisePillars] = useState([]);
+  const [processPillars, setProcessPillars] = useState([]);
   const [reviewMeta, setReviewMeta] = useState({ count: 0, averageRating: 0 });
 
   const stats = settings.statistics || {};
@@ -30,7 +34,7 @@ export default function Home() {
   useEffect(() => {
     const load = async () => {
       try {
-        const [servRes, projRes, styleRes, revRes, partRes, expRes, promRes] = await Promise.all([
+        const [servRes, projRes, styleRes, revRes, partRes, expRes, promRes, procRes] = await Promise.all([
           apiFetch('/services'),
           apiFetch('/projects?limit=12'),
           apiFetch('/design-styles'),
@@ -38,11 +42,12 @@ export default function Home() {
           apiFetch('/partners'),
           apiFetch('/trust-pillars?section=expertise'),
           apiFetch('/trust-pillars?section=promise'),
+          apiFetch('/trust-pillars?section=process'),
         ]);
 
         if (servRes.success) setServices(servRes.data);
         if (projRes.success) setProjects(projRes.data);
-        if (styleRes.success) setDesignStyles(styleRes.data.slice(0, 4));
+        if (styleRes.success) setDesignStyles(styleRes.data);
         if (revRes.success) {
           setReviews(revRes.data.slice(0, 4));
           setReviewMeta({
@@ -53,6 +58,7 @@ export default function Home() {
         if (partRes.success) setPartners(partRes.data);
         if (expRes.success) setExpertisePillars(expRes.data);
         if (promRes.success) setPromisePillars(promRes.data);
+        if (procRes.success) setProcessPillars(procRes.data);
       } catch (e) {
         console.error('Error loading home data:', e);
       }
@@ -66,10 +72,8 @@ export default function Home() {
 
   return (
     <div className="page-content">
-      {/* 1. Hero */}
       <HeroSection settings={settings} />
 
-      {/* 2. Partners */}
       {partners.length > 0 && (
         <section className="py-10 bg-stone-900 border-y border-stone-800">
           <ScrollReveal className="text-center mb-2 px-4">
@@ -84,13 +88,10 @@ export default function Home() {
         </section>
       )}
 
-      {/* 3. Expertise (Halo-style joinery / fit-out / finishes / design hub) */}
       <ExpertisePillars pillars={expertisePillars} />
 
-      {/* 4. Featured projects with filters */}
       <ProjectShowcase projects={showcaseProjects} />
 
-      {/* 5. Stats / About strip */}
       {(stats.yearsExperience > 0 || stats.completedProjects > 0) && (
         <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white border-y border-stone-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -133,13 +134,12 @@ export default function Home() {
         </section>
       )}
 
-      {/* 6. Inspection + Air Quality (Halo split) */}
       <FeatureSplit services={services} />
 
-      {/* 7. Our Promise (Yalla) */}
       <PromiseGrid pillars={promisePillars} />
 
-      {/* 8. Full services grid (single, Halo-style) */}
+      <HomeConsultation />
+
       {services.length > 0 && (
         <section className="py-24 bg-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -176,7 +176,6 @@ export default function Home() {
         </section>
       )}
 
-      {/* 9. Reviews */}
       {reviews.length > 0 && (
         <section className="py-24 bg-stone-50">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -227,57 +226,14 @@ export default function Home() {
         </section>
       )}
 
-      {/* 10. Video */}
       <VideoShowcase />
 
-      {/* 11. Design styles */}
-      {designStyles.length > 0 && (
-        <section className="py-24 bg-stone-100">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <ScrollReveal className="text-center mb-14">
-              <span className="text-[#5C7A6B] font-semibold text-xs uppercase tracking-widest">Interior Design Styles</span>
-              <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">Every Style Executed to Perfection</h2>
-            </ScrollReveal>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-              {designStyles.map((style, i) => (
-                <ScrollReveal key={style._id} delay={i * 90}>
-                  <Link
-                    to={`/design-styles/${style.slug}`}
-                    className="group relative rounded-3xl overflow-hidden h-80 shadow-xl hover-lift block"
-                  >
-                    {style.image && (
-                      <img
-                        src={style.image}
-                        alt={style.name}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-stone-950/90 to-transparent p-6 flex flex-col justify-end">
-                      <h3 className="font-serif text-xl font-bold text-white group-hover:text-[#C4795A] transition-colors">
-                        {style.name}
-                      </h3>
-                      <p className="text-xs text-stone-300 mt-1">{style.tagline}</p>
-                    </div>
-                  </Link>
-                </ScrollReveal>
-              ))}
-            </div>
-            <ScrollReveal className="text-center mt-10">
-              <Link
-                to="/design-styles"
-                className="btn-sage inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm"
-              >
-                Explore All Design Styles <ArrowRight className="w-4 h-4" />
-              </Link>
-            </ScrollReveal>
-          </div>
-        </section>
-      )}
+      <DesignStyleExplorer styles={designStyles} />
 
-      {/* 12. Skills */}
       <SkillsSection settings={settings} />
 
-      {/* 13. Materials / Experience Center (Yalla) */}
+      <ProcessGrid pillars={processPillars} />
+
       <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center">
@@ -298,6 +254,12 @@ export default function Home() {
                 Browse Materials <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
+                to="/commercial"
+                className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm border border-stone-600 text-stone-200 hover:bg-white/10 transition"
+              >
+                Commercial Fit-Out
+              </Link>
+              <Link
                 to="/careers"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm border border-stone-600 text-stone-200 hover:bg-white/10 transition"
               >
@@ -308,7 +270,6 @@ export default function Home() {
         </div>
       </section>
 
-      {/* 14. Final CTA */}
       <section className="relative py-28 overflow-hidden">
         {settings.ctaBandImage && (
           <img

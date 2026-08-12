@@ -16,6 +16,7 @@ import { JobApplication } from '../models/JobApplication.js';
 import { JobOpening } from '../models/JobOpening.js';
 import { NavItem } from '../models/NavItem.js';
 import { Material } from '../models/Material.js';
+import { Media } from '../models/Media.js';
 import { slugify } from '../utils/slugify.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -43,6 +44,7 @@ async function seed() {
     JobOpening.deleteMany({}),
     NavItem.deleteMany({}),
     Material.deleteMany({}),
+    Media.deleteMany({}),
   ]);
 
   console.log('Creating admin user...');
@@ -51,6 +53,14 @@ async function seed() {
     email: 'admin@interior.com',
     password: 'Admin@123',
     role: 'admin',
+  });
+
+  console.log('Creating manager user...');
+  const manager = await User.create({
+    name: 'Sales Manager',
+    email: 'manager@interior.com',
+    password: 'Manager@123',
+    role: 'manager',
   });
 
   console.log('Creating editor user...');
@@ -69,6 +79,8 @@ async function seed() {
     'Bathroom Renovation': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80',
     'Bespoke Joinery': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
     'Property Inspection': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
+    'Office Fit-Out': 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
+    'Windows & Doors': 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
   };
   const servicesData = loadJson('services.json');
   const services = await Service.insertMany(
@@ -87,51 +99,27 @@ async function seed() {
     'https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?auto=format&fit=crop&w=800&q=80',
     'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1615874959474-d609969a20ed?auto=format&fit=crop&w=800&q=80',
+    'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=800&q=80',
   ];
   const stylesData = loadJson('designStyles.json');
   await DesignStyle.insertMany(
     stylesData.map((s, index) => ({
       ...s,
       slug: slugify(s.name),
-      description: `${s.tagline}. A refined interior style executed to perfection.`,
+      description: s.description || `${s.tagline}. A refined interior style executed to perfection.`,
       image: styleImages[index % styleImages.length],
       isActive: true,
     }))
   );
 
   console.log('Seeding trust pillars...');
-  const promisePillars = loadJson('trustPillars.json').map((p) => ({ ...p, section: 'promise' }));
-  await TrustPillar.insertMany([
-    ...promisePillars,
-    {
-      title: 'Carpentry & Joinery',
-      description: '25+ years experience • 75 skilled craftsmen • 15,000 sq.ft Al Quoz facility • Value engineering for every budget.',
-      icon: 'Hammer',
-      section: 'expertise',
-      order: 1,
-    },
-    {
-      title: 'Turnkey Fit-Outs',
-      description: 'From palaces to penthouses, hotels to retail — one-stop design, procurement, permits and execution.',
-      icon: 'Building2',
-      section: 'expertise',
-      order: 2,
-    },
-    {
-      title: 'Decorative Finishes',
-      description: 'In-house artisans for microcement, terrazzo, decorative paints and specialty wall treatments.',
-      icon: 'Paintbrush',
-      section: 'expertise',
-      order: 3,
-    },
-    {
-      title: 'Design Hub',
-      description: 'We collaborate with leading designers and connect them to our exclusive VIP clientele across Dubai.',
-      icon: 'Users',
-      section: 'expertise',
-      order: 4,
-    },
-  ]);
+  await TrustPillar.insertMany(loadJson('trustPillars.json'));
 
   console.log('Seeding reviews...');
   await Review.insertMany([
@@ -186,7 +174,7 @@ async function seed() {
   ]);
 
   console.log('Seeding projects...');
-  await Project.insertMany([
+  const projects = await Project.insertMany([
     {
       title: 'Dubai Creek Harbour Villa',
       slug: 'dubai-creek-harbour-villa',
@@ -194,6 +182,15 @@ async function seed() {
       category: 'residential',
       location: 'Dubai Creek Harbour',
       coverImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+      beforeAfter: {
+        before: 'https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=800',
+        after: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+      },
+      gallery: [
+        { url: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800', caption: 'Living lounge' },
+        { url: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800', caption: 'Kitchen' },
+        { url: 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?w=800', caption: 'Master suite' },
+      ],
       scope: 'Design, joinery, MEP, finishes',
       duration: '10 weeks',
       isFeatured: true,
@@ -208,6 +205,14 @@ async function seed() {
       category: 'residential',
       location: 'Dubai Marina',
       coverImage: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
+      beforeAfter: {
+        before: 'https://images.unsplash.com/photo-1556912173-46c336c7fd55?w=800',
+        after: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800',
+      },
+      gallery: [
+        { url: 'https://images.unsplash.com/photo-1556911220-bff31c812dba?w=800', caption: 'Custom kitchen' },
+        { url: 'https://images.unsplash.com/photo-1620626011761-996317b8d101?w=800', caption: 'Bathroom' },
+      ],
       scope: 'Kitchen, bathrooms, flooring',
       duration: '8 weeks',
       isFeatured: true,
@@ -222,6 +227,10 @@ async function seed() {
       category: 'commercial',
       location: 'Business Bay',
       coverImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?w=800',
+      gallery: [
+        { url: 'https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=800', caption: 'Open workspace' },
+        { url: 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=800', caption: 'Boardroom' },
+      ],
       scope: 'Fit-out, joinery, lighting',
       duration: '12 weeks',
       isFeatured: true,
@@ -236,6 +245,9 @@ async function seed() {
       category: 'retail',
       location: 'DIFC',
       coverImage: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800',
+      gallery: [
+        { url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=800', caption: 'Boutique floor' },
+      ],
       scope: 'Retail fit-out, display joinery',
       duration: '6 weeks',
       isFeatured: true,
@@ -243,6 +255,23 @@ async function seed() {
       completedAt: new Date('2026-01-10'),
     },
   ]);
+
+  // Link first design styles to related projects
+  const styles = await DesignStyle.find().sort({ createdAt: 1 }).limit(4);
+  if (styles[0] && projects[0]) {
+    styles[0].relatedProjects = [projects[0]._id, projects[1]._id];
+    await styles[0].save();
+  }
+  if (styles[1] && projects[1]) {
+    styles[1].relatedProjects = [projects[1]._id, projects[2]._id];
+    await styles[1].save();
+  }
+  if (projects[0] && styles[0]) {
+    await Project.findByIdAndUpdate(projects[0]._id, { designStyle: styles[0]._id });
+  }
+  if (projects[1] && styles[1]) {
+    await Project.findByIdAndUpdate(projects[1]._id, { designStyle: styles[1]._id });
+  }
 
   console.log('Seeding materials...');
   await Material.insertMany([
@@ -368,6 +397,34 @@ async function seed() {
     },
   ]);
 
+  console.log('Seeding home media (video showcase)...');
+  await Media.insertMany([
+    {
+      type: 'video',
+      title: 'Villa Transformation Showcase',
+      url: 'https://www.youtube.com/embed/ScMzIvxBSi4',
+      thumbnail: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?w=800',
+      placement: 'home',
+      order: 1,
+    },
+    {
+      type: 'video',
+      title: 'Craftsmanship & Joinery',
+      url: 'https://www.youtube.com/embed/aqz-KE-bpKQ',
+      thumbnail: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800',
+      placement: 'home',
+      order: 2,
+    },
+    {
+      type: 'image',
+      title: 'Studio Atmosphere',
+      url: 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?w=1200',
+      thumbnail: 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?w=400',
+      placement: 'about',
+      order: 1,
+    },
+  ]);
+
   console.log('Seeding site settings...');
   await SiteSetting.create({
     companyName: 'Aura Luxury Interiors & Renovations Dubai',
@@ -411,6 +468,12 @@ async function seed() {
       'In-House Cabinetry & Millwork Workshop in Dubai',
       'Dedicated Project Managers & Thermal Snagging Engineers',
       'Full Transparency with Detailed BOQ & Fixed Timeline Guarantee',
+    ],
+    certifications: [
+      'Dubai Municipality Approved Contractor',
+      'DEWA Registered Electrical Works',
+      'Civil Defence Fire Safety Compliant',
+      'Trakhees / DDA Fit-Out Approvals',
     ],
     aboutImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
     mission: 'To deliver world-class turnkey interior fit-outs with uncompromising craftsmanship, transparent communication, and flawless Dubai authority approvals.',
@@ -471,7 +534,22 @@ async function seed() {
       preferredContact: 'whatsapp',
       source: 'Consultation Booking Page',
       leadType: 'consultation',
+      status: 'quoted',
+      assignedTo: manager._id,
+    },
+    {
+      fullName: 'Omar Hassan',
+      email: 'omar@example.com',
+      phone: '+971502223344',
+      propertyType: 'apartment',
+      service: services[1]?._id || services[0]._id,
+      location: 'Downtown Dubai',
+      message: 'Kitchen and living room fit-out quote needed.',
+      preferredContact: 'whatsapp',
+      source: 'Website Hero CTA',
+      leadType: 'consultation',
       status: 'new',
+      assignedTo: manager._id,
     },
     {
       fullName: 'James Wilson',
@@ -482,6 +560,7 @@ async function seed() {
       source: 'Contact Page Form',
       leadType: 'contact',
       status: 'contacted',
+      assignedTo: admin._id,
     },
   ]);
 
@@ -490,6 +569,7 @@ async function seed() {
   if (sampleLead) {
     await Quote.create({
       quoteNumber: `Q-${new Date().getFullYear()}-0001`,
+      accessCode: 'P-8F92A1C3',
       lead: sampleLead._id,
       lineItems: [
         { description: 'Design & planning', quantity: 1, unitPrice: 15000, total: 15000 },
@@ -499,7 +579,7 @@ async function seed() {
       tax: 5000,
       discount: 0,
       grandTotal: 105000,
-      status: 'draft',
+      status: 'sent',
       createdBy: admin._id,
     });
   }
@@ -520,10 +600,11 @@ async function seed() {
       megaMenuCtaLabel: 'Explore Services',
       megaMenuCtaPath: '/services',
     },
+    { label: 'Commercial', path: '/commercial', order: 4, placement: 'header', isActive: true, menuType: 'link' },
     {
       label: 'Projects',
       path: '/projects',
-      order: 4,
+      order: 5,
       placement: 'header',
       isActive: true,
       menuType: 'mega',
@@ -535,7 +616,7 @@ async function seed() {
     {
       label: 'Styles',
       path: '/design-styles',
-      order: 5,
+      order: 6,
       placement: 'header',
       isActive: true,
       menuType: 'mega',
@@ -544,20 +625,25 @@ async function seed() {
       megaMenuCtaLabel: 'Explore Styles',
       megaMenuCtaPath: '/design-styles',
     },
-    { label: 'Reviews', path: '/reviews', order: 6, placement: 'header', isActive: true, menuType: 'link' },
-    { label: 'Careers', path: '/careers', order: 7, placement: 'header', isActive: true, menuType: 'link' },
-    { label: 'Contact', path: '/contact', order: 8, placement: 'header', isActive: true, menuType: 'link' },
+    { label: 'Reviews', path: '/reviews', order: 7, placement: 'header', isActive: true, menuType: 'link' },
+    { label: 'Materials', path: '/materials', order: 8, placement: 'header', isActive: true, menuType: 'link' },
+    { label: 'Careers', path: '/careers', order: 9, placement: 'header', isActive: true, menuType: 'link' },
+    { label: 'Contact', path: '/contact', order: 10, placement: 'header', isActive: true, menuType: 'link' },
     { label: 'About', path: '/about', order: 1, placement: 'footer', isActive: true },
-    { label: 'Our Services', path: '/services', order: 2, placement: 'footer', isActive: true },
+    { label: 'Commercial Fit-Out', path: '/commercial', order: 2, placement: 'footer', isActive: true },
     { label: 'Project Portfolio', path: '/projects', order: 3, placement: 'footer', isActive: true },
     { label: 'Design Styles', path: '/design-styles', order: 4, placement: 'footer', isActive: true },
-    { label: 'Client Reviews', path: '/reviews', order: 5, placement: 'footer', isActive: true },
-    { label: 'Careers', path: '/careers', order: 6, placement: 'footer', isActive: true },
+    { label: 'Materials', path: '/materials', order: 5, placement: 'footer', isActive: true },
+    { label: 'Client Reviews', path: '/reviews', order: 6, placement: 'footer', isActive: true },
+    { label: 'Book Consultation', path: '/consultation', order: 7, placement: 'footer', isActive: true },
+    { label: 'Client Portal', path: '/portal', order: 8, placement: 'footer', isActive: true },
+    { label: 'Careers', path: '/careers', order: 9, placement: 'footer', isActive: true },
   ]);
 
   console.log('\nSeed complete.');
-  console.log('Admin login: admin@interior.com / Admin@123');
-  console.log('Editor login: editor@interior.com / Editor@123');
+  console.log('Admin login:   admin@interior.com / Admin@123');
+  console.log('Manager login: manager@interior.com / Manager@123');
+  console.log('Editor login:  editor@interior.com / Editor@123');
   process.exit(0);
 }
 

@@ -14,6 +14,10 @@ import {
   Building,
   Star,
   Sparkles,
+  Receipt,
+  Package,
+  HardHat,
+  Palette,
 } from 'lucide-react';
 
 const ICON_MAP = {
@@ -32,6 +36,10 @@ const ICON_MAP = {
   Building,
   Star,
   Sparkles,
+  Receipt,
+  Package,
+  HardHat,
+  Palette,
 };
 
 export function getPillarIcon(name) {

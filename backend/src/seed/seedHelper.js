@@ -69,44 +69,13 @@ export async function seedData() {
     stylesData.map((s, index) => ({
       ...s,
       slug: slugify(s.name),
-      description: `${s.tagline}. A refined interior style executed to perfection.`,
+      description: s.description || `${s.tagline}. A refined interior style executed to perfection.`,
       image: styleImages[index % styleImages.length],
       isActive: true,
     }))
   );
 
-  const promisePillars = loadJson('trustPillars.json').map((p) => ({ ...p, section: 'promise' }));
-  await TrustPillar.insertMany([
-    ...promisePillars,
-    {
-      title: 'Carpentry & Joinery',
-      description: '25+ years experience • 75 skilled craftsmen • 15,000 sq.ft Al Quoz facility • Value engineering for every budget.',
-      icon: 'Hammer',
-      section: 'expertise',
-      order: 1,
-    },
-    {
-      title: 'Turnkey Fit-Outs',
-      description: 'From palaces to penthouses, hotels to retail — one-stop design, procurement, permits and execution.',
-      icon: 'Building2',
-      section: 'expertise',
-      order: 2,
-    },
-    {
-      title: 'Decorative Finishes',
-      description: 'In-house artisans for microcement, terrazzo, decorative paints and specialty wall treatments.',
-      icon: 'Paintbrush',
-      section: 'expertise',
-      order: 3,
-    },
-    {
-      title: 'Design Hub',
-      description: 'We collaborate with leading designers and connect them to our exclusive VIP clientele across Dubai.',
-      icon: 'Users',
-      section: 'expertise',
-      order: 4,
-    },
-  ]);
+  await TrustPillar.insertMany(loadJson('trustPillars.json'));
 
   await Review.insertMany([
     {
