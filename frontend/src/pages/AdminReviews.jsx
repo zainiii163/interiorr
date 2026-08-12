@@ -78,17 +78,44 @@ export default function AdminReviews() {
     }
   };
 
+  const [syncingGoogle, setSyncingGoogle] = useState(false);
+
+  const handleSyncGoogle = async () => {
+    setSyncingGoogle(true);
+    try {
+      const res = await apiFetch('/reviews/sync-google', { method: 'POST' });
+      if (res.success) {
+        alert(res.message || 'Google Business reviews synced successfully!');
+        fetchReviews();
+      }
+    } catch (err) {
+      alert('Failed to sync Google reviews: ' + err.message);
+    } finally {
+      setSyncingGoogle(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">Customer Reviews</h1>
-          <p className="text-xs text-stone-500 mt-1">Manage testimonials shown on the home page and reviews page</p>
+          <h1 className="font-serif text-3xl font-bold text-stone-900">Customer & Google Reviews</h1>
+          <p className="text-xs text-stone-500 mt-1">Manage testimonials and auto-synced Google Business Profile reviews</p>
         </div>
-        <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
-          <Plus className="w-4 h-4" />
-          <span>Add Review</span>
-        </button>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={handleSyncGoogle}
+            disabled={syncingGoogle}
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-900 hover:bg-stone-800 text-white flex items-center space-x-2 shadow-md transition disabled:opacity-50"
+          >
+            <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+            <span>{syncingGoogle ? 'Syncing...' : 'Sync Google Reviews'}</span>
+          </button>
+          <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
+            <Plus className="w-4 h-4" />
+            <span>Add Review</span>
+          </button>
+        </div>
       </div>
 
       <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
@@ -96,6 +123,7 @@ export default function AdminReviews() {
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
             <tr>
               <th className="py-3.5 px-4">Customer</th>
+              <th className="py-3.5 px-4">Source</th>
               <th className="py-3.5 px-4">Rating</th>
               <th className="py-3.5 px-4">Review</th>
               <th className="py-3.5 px-4">Status</th>
@@ -106,16 +134,23 @@ export default function AdminReviews() {
             {reviews.map((rev) => (
               <tr key={rev._id} className="hover:bg-stone-50">
                 <td className="py-3.5 px-4">
-                  <div className="font-bold text-stone-900">{rev.customerName}</div>
+                  <div className="font-bold text-stone-900">{rev.customerName || rev.authorName}</div>
                   <div className="text-stone-500">{rev.authorTitle}</div>
                 </td>
                 <td className="py-3.5 px-4">
+                  <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold uppercase ${
+                    rev.source === 'google' ? 'bg-blue-100 text-blue-800 border border-blue-200' : 'bg-stone-100 text-stone-700'
+                  }`}>
+                    {rev.source === 'google' ? 'G-Business' : 'Direct'}
+                  </span>
+                </td>
+                <td className="py-3.5 px-4">
                   <span className="inline-flex items-center text-amber-600 font-bold">
-                    <Star className="w-3.5 h-3.5 fill-current mr-1" />
+                    <Star className="w-3.5 h-3.5 fill-current mr-1 text-amber-400" />
                     {rev.rating}
                   </span>
                 </td>
-                <td className="py-3.5 px-4 text-stone-600 max-w-md truncate">{rev.reviewText}</td>
+                <td className="py-3.5 px-4 text-stone-600 max-w-md truncate">{rev.reviewText || rev.content}</td>
                 <td className="py-3.5 px-4 space-x-1">
                   {rev.isFeatured && <span className="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[10px] font-bold">FEATURED</span>}
                   <span className={`px-2 py-0.5 rounded-full text-[10px] font-bold ${rev.isPublished ? 'bg-emerald-100 text-emerald-800' : 'bg-stone-200 text-stone-600'}`}>

@@ -53,13 +53,22 @@ export default function AdminDashboard() {
             {loading ? 'Loading metrics…' : 'System status normal • Dubai Interior Management & Quotation Engine'}
           </p>
         </div>
-        <Link
-          to="/admin/quotes"
-          className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md"
-        >
-          <Plus className="w-4 h-4" />
-          <span>Generate Quote</span>
-        </Link>
+        <div className="flex items-center space-x-3">
+          <Link
+            to="/admin/analytics"
+            className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-800 hover:bg-stone-700 text-stone-200 border border-stone-700 flex items-center space-x-2 shadow-md transition"
+          >
+            <TrendingUp className="w-4 h-4 text-[#C4795A]" />
+            <span>View Analytics</span>
+          </Link>
+          <Link
+            to="/admin/quotes"
+            className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md"
+          >
+            <Plus className="w-4 h-4" />
+            <span>Generate Quote</span>
+          </Link>
+        </div>
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">

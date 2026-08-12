@@ -158,8 +158,14 @@ export default function Navbar() {
   const linkClass =
     'text-[10px] xl:text-[11px] 2xl:text-xs font-semibold tracking-[0.12em] 2xl:tracking-widest uppercase transition-all duration-200 whitespace-nowrap';
 
-  const renderDesktopNavLinks = () =>
-    navLinks.map((link) => {
+  const renderDesktopNavLinks = () => {
+    const staticLinks = [
+      { _id: 'static-materials', label: 'Materials', path: '/materials', menuType: 'link' },
+    ];
+    
+    const allLinks = [...navLinks, ...staticLinks];
+    
+    return allLinks.map((link) => {
       const isMega = isMegaMenuItem(link);
       const isActive = location.pathname === link.path || activeMegaId === link._id;
       const isMegaOpen = activeMegaId === link._id;
@@ -190,6 +196,7 @@ export default function Navbar() {
         />
       );
     });
+  };
 
   const headerShell = scrolled || activeMegaId
     ? 'bg-stone-900/98 backdrop-blur-xl shadow-2xl py-3 border-b border-stone-800 text-white'
@@ -272,6 +279,13 @@ export default function Navbar() {
                 />
               );
             })}
+            <Link
+              to="/materials"
+              onClick={() => setIsOpen(false)}
+              className="block text-lg font-semibold text-stone-300 hover:text-[#C4795A] py-3 px-4 rounded-xl hover:bg-white/5 transition uppercase tracking-wide"
+            >
+              Materials
+            </Link>
             <div className="pt-6 border-t border-stone-800 space-y-3">
               {user && (
                 <Link

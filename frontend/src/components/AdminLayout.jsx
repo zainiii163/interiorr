@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
-import { 
+import {
   LayoutDashboard, Users, FileText, Layers, FolderKanban,
   Settings, LogOut, ArrowLeft, Star, Handshake, Palette, Shield,
-  ShieldCheck, Briefcase, ClipboardList, Compass,
+  ShieldCheck, Briefcase, ClipboardList, Compass, TrendingUp,
+  Package, Image as ImageIcon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,6 +12,12 @@ export default function AdminLayout() {
   const { user, loading, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/admin/login');
+    }
+  }, [loading, user, navigate]);
 
   if (loading) {
     return (
@@ -21,7 +28,6 @@ export default function AdminLayout() {
   }
 
   if (!user) {
-    navigate('/admin/login');
     return null;
   }
 
@@ -32,6 +38,7 @@ export default function AdminLayout() {
 
   const navItems = [
     { name: 'Dashboard', path: '/admin/dashboard', icon: LayoutDashboard },
+    { name: 'Analytics & Revenue', path: '/admin/analytics', icon: TrendingUp },
     { name: 'Leads & Inquiries', path: '/admin/leads', icon: Users },
     { name: 'Job Openings', path: '/admin/job-openings', icon: Briefcase },
     { name: 'Job Applications', path: '/admin/applications', icon: ClipboardList },
@@ -39,6 +46,8 @@ export default function AdminLayout() {
     { name: 'Services', path: '/admin/services', icon: Layers },
     { name: 'Projects', path: '/admin/projects', icon: FolderKanban },
     { name: 'Design Styles', path: '/admin/design-styles', icon: Palette },
+    { name: 'Materials', path: '/admin/materials', icon: Package },
+    { name: 'Media Library', path: '/admin/media', icon: ImageIcon },
     { name: 'Trust Pillars', path: '/admin/trust-pillars', icon: ShieldCheck },
     { name: 'Reviews', path: '/admin/reviews', icon: Star },
     { name: 'Partners', path: '/admin/partners', icon: Handshake },

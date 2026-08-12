@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Plus, Trash2, FileText, Printer } from 'lucide-react';
+import { Plus, Trash2, FileText, Download, Loader2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,6 +13,7 @@ export default function AdminQuotes() {
   const [leads, setLeads] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState(null);
+  const [downloadingPDF, setDownloadingPDF] = useState(null);
 
   const [formData, setFormData] = useState({
     leadId: leadIdParam,
@@ -114,6 +115,35 @@ export default function AdminQuotes() {
     }
   };
 
+  const handleDownloadPDF = async (quoteId, quoteNumber) => {
+    setDownloadingPDF(quoteId);
+    try {
+      const response = await fetch(`/api/v1/quotes/${quoteId}/pdf`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Quote-${quoteNumber}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (e) {
+      alert('Failed to download PDF: ' + e.message);
+    } finally {
+      setDownloadingPDF(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       
@@ -141,11 +171,21 @@ export default function AdminQuotes() {
             </div>
             <div className="flex items-center space-x-3">
               <button
-                onClick={() => window.print()}
-                className="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-xs font-semibold flex items-center space-x-1"
+                onClick={() => handleDownloadPDF(selectedQuote._id, selectedQuote.quoteNumber)}
+                disabled={downloadingPDF === selectedQuote._id}
+                className="px-3 py-1.5 rounded-lg bg-[#C4795A] text-white text-xs font-semibold flex items-center space-x-1 hover:bg-[#A86548] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Printer className="w-3.5 h-3.5" />
-                <span>Print PDF</span>
+                {downloadingPDF === selectedQuote._id ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download PDF</span>
+                  </>
+                )}
               </button>
               <button
                 onClick={() => setSelectedQuote(null)}
@@ -211,47 +251,88 @@ export default function AdminQuotes() {
               <th className="py-3.5 px-4">Quote Number</th>
               <th className="py-3.5 px-4">Client Name</th>
               <th className="py-3.5 px-4">Grand Total (AED)</th>
-              <th className="py-3.5 px-4">Status</th>
+              <th className="py-3.5 px-4">Quote Status</th>
+              <th className="py-3.5 px-4">Payment Status</th>
               <th className="py-3.5 px-4 text-right">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-stone-100 font-medium">
-            {quotes.map((q) => (
-              <tr key={q._id} className="hover:bg-stone-50 transition">
-                <td className="py-3.5 px-4 font-serif font-bold text-[#C4795A] text-sm">{q.quoteNumber}</td>
-                <td className="py-3.5 px-4 font-bold text-stone-900">{q.leadName}</td>
-                <td className="py-3.5 px-4 font-bold">{q.grandTotal?.toLocaleString()} AED</td>
-                <td className="py-3.5 px-4">
-                  <select
-                    value={q.status}
-                    onChange={(e) => handleStatusChange(q._id, e.target.value)}
-                    className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-stone-100 border border-stone-300"
-                  >
-                    <option value="Draft">Draft</option>
-                    <option value="Sent">Sent</option>
-                    <option value="Accepted">Accepted</option>
-                    <option value="Rejected">Rejected</option>
-                  </select>
-                </td>
-                <td className="py-3.5 px-4 text-right space-x-2">
-                  <button
-                    onClick={() => setSelectedQuote(q)}
-                    className="text-xs font-bold text-[#C4795A] hover:underline"
-                  >
-                    View BOQ
-                  </button>
-                  {isAdmin && (
-                    <button
-                      onClick={() => handleDeleteQuote(q._id)}
-                      className="p-1.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-700 inline-flex align-middle"
-                      title="Delete quote"
+            {quotes.map((q) => {
+              const portalUrl = `${window.location.origin}/portal/${q.accessCode || q.quoteNumber || q._id}`;
+              return (
+                <tr key={q._id} className="hover:bg-stone-50 transition">
+                  <td className="py-3.5 px-4">
+                    <div className="font-serif font-bold text-[#C4795A] text-sm">{q.quoteNumber}</div>
+                    {q.accessCode && (
+                      <div className="text-[10px] text-stone-400 font-mono">Code: {q.accessCode}</div>
+                    )}
+                  </td>
+                  <td className="py-3.5 px-4 font-bold text-stone-900">{q.leadName}</td>
+                  <td className="py-3.5 px-4 font-bold">{q.grandTotal?.toLocaleString()} AED</td>
+                  <td className="py-3.5 px-4">
+                    <select
+                      value={q.status}
+                      onChange={(e) => handleStatusChange(q._id, e.target.value)}
+                      className="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase bg-stone-100 border border-stone-300"
                     >
-                      <Trash2 className="w-3.5 h-3.5" />
+                      <option value="Draft">Draft</option>
+                      <option value="Sent">Sent</option>
+                      <option value="Accepted">Accepted</option>
+                      <option value="Rejected">Rejected</option>
+                    </select>
+                  </td>
+                  <td className="py-3.5 px-4">
+                    <span className={`px-2.5 py-1 rounded-full text-[10px] font-bold uppercase ${
+                      q.paymentStatus === 'paid' ? 'bg-emerald-100 text-emerald-800' :
+                      q.paymentStatus === 'pending' ? 'bg-amber-100 text-amber-800' :
+                      'bg-stone-100 text-stone-600'
+                    }`}>
+                      {q.paymentStatus || 'unpaid'}
+                    </span>
+                  </td>
+                  <td className="py-3.5 px-4 text-right space-x-2">
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(portalUrl);
+                        alert(`Client Portal link copied to clipboard!\n${portalUrl}`);
+                      }}
+                      className="px-2.5 py-1 rounded-lg bg-stone-100 hover:bg-stone-200 text-[#C4795A] font-bold text-[11px]"
+                      title="Copy Client Portal Access Link"
+                    >
+                      Client Portal Link
                     </button>
-                  )}
-                </td>
-              </tr>
-            ))}
+                    <button
+                      onClick={() => handleDownloadPDF(q._id, q.quoteNumber)}
+                      disabled={downloadingPDF === q._id}
+                      className="px-2.5 py-1 rounded-lg bg-[#C4795A] hover:bg-[#A86548] text-white font-bold text-[11px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                      title="Download PDF"
+                    >
+                      {downloadingPDF === q._id ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Download className="w-3 h-3" />
+                      )}
+                      PDF
+                    </button>
+                    <button
+                      onClick={() => setSelectedQuote(q)}
+                      className="text-xs font-bold text-stone-700 hover:underline"
+                    >
+                      View BOQ
+                    </button>
+                    {isAdmin && (
+                      <button
+                        onClick={() => handleDeleteQuote(q._id)}
+                        className="p-1.5 rounded bg-rose-100 hover:bg-rose-200 text-rose-700 inline-flex align-middle"
+                        title="Delete quote"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    )}
+                  </td>
+                </tr>
+              );
+            })}
           </tbody>
         </table>
       </div>

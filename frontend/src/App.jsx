@@ -14,14 +14,18 @@ import Projects from './pages/Projects';
 import ProjectDetail from './pages/ProjectDetail';
 import DesignStyles from './pages/DesignStyles';
 import StyleDetail from './pages/StyleDetail';
+import Materials from './pages/public/MaterialsPage';
 import Reviews from './pages/Reviews';
 import Contact from './pages/Contact';
 import Consultation from './pages/Consultation';
 import Careers from './pages/Careers';
+import ClientPortal from './pages/ClientPortal';
+import PaymentSuccess from './pages/PaymentSuccess';
 
 // Admin Pages
 import AdminLogin from './pages/AdminLogin';
 import AdminDashboard from './pages/AdminDashboard';
+import AdminAnalytics from './pages/AdminAnalytics';
 import AdminLeads from './pages/AdminLeads';
 import LeadDetailAdmin from './pages/LeadDetailAdmin';
 import AdminServices from './pages/AdminServices';
@@ -36,6 +40,8 @@ import AdminTrustPillars from './pages/AdminTrustPillars';
 import AdminJobApplications from './pages/AdminJobApplications';
 import AdminJobOpenings from './pages/AdminJobOpenings';
 import AdminNavigation from './pages/AdminNavigation';
+import AdminMaterials from './pages/AdminMaterials';
+import AdminMedia from './pages/AdminMedia';
 import NotFound from './pages/NotFound';
 
 function App() {
@@ -44,6 +50,10 @@ function App() {
       <AuthProvider>
         <div className="min-h-screen flex flex-col">
           <Routes>
+            <Route path="/portal" element={<ClientPortal />} />
+            <Route path="/portal/:code" element={<ClientPortal />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+
             <Route element={<PublicLayout />}>
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
@@ -53,6 +63,7 @@ function App() {
               <Route path="/projects/:slug" element={<ProjectDetail />} />
               <Route path="/design-styles" element={<DesignStyles />} />
               <Route path="/design-styles/:slug" element={<StyleDetail />} />
+              <Route path="/materials" element={<Materials />} />
               <Route path="/reviews" element={<Reviews />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/consultation" element={<Consultation />} />
@@ -65,6 +76,7 @@ function App() {
             <Route path="/admin" element={<AdminLayout />}>
               <Route index element={<Navigate to="/admin/dashboard" replace />} />
               <Route path="dashboard" element={<AdminDashboard />} />
+              <Route path="analytics" element={<AdminAnalytics />} />
               <Route path="leads" element={<AdminLeads />} />
               <Route path="leads/:id" element={<LeadDetailAdmin />} />
               <Route path="services" element={<AdminServices />} />
@@ -73,6 +85,8 @@ function App() {
               <Route path="design-styles" element={<AdminDesignStyles />} />
               <Route path="reviews" element={<AdminReviews />} />
               <Route path="partners" element={<AdminPartners />} />
+              <Route path="materials" element={<AdminMaterials />} />
+              <Route path="media" element={<AdminMedia />} />
               <Route path="trust-pillars" element={<AdminTrustPillars />} />
               <Route path="applications" element={<AdminJobApplications />} />
               <Route path="job-openings" element={<AdminJobOpenings />} />

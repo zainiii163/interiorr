@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as c from '../controllers/contentController.js';
+import { syncGoogleReviews, getGoogleReviewsStats } from '../controllers/googleReviewsController.js';
 import { protect, authorize, optionalProtect } from '../middleware/auth.js';
 import { upload } from '../middleware/upload.js';
 
@@ -7,6 +8,8 @@ const router = Router();
 
 // Reviews
 router.get('/reviews', optionalProtect, c.listReviews);
+router.post('/reviews/sync-google', protect, syncGoogleReviews);
+router.get('/reviews/google-stats', getGoogleReviewsStats);
 router.post('/reviews', protect, c.createReview);
 router.put('/reviews/:id', protect, c.updateReview);
 router.delete('/reviews/:id', protect, authorize('admin'), c.deleteReview);
@@ -40,11 +43,19 @@ router.post('/quotes', protect, c.createQuote);
 router.put('/quotes/:id', protect, c.updateQuote);
 router.put('/quotes/:id/status', protect, c.updateQuoteStatus);
 router.delete('/quotes/:id', protect, authorize('admin'), c.deleteQuote);
+router.get('/quotes/:id/pdf', optionalProtect, c.exportQuotePDF);
 
 // Media
 router.get('/media', c.listMedia);
 router.post('/media', protect, c.createMedia);
 router.delete('/media/:id', protect, authorize('admin'), c.deleteMedia);
+
+// Materials
+router.get('/materials', c.listMaterials);
+router.get('/materials/:slug', c.getMaterialBySlug);
+router.post('/materials', protect, c.createMaterial);
+router.put('/materials/:id', protect, c.updateMaterial);
+router.delete('/materials/:id', protect, authorize('admin'), c.deleteMaterial);
 
 // Uploads
 router.post('/uploads/image', protect, upload.single('image'), c.uploadImage);

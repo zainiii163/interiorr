@@ -53,6 +53,10 @@ const siteSettingSchema = new mongoose.Schema(
     ctaBandImage: { type: String, default: '' },
     finalCtaTitle: { type: String, default: '' },
     finalCtaBody: { type: String, default: '' },
+    googlePlaceId: { type: String, default: '' },
+    googleApiKey: { type: String, default: '' },
+    autoSyncGoogleReviews: { type: Boolean, default: true },
+    lastGoogleSyncAt: { type: Date },
   },
   { timestamps: true }
 );

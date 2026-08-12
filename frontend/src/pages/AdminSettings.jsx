@@ -276,6 +276,59 @@ export default function AdminSettings() {
           </div>
         </div>
 
+        <div>
+          <h2 className="font-serif text-lg font-bold text-stone-900 mb-4">Google Reviews Sync</h2>
+          <p className="text-xs text-stone-500 mb-4">
+            Configure Google Places API to sync real reviews. Without keys, the Sync button imports curated demo reviews.
+          </p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
+                Google Place ID
+              </label>
+              <input
+                type="text"
+                value={settings.googlePlaceId || ''}
+                onChange={(e) => handleChange('googlePlaceId', e.target.value)}
+                disabled={!isAdmin}
+                placeholder="ChIJ..."
+                className="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm disabled:bg-stone-50"
+              />
+            </div>
+            <div className="sm:col-span-2">
+              <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
+                Google Places API Key
+              </label>
+              <input
+                type="password"
+                value={settings.googleApiKey || ''}
+                onChange={(e) => handleChange('googleApiKey', e.target.value)}
+                disabled={!isAdmin}
+                placeholder="AIza..."
+                className="w-full px-4 py-3 rounded-xl border border-stone-300 text-sm disabled:bg-stone-50"
+              />
+            </div>
+            <div className="sm:col-span-2 flex items-center gap-3">
+              <input
+                type="checkbox"
+                id="autoSyncGoogle"
+                checked={settings.autoSyncGoogleReviews ?? true}
+                onChange={(e) => handleChange('autoSyncGoogleReviews', e.target.checked)}
+                disabled={!isAdmin}
+                className="rounded"
+              />
+              <label htmlFor="autoSyncGoogle" className="text-xs text-stone-600">
+                Enable automatic Google reviews sync
+              </label>
+            </div>
+            {settings.lastGoogleSyncAt && (
+              <p className="sm:col-span-2 text-xs text-stone-400">
+                Last synced: {new Date(settings.lastGoogleSyncAt).toLocaleString()}
+              </p>
+            )}
+          </div>
+        </div>
+
         <div className="flex items-center gap-3 pt-2">
           {isAdmin && (
             <>

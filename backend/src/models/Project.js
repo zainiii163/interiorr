@@ -8,6 +8,20 @@ const galleryItemSchema = new mongoose.Schema(
   { _id: false }
 );
 
+const timelineMilestoneSchema = new mongoose.Schema({
+  title: { type: String, required: true },
+  description: { type: String, default: '' },
+  status: {
+    type: String,
+    enum: ['pending', 'in_progress', 'completed'],
+    default: 'pending',
+  },
+  progressPercentage: { type: Number, default: 0 },
+  targetDate: { type: Date },
+  completedDate: { type: Date },
+  notes: { type: String, default: '' },
+});
+
 const projectSchema = new mongoose.Schema(
   {
     title: { type: String, required: true, trim: true },
@@ -32,6 +46,9 @@ const projectSchema = new mongoose.Schema(
     isFeatured: { type: Boolean, default: false },
     completedAt: { type: Date },
     isPublished: { type: Boolean, default: true },
+    clientEmail: { type: String, lowercase: true, trim: true },
+    quote: { type: mongoose.Schema.Types.ObjectId, ref: 'Quote' },
+    timeline: [timelineMilestoneSchema],
   },
   { timestamps: true }
 );
