@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link, useNavigate, useLocation, Outlet } from 'react-router-dom';
-import { 
+import {
   LayoutDashboard, Users, FileText, Layers, FolderKanban,
   Settings, LogOut, ArrowLeft, Star, Handshake, Palette, Shield,
-  ShieldCheck, Briefcase, ClipboardList, Compass,
+  ShieldCheck, Briefcase, ClipboardList, Compass, TrendingUp,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -11,6 +11,12 @@ export default function AdminLayout() {
   const { user, loading, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/admin/login');
+    }
+  }, [loading, user, navigate]);
 
   if (loading) {
     return (
@@ -21,7 +27,6 @@ export default function AdminLayout() {
   }
 
   if (!user) {
-    navigate('/admin/login');
     return null;
   }
 
