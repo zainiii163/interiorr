@@ -254,6 +254,22 @@ async function seed() {
       isPublished: true,
       completedAt: new Date('2026-01-10'),
     },
+    {
+      title: 'JLT Wellness Clinic',
+      slug: 'jlt-wellness-clinic',
+      description: 'Authority-ready clinic fit-out with hygienic finishes, HVAC coordination, and custom joinery.',
+      category: 'commercial',
+      location: 'Jumeirah Lakes Towers',
+      coverImage: 'https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?w=800',
+      gallery: [
+        { url: 'https://images.unsplash.com/photo-1629909613654-28e377c37b09?w=800', caption: 'Treatment suite' },
+      ],
+      scope: 'Clinical fit-out, MEP, joinery',
+      duration: '8 weeks',
+      isFeatured: true,
+      isPublished: true,
+      completedAt: new Date('2026-03-01'),
+    },
   ]);
 
   // Link first design styles to related projects

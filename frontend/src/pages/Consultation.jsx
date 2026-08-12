@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useSearchParams } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 import { Calendar, ShieldCheck, CheckCircle2, Send, ArrowRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
 
@@ -286,14 +286,23 @@ export default function Consultation() {
             {[
               { icon: ShieldCheck, title: 'Warranty', body: 'Up to 10 years on kitchens, wardrobes and cabinets.' },
               { icon: CheckCircle2, title: 'Free basic design', body: '2D and 3D drawings included for confirmed projects.' },
-              { icon: ArrowRight, title: 'Job applications', body: 'Apply via Careers — inquiry forms are not used for hiring.' },
+              { icon: ArrowRight, title: 'Job applications', body: 'Apply via Careers — inquiry forms are not used for hiring.', to: '/careers' },
             ].map((item) => {
               const Icon = item.icon;
-              return (
-                <div key={item.title} className="p-6 rounded-2xl bg-white border border-stone-200">
+              const inner = (
+                <>
                   <Icon className="w-5 h-5 text-[#5C7A6B] mb-2" />
                   <h3 className="font-serif font-bold text-stone-900">{item.title}</h3>
                   <p className="text-xs text-stone-600 mt-1">{item.body}</p>
+                </>
+              );
+              return item.to ? (
+                <Link key={item.title} to={item.to} className="block p-6 rounded-2xl bg-white border border-stone-200 hover:border-[#C4795A]/40 transition">
+                  {inner}
+                </Link>
+              ) : (
+                <div key={item.title} className="p-6 rounded-2xl bg-white border border-stone-200">
+                  {inner}
                 </div>
               );
             })}
