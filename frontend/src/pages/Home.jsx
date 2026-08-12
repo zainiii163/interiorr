@@ -16,6 +16,8 @@ import PromiseGrid from '../components/home/PromiseGrid';
 
 import ProjectShowcase from '../components/home/ProjectShowcase';
 
+import VideoShowcase from '../components/home/VideoShowcase';
+
 import SkillsSection from '../components/home/SkillsSection';
 
 import Marquee from '../components/ui/Marquee';
@@ -228,6 +230,8 @@ export default function Home() {
 
 
       <ProjectShowcase projects={showcaseProjects} />
+
+      <VideoShowcase />
 
       <PromiseGrid pillars={promisePillars} />
 

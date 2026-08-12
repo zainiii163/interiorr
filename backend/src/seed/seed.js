@@ -15,6 +15,7 @@ import { Quote } from '../models/Quote.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { JobOpening } from '../models/JobOpening.js';
 import { NavItem } from '../models/NavItem.js';
+import { Material } from '../models/Material.js';
 import { slugify } from '../utils/slugify.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
@@ -41,6 +42,7 @@ async function seed() {
     JobApplication.deleteMany({}),
     JobOpening.deleteMany({}),
     NavItem.deleteMany({}),
+    Material.deleteMany({}),
   ]);
 
   console.log('Creating admin user...');
@@ -239,6 +241,130 @@ async function seed() {
       isFeatured: true,
       isPublished: true,
       completedAt: new Date('2026-01-10'),
+    },
+  ]);
+
+  console.log('Seeding materials...');
+  await Material.insertMany([
+    {
+      name: 'Italian Carrara Marble',
+      slug: slugify('Italian Carrara Marble'),
+      category: 'marble',
+      subcategory: 'Natural Stone',
+      description: 'Premium Italian Carrara marble with classic white background and grey veining. Perfect for luxury interiors.',
+      images: ['https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?w=800'],
+      specifications: {
+        origin: 'Italy',
+        finish: 'Polished',
+        thickness: '20mm',
+        size: '600x600mm',
+      },
+      pricePerUnit: 450,
+      unit: 'sqm',
+      inStock: true,
+      isFeatured: true,
+      order: 1,
+      isActive: true,
+    },
+    {
+      name: 'European Oak Hardwood',
+      slug: slugify('European Oak Hardwood'),
+      category: 'flooring',
+      subcategory: 'Hardwood',
+      description: 'Premium European oak hardwood flooring with natural grain patterns. Engineered construction for stability.',
+      images: ['https://images.unsplash.com/photo-1616486338812-3dadae4b4ace?w=800'],
+      specifications: {
+        origin: 'Europe',
+        finish: 'Matte Lacquer',
+        thickness: '15mm',
+        width: '180mm',
+      },
+      pricePerUnit: 380,
+      unit: 'sqm',
+      inStock: true,
+      isFeatured: true,
+      order: 2,
+      isActive: true,
+    },
+    {
+      name: 'Porcelain Tiles - Concrete Look',
+      slug: slugify('Porcelain Tiles - Concrete Look'),
+      category: 'tiles',
+      subcategory: 'Porcelain',
+      description: 'Modern porcelain tiles with concrete texture effect. Durable and low maintenance for contemporary spaces.',
+      images: ['https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?w=800'],
+      specifications: {
+        origin: 'Spain',
+        finish: 'Matt',
+        thickness: '10mm',
+        size: '600x600mm',
+      },
+      pricePerUnit: 120,
+      unit: 'sqm',
+      inStock: true,
+      isFeatured: false,
+      order: 3,
+      isActive: true,
+    },
+    {
+      name: 'Brushed Gold Fixtures Set',
+      slug: slugify('Brushed Gold Fixtures Set'),
+      category: 'fixtures',
+      subcategory: 'Bathroom',
+      description: 'Luxury brushed gold bathroom fixture set including faucet, shower head, and accessories.',
+      images: ['https://images.unsplash.com/photo-1584622650111-993a426fbf0a?w=800'],
+      specifications: {
+        origin: 'Germany',
+        finish: 'Brushed Gold',
+        material: 'Brass',
+        warranty: '10 years',
+      },
+      pricePerUnit: 2500,
+      unit: 'set',
+      inStock: true,
+      isFeatured: true,
+      order: 4,
+      isActive: true,
+    },
+    {
+      name: 'Emperador Dark Marble',
+      slug: slugify('Emperador Dark Marble'),
+      category: 'marble',
+      subcategory: 'Natural Stone',
+      description: 'Rich dark brown Spanish marble with lighter veining. Creates dramatic and elegant interiors.',
+      images: ['https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?w=800'],
+      specifications: {
+        origin: 'Spain',
+        finish: 'Honed',
+        thickness: '20mm',
+        size: '800x800mm',
+      },
+      pricePerUnit: 520,
+      unit: 'sqm',
+      inStock: true,
+      isFeatured: false,
+      order: 5,
+      isActive: true,
+    },
+    {
+      name: 'Large Format Porcelain Slabs',
+      slug: slugify('Large Format Porcelain Slabs'),
+      category: 'tiles',
+      subcategory: 'Porcelain',
+      description: 'Extra-large porcelain slabs for seamless surfaces. Minimal grout lines for modern aesthetic.',
+      images: ['https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800'],
+      specifications: {
+        origin: 'Italy',
+        finish: 'Glossy',
+        thickness: '6mm',
+        size: '1200x2400mm',
+      },
+      pricePerUnit: 280,
+      unit: 'sqm',
+      inStock: false,
+      isFeatured: false,
+      order: 6,
+      isActive: true,
     },
   ]);
 

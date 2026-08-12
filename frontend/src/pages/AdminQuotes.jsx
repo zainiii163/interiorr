@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { Plus, Trash2, FileText, Printer } from 'lucide-react';
+import { Plus, Trash2, FileText, Download, Loader2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,6 +13,7 @@ export default function AdminQuotes() {
   const [leads, setLeads] = useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedQuote, setSelectedQuote] = useState(null);
+  const [downloadingPDF, setDownloadingPDF] = useState(null);
 
   const [formData, setFormData] = useState({
     leadId: leadIdParam,
@@ -114,6 +115,35 @@ export default function AdminQuotes() {
     }
   };
 
+  const handleDownloadPDF = async (quoteId, quoteNumber) => {
+    setDownloadingPDF(quoteId);
+    try {
+      const response = await fetch(`/api/v1/quotes/${quoteId}/pdf`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Quote-${quoteNumber}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (e) {
+      alert('Failed to download PDF: ' + e.message);
+    } finally {
+      setDownloadingPDF(null);
+    }
+  };
+
   return (
     <div className="space-y-6">
       
@@ -141,11 +171,21 @@ export default function AdminQuotes() {
             </div>
             <div className="flex items-center space-x-3">
               <button
-                onClick={() => window.print()}
-                className="px-3 py-1.5 rounded-lg bg-stone-100 text-stone-700 text-xs font-semibold flex items-center space-x-1"
+                onClick={() => handleDownloadPDF(selectedQuote._id, selectedQuote.quoteNumber)}
+                disabled={downloadingPDF === selectedQuote._id}
+                className="px-3 py-1.5 rounded-lg bg-[#C4795A] text-white text-xs font-semibold flex items-center space-x-1 hover:bg-[#A86548] disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                <Printer className="w-3.5 h-3.5" />
-                <span>Print PDF</span>
+                {downloadingPDF === selectedQuote._id ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    <span>Generating...</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download PDF</span>
+                  </>
+                )}
               </button>
               <button
                 onClick={() => setSelectedQuote(null)}
@@ -260,6 +300,19 @@ export default function AdminQuotes() {
                       title="Copy Client Portal Access Link"
                     >
                       Client Portal Link
+                    </button>
+                    <button
+                      onClick={() => handleDownloadPDF(q._id, q.quoteNumber)}
+                      disabled={downloadingPDF === q._id}
+                      className="px-2.5 py-1 rounded-lg bg-[#C4795A] hover:bg-[#A86548] text-white font-bold text-[11px] disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                      title="Download PDF"
+                    >
+                      {downloadingPDF === q._id ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <Download className="w-3 h-3" />
+                      )}
+                      PDF
                     </button>
                     <button
                       onClick={() => setSelectedQuote(q)}

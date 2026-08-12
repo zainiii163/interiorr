@@ -11,6 +11,7 @@ import DesignStylesPage from '../pages/public/DesignStylesPage';
 import ReviewsPage from '../pages/public/ReviewsPage';
 import ContactPage from '../pages/public/ContactPage';
 import BookConsultationPage from '../pages/public/BookConsultationPage';
+import MaterialsPage from '../pages/public/MaterialsPage';
 import NotFoundPage from '../pages/public/NotFoundPage';
 
 export default function PublicRoutes() {
@@ -24,6 +25,7 @@ export default function PublicRoutes() {
         <Route path="/projects" element={<ProjectsPage />} />
         <Route path="/projects/:slug" element={<ProjectDetailPage />} />
         <Route path="/design-styles" element={<DesignStylesPage />} />
+        <Route path="/materials" element={<MaterialsPage />} />
         <Route path="/reviews" element={<ReviewsPage />} />
         <Route path="/contact" element={<ContactPage />} />
         <Route path="/book-consultation" element={<BookConsultationPage />} />

@@ -7,6 +7,8 @@ const links = [
   { to: '/admin/services', label: 'Services' },
   { to: '/admin/projects', label: 'Projects' },
   { to: '/admin/reviews', label: 'Reviews' },
+  { to: '/admin/materials', label: 'Materials' },
+  { to: '/admin/media', label: 'Media' },
   { to: '/admin/settings', label: 'Settings' },
 ];
 

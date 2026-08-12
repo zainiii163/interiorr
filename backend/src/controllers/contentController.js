@@ -8,12 +8,14 @@ import { Media } from '../models/Media.js';
 import { Lead } from '../models/Lead.js';
 import { Project } from '../models/Project.js';
 import { JobApplication } from '../models/JobApplication.js';
+import { Material } from '../models/Material.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { slugify } from '../utils/slugify.js';
 import { uploadImageBuffer, toDataUrl } from '../services/uploadService.js';
 import { isCloudinaryConfigured } from '../config/cloudinary.js';
+import { generateQuotePDF } from '../services/pdfService.js';
 import {
   formatReview,
   formatDesignStyle,
@@ -239,6 +241,35 @@ export const deleteQuote = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, null, 'Quote deleted'));
 });
 
+export const exportQuotePDF = asyncHandler(async (req, res) => {
+  const quote = await Quote.findById(req.params.id).populate('lead', 'fullName email phone');
+  if (!quote) throw new ApiError(404, 'Quote not found');
+
+  const quoteData = {
+    quoteNumber: quote.quoteNumber,
+    leadName: quote.lead?.fullName || 'Client',
+    leadEmail: quote.lead?.email || '',
+    leadPhone: quote.lead?.phone || '',
+    lineItems: quote.lineItems,
+    subtotal: quote.subtotal,
+    discount: quote.discount,
+    tax: quote.tax,
+    grandTotal: quote.grandTotal,
+    currency: quote.currency,
+    createdAt: quote.createdAt,
+    validUntil: quote.validUntil,
+    notes: quote.notes,
+  };
+
+  const pdfBuffer = await generateQuotePDF(quoteData);
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="Quote-${quote.quoteNumber}.pdf"`);
+  res.setHeader('Content-Length', pdfBuffer.length);
+  
+  res.send(pdfBuffer);
+});
+
 // Media
 export const listMedia = asyncHandler(async (req, res) => {
   const filter = {};
@@ -256,6 +287,64 @@ export const deleteMedia = asyncHandler(async (req, res) => {
   const media = await Media.findByIdAndDelete(req.params.id);
   if (!media) throw new ApiError(404, 'Media not found');
   res.status(200).json(new ApiResponse(200, null, 'Media deleted'));
+});
+
+// Materials
+export const listMaterials = asyncHandler(async (req, res) => {
+  const filter = { isActive: true };
+  if (req.query.category) filter.category = req.query.category;
+  if (req.query.featured === 'true') filter.isFeatured = true;
+  
+  const materials = await Material.find(filter)
+    .sort({ order: 1, createdAt: -1 });
+  
+  res.status(200).json(new ApiResponse(200, materials));
+});
+
+export const getMaterialBySlug = asyncHandler(async (req, res) => {
+  const material = await Material.findOne({ 
+    slug: req.params.slug, 
+    isActive: true 
+  });
+  
+  if (!material) throw new ApiError(404, 'Material not found');
+  res.status(200).json(new ApiResponse(200, material));
+});
+
+export const createMaterial = asyncHandler(async (req, res) => {
+  const data = req.body;
+  
+  // Generate slug if not provided
+  if (!data.slug && data.name) {
+    data.slug = slugify(data.name);
+  }
+  
+  const material = await Material.create(data);
+  res.status(201).json(new ApiResponse(201, material, 'Material created'));
+});
+
+export const updateMaterial = asyncHandler(async (req, res) => {
+  const data = req.body;
+  
+  // Update slug if name changed and slug not provided
+  if (data.name && !data.slug) {
+    data.slug = slugify(data.name);
+  }
+  
+  const material = await Material.findByIdAndUpdate(
+    req.params.id,
+    data,
+    { new: true, runValidators: true }
+  );
+  
+  if (!material) throw new ApiError(404, 'Material not found');
+  res.status(200).json(new ApiResponse(200, material, 'Material updated'));
+});
+
+export const deleteMaterial = asyncHandler(async (req, res) => {
+  const material = await Material.findByIdAndDelete(req.params.id);
+  if (!material) throw new ApiError(404, 'Material not found');
+  res.status(200).json(new ApiResponse(200, null, 'Material deleted'));
 });
 
 // Upload image (Cloudinary when configured, otherwise data URL stub)
