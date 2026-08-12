@@ -2,176 +2,214 @@
   {
     "title": "Villa Renovation",
     "shortDescription": "Complete villa transformations from concept to handover.",
+    "fullDescription": "End-to-end villa renovation covering design, authority approvals, civil works, MEP, joinery, and finishing. We manage Dubai Municipality / DDA submissions, site logistics, and a single fixed programme so your home is delivered turnkey without juggling multiple contractors.",
     "category": "renovation",
     "icon": "Home",
     "isFeatured": true,
     "order": 1,
-    "features": ["Turnkey execution", "MEP coordination", "Premium finishes"]
+    "features": ["Turnkey execution", "MEP coordination", "Premium finishes", "Single project manager", "Fixed timeline & BOQ"]
   },
   {
     "title": "Full Home Renovation",
     "shortDescription": "End-to-end apartment and home renovations in 8–10 weeks.",
+    "fullDescription": "Apartment and townhouse renovations planned for Dubai living — kitchens, bathrooms, flooring, painting, joinery, and electrical upgrades in a coordinated 8–10 week programme. Includes free basic 2D/3D design for confirmed projects and NOC support with your building management.",
     "category": "renovation",
     "icon": "Building2",
     "isFeatured": true,
     "order": 2,
-    "features": ["Free basic design", "NOC support", "Transparent pricing"]
+    "features": ["Free basic design", "NOC support", "Transparent pricing", "8–10 week typical programme", "Dust & noise control plans"]
   },
   {
     "title": "Kitchen Renovation",
     "shortDescription": "Custom kitchens with German & Austrian hardware.",
+    "fullDescription": "Bespoke kitchens fabricated in our Dubai joinery workshop with Blum / Hafele hardware, soft-close systems, and stone or quartz worktops. From layout planning and appliance coordination to final install and snagging — with warranty options up to 10 years on cabinetry.",
     "category": "joinery",
     "icon": "CookingPot",
     "isFeatured": true,
     "order": 3,
-    "features": ["Up to 10-year warranty", "Blum hardware", "Best price guarantee"]
+    "features": ["Up to 10-year warranty", "Blum hardware", "Best price guarantee", "In-house fabrication", "Appliance & MEP coordination"]
   },
   {
     "title": "Bathroom Renovation",
     "shortDescription": "Luxury bathroom fit-outs with sanitaryware & tiling.",
+    "fullDescription": "Full wet-area renovations with waterproofing membranes, premium porcelain or marble tiling, sanitaryware, vanity joinery, and LED mirror packages. Designed for Dubai humidity and long-term leak protection with documented waterproofing stages.",
     "category": "renovation",
     "icon": "Bath",
     "isFeatured": true,
     "order": 4,
-    "features": ["Waterproofing", "Premium tiles", "Smart fixtures"]
+    "features": ["Waterproofing", "Premium tiles", "Smart fixtures", "Vanity joinery", "Leak-tested handover"]
   },
   {
     "title": "Bespoke Joinery",
     "shortDescription": "In-house joinery factory for wardrobes, cabinets & custom woodwork.",
+    "fullDescription": "Custom wardrobes, wall panelling, TV units, and feature millwork produced in our 15,000 sq.ft Dubai facility. Value engineering, CNC precision, veneers and lacquer finishes — delivered and installed by our own craftsmen for consistent quality control.",
     "category": "joinery",
     "icon": "Hammer",
     "isFeatured": true,
     "order": 5,
-    "features": ["15,000 sq ft facility", "75+ craftsmen", "Value engineering"]
+    "features": ["15,000 sq ft facility", "75+ craftsmen", "Value engineering", "CNC precision", "Site-measured install"]
   },
   {
     "title": "Property Inspection",
     "shortDescription": "Independent snagging for new homes, renovated spaces, and pre-handover units — catch finishing defects and hidden issues before they become costly problems.",
+    "fullDescription": "Independent property snagging and thermal / finishing audits before handover. We document defects with photo reports so developers or contractors rectify issues while still under liability — protecting your investment before keys are accepted.",
     "category": "inspection",
     "icon": "ClipboardCheck",
     "isFeatured": true,
     "order": 6,
-    "features": ["Pre-handover checks", "Detailed reports", "Defect identification"],
-    "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80"
+    "features": ["Pre-handover checks", "Detailed reports", "Defect identification", "Photo documentation", "Follow-up verification"]
   },
   {
     "title": "Decorative Paints",
     "shortDescription": "Artisan finishes and specialty wall treatments.",
+    "fullDescription": "Specialty wall finishes including Venetian plaster, microtexture paints, feature walls, and low-VOC decorative coatings. Colour consultation and sample boards provided so finishes match your interior scheme before full application.",
     "category": "specialty",
     "icon": "Paintbrush",
-    "order": 7
+    "order": 7,
+    "features": ["Venetian & textured finishes", "Low-VOC options", "Sample boards", "Feature wall design", "Dust-controlled application"]
   },
   {
     "title": "MEP & HVAC",
     "shortDescription": "Certified mechanical, electrical, and plumbing works.",
+    "fullDescription": "Licensed MEP packages covering electrical rewiring, lighting design, plumbing, AC redistribution, and exhaust — coordinated with fit-out drawings so ceilings, joinery, and wet areas are conflict-free before closing works begin.",
     "category": "fitout",
     "icon": "Wrench",
-    "order": 8
+    "order": 8,
+    "features": ["Licensed technicians", "AC & lighting design", "As-built documentation", "DEWA-ready works", "Coordinated with ceilings"]
   },
   {
     "title": "Authority Approvals",
     "shortDescription": "In-house team for NOCs and municipality approvals.",
+    "fullDescription": "In-house drawings and submissions for Dubai Municipality, DDA, Trakhees, and building NOCs. We prepare fit-out packages, chase comments, and keep your programme moving while approvals clear.",
     "category": "specialty",
     "icon": "FileCheck",
-    "order": 9
+    "order": 9,
+    "features": ["DM / DDA / Trakhees", "Building NOC support", "Drawing packages", "Comment responses", "Programme tracking"]
   },
   {
     "title": "Air Quality",
     "shortDescription": "Advanced indoor air treatment targeting mold spores, dust allergens, pet dander, and odors — healthier living after every fit-out.",
+    "fullDescription": "Post-renovation and occupied-space air treatment to reduce mold spores, dust, allergens, and construction odours. Ideal after fit-outs or for villas with HVAC recirculation concerns — leaving interiors healthier and handover-ready.",
     "category": "specialty",
     "icon": "Wind",
     "isFeatured": true,
     "order": 10,
-    "features": ["Mold & allergen control", "Post-renovation clean air", "Odor reduction"],
-    "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
+    "features": ["Mold & allergen control", "Post-renovation clean air", "Odor reduction", "Occupied-space safe options", "Measurable before/after"]
   },
   {
     "title": "Custom Furniture",
     "shortDescription": "Made-to-measure furniture for residential and commercial spaces.",
+    "fullDescription": "Made-to-measure sofas, desks, reception counters, and feature furniture built to your drawings and fabric/finish selections. Coordinated with site dimensions so pieces fit elevators, corridors, and final layouts perfectly.",
     "category": "joinery",
     "icon": "Sofa",
-    "order": 11
+    "order": 11,
+    "features": ["Site-measured pieces", "Commercial & residential", "Fabric & finish library", "Delivery & install", "Matched to joinery finishes"]
   },
   {
     "title": "Project Management",
     "shortDescription": "Dedicated PMs for on-time, on-budget delivery.",
+    "fullDescription": "A dedicated project manager owns your timeline, procurement, subcontractors, and weekly client updates. You get one point of contact, clear milestones, and proactive risk management through to snag-free handover.",
     "category": "fitout",
     "icon": "Kanban",
-    "order": 12
+    "order": 12,
+    "features": ["Single point of contact", "Weekly progress reports", "Procurement control", "Milestone tracking", "Snag-free handover focus"]
   },
   {
     "title": "Marble & Stone Works",
     "shortDescription": "Premium marble, granite, and stone cladding for floors and walls.",
+    "fullDescription": "Supply and install of Italian and regional marbles, granite, and stone cladding for floors, bathrooms, and feature walls. Includes templating, precision cutting, sealing, and polish for a luxury finish that lasts in Dubai conditions.",
     "category": "specialty",
     "icon": "Gem",
     "isFeatured": true,
     "order": 13,
-    "features": ["Italian marble", "Precision cutting", "Sealing & polish"]
+    "features": ["Italian marble", "Precision cutting", "Sealing & polish", "Templating on site", "Wall & floor cladding"]
   },
   {
     "title": "Tile & Flooring",
     "shortDescription": "Porcelain, hardwood, and luxury vinyl flooring installation.",
+    "fullDescription": "Complete flooring packages for villas, apartments, and commercial spaces — large-format porcelain, engineered hardwood, and luxury vinyl (LVT). Includes substrate preparation, levelling, waterproofing where required, precision laying, and finishing so floors are flat, durable, and aligned with your design scheme.",
     "category": "renovation",
     "icon": "Layers",
-    "order": 14
+    "order": 14,
+    "features": [
+      "Large-format porcelain",
+      "Engineered hardwood & LVT",
+      "Substrate prep & levelling",
+      "Wet-area waterproofing",
+      "Skirting & transition detailing"
+    ]
   },
   {
     "title": "Gypsum & False Ceiling",
     "shortDescription": "Custom gypsum ceilings with cove lighting and acoustic solutions.",
+    "fullDescription": "Custom gypsum board ceilings with cove lighting, bulkheads, and acoustic treatments. Coordinated with MEP and stretch-ceiling interfaces so lighting, AC grilles, and speakers sit flush and on design.",
     "category": "fitout",
     "icon": "Square",
-    "order": 15
+    "order": 15,
+    "features": ["Cove & indirect lighting", "Acoustic options", "MEP coordination", "Smooth paint-ready finish", "Access panels where needed"]
   },
   {
     "title": "Stretch Ceiling",
     "shortDescription": "Modern stretch ceiling systems with printed and translucent options.",
+    "fullDescription": "Modern stretch ceiling systems — matte, gloss, translucent, and printed graphics — for feature living rooms, spas, and retail. Fast install, clean lines, and integrated LED options without heavy wet works.",
     "category": "specialty",
     "icon": "Maximize",
-    "order": 16
+    "order": 16,
+    "features": ["Matte / gloss / translucent", "Printed graphics", "LED integration", "Fast install", "Minimal site mess"]
   },
   {
     "title": "Microcement & Terrazzo",
     "shortDescription": "Seamless microcement and terrazzo finishes for contemporary spaces.",
+    "fullDescription": "Seamless microcement and terrazzo for floors, bathrooms, and feature walls. Continuous surfaces with minimal joints, custom colour matching, and sealed finishes suited to modern Dubai interiors.",
     "category": "specialty",
     "icon": "Circle",
-    "order": 17
+    "order": 17,
+    "features": ["Seamless surfaces", "Custom colours", "Floor & wall systems", "Sealed durability", "Contemporary aesthetic"]
   },
   {
     "title": "Smart Home Automation",
     "shortDescription": "Lighting, climate, and security automation integration.",
+    "fullDescription": "Smart lighting, climate, shading, and security integrated during fit-out so cabling and controllers are hidden cleanly. Works with leading platforms and is coordinated with joinery and ceilings before closing.",
     "category": "specialty",
     "icon": "Cpu",
-    "order": 18
+    "order": 18,
+    "features": ["Lighting scenes", "Climate & shading", "Security integration", "Hidden cabling", "Platform-agnostic setup"]
   },
   {
     "title": "Window Glazing & Partitions",
     "shortDescription": "Glass partitions, aluminum glazing, and office partitioning systems.",
+    "fullDescription": "Aluminium and glass partitions, double-glazed office fronts, and residential glazing upgrades. Acoustic options, frosted films, and door hardware matched to your commercial or villa fit-out.",
     "category": "fitout",
     "icon": "PanelTop",
-    "order": 19
+    "order": 19,
+    "features": ["Office glass fronts", "Acoustic options", "Frosted & branded films", "Matched door hardware", "Measured fabrication"]
   },
   {
     "title": "Turnkey Contracting",
     "shortDescription": "Full civil + fit-out contracting for residential and commercial projects.",
+    "fullDescription": "Single-contract delivery combining civil alterations, fit-out, joinery, MEP, and finishes. Ideal for investors and owners who want one accountable contractor from empty shell to furnished handover.",
     "category": "fitout",
     "icon": "HardHat",
-    "order": 20
+    "order": 20,
+    "features": ["Single accountable contractor", "Civil + fit-out", "Joinery & MEP included", "Handover documentation", "Warranty support"]
   },
   {
     "title": "Office Fit-Out",
     "shortDescription": "Brand-aligned offices, clinics, and co-working spaces with partitions, joinery, and MEP.",
+    "fullDescription": "Brand-aligned offices, clinics, and co-working spaces — partitions, workstations, reception joinery, meeting rooms, and MEP — typically delivered in a 4–8 week programme with authority-ready drawings.",
     "category": "fitout",
     "icon": "Building2",
     "isFeatured": true,
     "order": 21,
-    "features": ["4–8 week typical office programme", "Authority-ready drawings", "Custom workstations & joinery"]
+    "features": ["4–8 week typical office programme", "Authority-ready drawings", "Custom workstations & joinery", "Clinic & co-working ready", "Brand colour & signage coordination"]
   },
   {
     "title": "Windows & Doors",
     "shortDescription": "Aluminium, timber, and glass doors and windows specified and installed as part of the fit-out.",
+    "fullDescription": "Supply and install of aluminium, timber, and glass doors and windows as part of your renovation. Developer-compliant specs, acoustic and thermal options, and coordination with joinery and flooring transitions.",
     "category": "fitout",
     "icon": "PanelTop",
     "order": 22,
-    "features": ["Developer-compliant specs", "Acoustic and thermal options", "Coordinated with joinery"]
+    "features": ["Developer-compliant specs", "Acoustic and thermal options", "Coordinated with joinery", "Timber & aluminium systems", "Hardware & closing adjustments"]
   }
 ]

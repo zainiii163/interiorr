@@ -65,13 +65,16 @@ export default function ServiceDetail() {
           <div className="lg:col-span-2 space-y-8">
             <div>
               <h2 className="font-serif text-3xl font-bold text-stone-900">Overview & Scope</h2>
-              <p className="text-stone-700 mt-4 leading-relaxed text-base">
-                {service.description}
+              {service.shortDescription && service.description !== service.shortDescription && (
+                <p className="text-stone-500 mt-3 text-sm italic">{service.shortDescription}</p>
+              )}
+              <p className="text-stone-700 mt-4 leading-relaxed text-base whitespace-pre-line">
+                {service.description || service.shortDescription}
               </p>
             </div>
 
             {/* Features */}
-            {service.features && service.features.length > 0 && (
+            {service.features && service.features.length > 0 ? (
               <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm">
                 <h3 className="font-serif text-xl font-bold text-stone-900 mb-6">Key Specifications & Features</h3>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -83,7 +86,7 @@ export default function ServiceDetail() {
                   ))}
                 </div>
               </div>
-            )}
+            ) : null}
           </div>
 
           {/* Sidebar CTA Card */}

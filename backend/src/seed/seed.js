@@ -79,6 +79,9 @@ async function seed() {
     'Bathroom Renovation': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80',
     'Bespoke Joinery': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
     'Property Inspection': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
+    'Marble & Stone Works': 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80',
+    'Tile & Flooring': 'https://images.unsplash.com/photo-1581858726788-75bc52f3788f?auto=format&fit=crop&w=1200&q=80',
+    'Gypsum & False Ceiling': 'https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1200&q=80',
     'Office Fit-Out': 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
     'Windows & Doors': 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
   };
@@ -87,8 +90,8 @@ async function seed() {
     servicesData.map((s) => ({
       ...s,
       slug: slugify(s.title),
-      fullDescription: s.shortDescription,
-      image: serviceImages[s.title] || 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?auto=format&fit=crop&w=1200&q=80',
+      fullDescription: s.fullDescription || s.shortDescription,
+      image: s.image || serviceImages[s.title] || 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?auto=format&fit=crop&w=1200&q=80',
       isActive: true,
     }))
   );
