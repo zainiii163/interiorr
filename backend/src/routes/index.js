@@ -11,11 +11,16 @@ import navRoutes from './navRoutes.js';
 import clientPortalRoutes from './clientPortalRoutes.js';
 import paymentRoutes from './paymentRoutes.js';
 import analyticsRoutes from './analyticsRoutes.js';
+import { getIntegrationStatus } from '../config/integrations.js';
 
 const router = Router();
 
 router.get('/health', (req, res) => {
   res.json({ success: true, message: 'API OK', timestamp: new Date().toISOString() });
+});
+
+router.get('/integrations/status', (req, res) => {
+  res.json({ success: true, data: getIntegrationStatus() });
 });
 
 router.use('/auth', authRoutes);

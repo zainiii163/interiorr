@@ -3,6 +3,7 @@ import { SiteSetting } from '../models/SiteSetting.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { formatReview } from '../utils/legacyFormat.js';
+import { env } from '../config/env.js';
 
 // Curated authentic Dubai Business Google Reviews for auto-sync fallback
 const mockGoogleReviews = [
@@ -77,8 +78,8 @@ export const syncGoogleReviews = asyncHandler(async (req, res) => {
   let settings = await SiteSetting.findOne();
   if (!settings) settings = await SiteSetting.create({});
 
-  const apiKey = settings.googleApiKey || process.env.GOOGLE_PLACES_API_KEY;
-  const placeId = settings.googlePlaceId || process.env.GOOGLE_PLACE_ID;
+  const apiKey = settings.googleApiKey || env.google.placesApiKey;
+  const placeId = settings.googlePlaceId || env.google.placeId;
 
   let syncedCount = 0;
   let sourceMode = 'simulated';
