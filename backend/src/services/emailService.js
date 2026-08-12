@@ -6,65 +6,84 @@ function createTransport() {
   return nodemailer.createTransport({
     host: env.smtp.host,
     port: env.smtp.port,
-    secure: false,
+    secure: env.smtp.port === 465,
     auth: { user: env.smtp.user, pass: env.smtp.pass },
   });
 }
 
-export async function sendAdminLeadAlert(lead) {
+function wrapHtml(title, body) {
+  return `<!DOCTYPE html><html><body style="font-family:Arial,sans-serif;color:#333;max-width:600px;margin:0 auto;padding:20px">
+    <div style="border-bottom:3px solid #C4795A;padding-bottom:12px;margin-bottom:20px">
+      <strong style="font-size:18px;color:#C4795A">AURA Interiors</strong>
+    </div>
+    <h2 style="color:#1c1917;font-size:16px">${title}</h2>
+    ${body}
+    <p style="color:#78716c;font-size:12px;margin-top:30px;border-top:1px solid #e7e5e4;padding-top:12px">
+      This is an automated message from the Interior Platform.
+    </p>
+  </body></html>`;
+}
+
+async function sendMail({ to, subject, text, html }) {
   const transport = createTransport();
   if (!transport) {
-    console.log('[email skipped] Admin lead alert:', lead.fullName, lead.email);
-    return;
+    console.log(`[email skipped] ${subject} → ${to}`);
+    return false;
   }
+  await transport.sendMail({ from: `"AURA Interiors" <${env.smtp.user}>`, to, subject, text, html });
+  return true;
+}
 
+export async function sendAdminLeadAlert(lead) {
   const isContact = lead.leadType === 'contact';
   const subject = isContact
     ? `New contact inquiry: ${lead.fullName}`
     : `New consultation lead: ${lead.fullName}`;
 
-  await transport.sendMail({
-    from: env.smtp.user,
+  const rows = [
+    ['Type', lead.leadType || 'consultation'],
+    ['Name', lead.fullName],
+    ['Email', lead.email],
+    ['Phone', lead.phone],
+    ['Location', lead.location || '-'],
+    ['Message', lead.message || '-'],
+    ['Source', lead.source || '-'],
+  ];
+
+  const htmlRows = rows.map(([k, v]) => `<tr><td style="padding:6px 12px;font-weight:bold;color:#78716c">${k}</td><td style="padding:6px 12px">${v}</td></tr>`).join('');
+
+  return sendMail({
     to: env.adminEmail,
     subject,
-    text: `Type: ${lead.leadType || 'consultation'}\nName: ${lead.fullName}\nEmail: ${lead.email}\nPhone: ${lead.phone}\nLocation: ${lead.location || '-'}\nMessage: ${lead.message || '-'}\nSource: ${lead.source || '-'}`,
+    text: rows.map(([k, v]) => `${k}: ${v}`).join('\n'),
+    html: wrapHtml(subject, `<table style="border-collapse:collapse;width:100%">${htmlRows}</table>`),
   });
 }
 
 export async function sendClientConfirmation(lead) {
-  const transport = createTransport();
-  if (!transport) {
-    console.log('[email skipped] Client confirmation:', lead.email);
-    return;
-  }
-
   const isContact = lead.leadType === 'contact';
-  const subject = isContact
-    ? 'We received your message'
-    : 'We received your consultation request';
+  const subject = isContact ? 'We received your message' : 'Your consultation request is confirmed';
   const intro = isContact
-    ? 'Thank you for reaching out. Our team will respond shortly.'
-    : 'Thank you for booking a consultation. Our team will reach out shortly.';
+    ? 'Thank you for reaching out. Our team will respond within 24 hours.'
+    : 'Thank you for booking a consultation. A design specialist will contact you shortly.';
 
-  await transport.sendMail({
-    from: env.smtp.user,
+  return sendMail({
     to: lead.email,
     subject,
-    text: `Hi ${lead.fullName},\n\n${intro}\n\n— Interior Platform`,
+    text: `Hi ${lead.fullName},\n\n${intro}\n\n— AURA Interiors`,
+    html: wrapHtml(
+      subject,
+      `<p>Hi <strong>${lead.fullName}</strong>,</p><p>${intro}</p><p>Best regards,<br><strong>AURA Interiors Team</strong></p>`
+    ),
   });
 }
 
 export async function sendJobApplicationAlert(application) {
-  const transport = createTransport();
-  if (!transport) {
-    console.log('[email skipped] Job application:', application.fullName, application.position);
-    return;
-  }
-
-  await transport.sendMail({
-    from: env.smtp.user,
+  const subject = `New job application: ${application.position} — ${application.fullName}`;
+  return sendMail({
     to: env.adminEmail,
-    subject: `New job application: ${application.position} — ${application.fullName}`,
-    text: `Position: ${application.position}\nName: ${application.fullName}\nEmail: ${application.email}\nPhone: ${application.phone}\nExperience: ${application.experience || '-'}\nResume: ${application.resumeUrl || '-'}\n\nCover letter:\n${application.coverLetter || '-'}`,
+    subject,
+    text: `Position: ${application.position}\nName: ${application.fullName}\nEmail: ${application.email}\nPhone: ${application.phone}`,
+    html: wrapHtml(subject, `<p><strong>${application.fullName}</strong> applied for <strong>${application.position}</strong>.</p><p>Email: ${application.email}<br>Phone: ${application.phone}</p>`),
   });
 }

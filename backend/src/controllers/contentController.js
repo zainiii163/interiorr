@@ -281,9 +281,9 @@ export const uploadImage = asyncHandler(async (req, res) => {
   res.status(200).json(
     new ApiResponse(200, {
       url: base64,
-      provider: 'stub',
-      message: 'Cloudinary not configured — returned inline preview. Set CLOUDINARY_* env vars for production.',
-    })
+      provider: 'local',
+      warning: 'Cloudinary not configured — image stored as data URL. Set CLOUDINARY_* env vars for production.',
+    }, 'Image uploaded (local mode)')
   );
 });
 

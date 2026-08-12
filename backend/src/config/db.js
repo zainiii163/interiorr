@@ -1,26 +1,34 @@
 import mongoose from 'mongoose';
 import { env } from './env.js';
 
+function maskUri(uri) {
+  return uri.replace(/:([^@/]+)@/, ':****@');
+}
+
 export async function connectDB() {
   mongoose.set('strictQuery', true);
-  try {
-    await mongoose.connect(env.mongoUri, { serverSelectionTimeoutMS: 3000 });
-    console.log(`MongoDB connected: ${env.mongoUri}`);
-  } catch (err) {
-    console.warn(`Local MongoDB not reachable. Starting in-memory MongoDB fallback...`);
-    try {
-      const { MongoMemoryServer } = await import('mongodb-memory-server');
-      const mongod = await MongoMemoryServer.create();
-      const uri = mongod.getUri('interior_platform');
-      await mongoose.connect(uri);
-      console.log(`In-memory MongoDB ready & connected: ${uri}`);
-    } catch (memErr) {
-      console.error('Failed to connect to MongoMemoryServer fallback:', memErr);
-      throw err;
-    }
+
+  const isLocalhost = /localhost|127\.0\.0\.1/.test(env.mongoUri);
+
+  if (isLocalhost && env.nodeEnv === 'production') {
+    throw new Error(
+      'MONGODB_URI points to localhost in production. Set a MongoDB Atlas connection string in backend/.env'
+    );
   }
 
-  // Auto-seed demo data if database is empty
+  try {
+    await mongoose.connect(env.mongoUri, { serverSelectionTimeoutMS: 8000 });
+    console.log(`MongoDB connected: ${maskUri(env.mongoUri)}`);
+  } catch (err) {
+    if (isLocalhost) {
+      console.error('\n--- MongoDB connection failed ---');
+      console.error('Local MongoDB is not running on port 27017.');
+      console.error('Fix: set MONGODB_URI in backend/.env to your MongoDB Atlas URI.');
+      console.error('Example: MONGODB_URI=mongodb+srv://user:pass@cluster.mongodb.net/interior_platform\n');
+    }
+    throw err;
+  }
+
   try {
     const { User } = await import('../models/User.js');
     const userCount = await User.countDocuments();

@@ -6,6 +6,12 @@ import { asyncHandler } from '../utils/asyncHandler.js';
 import { formatQuote } from '../utils/legacyFormat.js';
 import { env } from '../config/env.js';
 
+async function getStripe() {
+  if (!env.stripe.secretKey) return null;
+  const Stripe = (await import('stripe')).default;
+  return new Stripe(env.stripe.secretKey);
+}
+
 export const createCheckoutSession = asyncHandler(async (req, res) => {
   const { quoteId } = req.body;
   if (!quoteId) throw new ApiError(400, 'Quote ID is required');
@@ -13,15 +19,11 @@ export const createCheckoutSession = asyncHandler(async (req, res) => {
   const quote = await Quote.findById(quoteId).populate('lead');
   if (!quote) throw new ApiError(404, 'Quote not found');
 
-  const stripeSecretKey = process.env.STRIPE_SECRET_KEY;
   const clientOrigin = req.headers.origin || env.frontendUrl || 'http://localhost:5173';
+  const stripe = await getStripe();
 
-  // If Stripe Secret Key is present, execute real Stripe API checkout session
-  if (stripeSecretKey) {
+  if (stripe) {
     try {
-      const Stripe = (await import('stripe')).default;
-      const stripe = new Stripe(stripeSecretKey);
-
       const lineItems = (quote.lineItems || []).map((item) => ({
         price_data: {
           currency: (quote.currency || 'AED').toLowerCase(),
@@ -34,14 +36,11 @@ export const createCheckoutSession = asyncHandler(async (req, res) => {
         quantity: item.quantity || 1,
       }));
 
-      // Add tax line item if applicable
       if (quote.tax > 0) {
         lineItems.push({
           price_data: {
             currency: (quote.currency || 'AED').toLowerCase(),
-            product_data: {
-              name: 'UAE VAT (5%)',
-            },
+            product_data: { name: 'UAE VAT (5%)' },
             unit_amount: Math.round(quote.tax * 100),
           },
           quantity: 1,
@@ -71,30 +70,25 @@ export const createCheckoutSession = asyncHandler(async (req, res) => {
           url: session.url,
           sessionId: session.id,
           mode: 'stripe',
-          message: 'Stripe Checkout session initialized',
-        })
+        }, 'Stripe checkout session created')
       );
       return;
     } catch (err) {
-      console.warn('Stripe checkout session creation error, falling back to sandbox mode:', err.message);
+      console.warn('Stripe checkout failed, using sandbox mode:', err.message);
     }
   }
 
-  // Sandbox checkout session for demonstration / immediate testing
-  const sandboxSessionId = `cs_sandbox_${Math.random().toString(36).substr(2, 9)}`;
+  const sandboxSessionId = `cs_sandbox_${Date.now()}`;
   quote.paymentStatus = 'pending';
   quote.stripeCheckoutSessionId = sandboxSessionId;
   await quote.save();
 
-  const successUrl = `${clientOrigin}/payment/success?quoteId=${quote._id}&session_id=${sandboxSessionId}`;
-
   res.status(200).json(
     new ApiResponse(200, {
-      url: successUrl,
+      url: `${clientOrigin}/payment/success?quoteId=${quote._id}&session_id=${sandboxSessionId}`,
       sessionId: sandboxSessionId,
       mode: 'sandbox',
-      message: 'Sandbox payment session generated (Stripe test fallback)',
-    })
+    }, 'Sandbox payment session created (set STRIPE_SECRET_KEY for live payments)')
   );
 });
 
@@ -109,7 +103,7 @@ export const confirmPayment = asyncHandler(async (req, res) => {
   quote.paymentStatus = 'paid';
   quote.paidAt = new Date();
   quote.acceptedAt = quote.acceptedAt || new Date();
-  quote.stripePaymentIntentId = sessionId || `pi_${Math.random().toString(36).substr(2, 9)}`;
+  quote.stripePaymentIntentId = sessionId || `pi_sandbox_${Date.now()}`;
   await quote.save();
 
   if (quote.lead) {
@@ -117,34 +111,29 @@ export const confirmPayment = asyncHandler(async (req, res) => {
   }
 
   res.status(200).json(
-    new ApiResponse(
-      200,
-      {
-        quote: formatQuote(quote),
-        paymentDetails: {
-          paidAmount: quote.grandTotal,
-          currency: quote.currency || 'AED',
-          transactionRef: quote.stripePaymentIntentId,
-          paidAt: quote.paidAt,
-        },
+    new ApiResponse(200, {
+      quote: formatQuote(quote),
+      paymentDetails: {
+        paidAmount: quote.grandTotal,
+        currency: quote.currency || 'AED',
+        transactionRef: quote.stripePaymentIntentId,
+        paidAt: quote.paidAt,
       },
-      'Payment confirmed and quote marked as accepted!'
-    )
+    }, 'Payment confirmed and quote marked as accepted')
   );
 });
 
 export const handleStripeWebhook = asyncHandler(async (req, res) => {
   const sig = req.headers['stripe-signature'];
-  const webhookSecret = process.env.STRIPE_WEBHOOK_SECRET;
+  const webhookSecret = env.stripe.webhookSecret;
 
-  if (!webhookSecret) {
-    res.status(200).json({ received: true });
+  if (!webhookSecret || !env.stripe.secretKey) {
+    res.status(200).json({ received: true, mode: 'no_webhook_secret' });
     return;
   }
 
   try {
-    const Stripe = (await import('stripe')).default;
-    const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
+    const stripe = await getStripe();
     const event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
 
     if (event.type === 'checkout.session.completed') {
@@ -168,7 +157,7 @@ export const handleStripeWebhook = asyncHandler(async (req, res) => {
     }
     res.status(200).json({ received: true });
   } catch (err) {
-    console.error('Webhook signature verification failed:', err.message);
+    console.error('Stripe webhook error:', err.message);
     res.status(400).send(`Webhook Error: ${err.message}`);
   }
 });
