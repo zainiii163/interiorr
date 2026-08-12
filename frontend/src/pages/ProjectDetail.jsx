@@ -130,11 +130,15 @@ export default function ProjectDetail() {
           <div>
             <h2 className="font-serif text-3xl font-bold text-stone-900 mb-8">Photo Gallery</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {project.gallery.map((img, idx) => (
-                <div key={idx} className="rounded-2xl overflow-hidden shadow-md h-72">
-                  <img src={img} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-500" />
-                </div>
-              ))}
+              {project.gallery.map((img, idx) => {
+                const src = typeof img === 'string' ? img : img?.url;
+                if (!src) return null;
+                return (
+                  <div key={idx} className="rounded-2xl overflow-hidden shadow-md h-72">
+                    <img src={src} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover hover:scale-105 transition duration-500" />
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}

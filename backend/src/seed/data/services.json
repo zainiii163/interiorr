@@ -94,5 +94,63 @@
     "category": "fitout",
     "icon": "Kanban",
     "order": 12
+  },
+  {
+    "title": "Marble & Stone Works",
+    "shortDescription": "Premium marble, granite, and stone cladding for floors and walls.",
+    "category": "specialty",
+    "icon": "Gem",
+    "isFeatured": true,
+    "order": 13,
+    "features": ["Italian marble", "Precision cutting", "Sealing & polish"]
+  },
+  {
+    "title": "Tile & Flooring",
+    "shortDescription": "Porcelain, hardwood, and luxury vinyl flooring installation.",
+    "category": "renovation",
+    "icon": "Layers",
+    "order": 14
+  },
+  {
+    "title": "Gypsum & False Ceiling",
+    "shortDescription": "Custom gypsum ceilings with cove lighting and acoustic solutions.",
+    "category": "fitout",
+    "icon": "Square",
+    "order": 15
+  },
+  {
+    "title": "Stretch Ceiling",
+    "shortDescription": "Modern stretch ceiling systems with printed and translucent options.",
+    "category": "specialty",
+    "icon": "Maximize",
+    "order": 16
+  },
+  {
+    "title": "Microcement & Terrazzo",
+    "shortDescription": "Seamless microcement and terrazzo finishes for contemporary spaces.",
+    "category": "specialty",
+    "icon": "Circle",
+    "order": 17
+  },
+  {
+    "title": "Smart Home Automation",
+    "shortDescription": "Lighting, climate, and security automation integration.",
+    "category": "specialty",
+    "icon": "Cpu",
+    "order": 18
+  },
+  {
+    "title": "Window Glazing & Partitions",
+    "shortDescription": "Glass partitions, aluminum glazing, and office partitioning systems.",
+    "category": "fitout",
+    "icon": "PanelTop",
+    "order": 19
+  },
+  {
+    "title": "Turnkey Contracting",
+    "shortDescription": "Full civil + fit-out contracting for residential and commercial projects.",
+    "category": "fitout",
+    "icon": "HardHat",
+    "order": 20
   }
 ]

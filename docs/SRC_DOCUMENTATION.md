@@ -1157,30 +1157,32 @@ VITE_SITE_NAME=Interior Platform
 
 ### Phase 1 — MVP (4–6 weeks)
 
-- [ ] Scaffold monorepo (`frontend/` + `backend/` as separate apps)
-- [ ] Wire API integration (`frontend/src/services/api.js` + backend CORS)
-- [ ] MongoDB models + seed script
-- [ ] Public pages: Home, Services, Projects, About, Contact, Book Consultation
-- [ ] Lead form → API → email notification
-- [ ] Admin: login, dashboard, leads, services, projects, reviews CRUD
-- [ ] Image upload to Cloudinary
-- [ ] Responsive UI with new color system
-- [ ] WhatsApp FAB + contact CTAs
+- [x] Scaffold monorepo (`frontend/` + `backend/` as separate apps)
+- [x] Wire API integration (`frontend/src/services/api.js` + backend CORS)
+- [x] MongoDB models + seed script
+- [x] Public pages: Home, Services, Projects, About, Contact, Book Consultation
+- [x] Lead form → API → email notification
+- [x] Admin: login, dashboard, leads, services, projects, reviews CRUD
+- [x] Image upload to Cloudinary (env-configured; local stub fallback)
+- [x] Responsive UI with new color system
+- [x] WhatsApp FAB + contact CTAs
 
 ### Phase 2 — Enhanced CMS (2–3 weeks)
 
-- [ ] Design styles pages + admin
-- [ ] Quote builder (line items, PDF export)
-- [ ] Trust pillars + site settings admin
-- [ ] Careers / job applications
-- [ ] Material catalog (experience center)
+- [x] Design styles pages + admin
+- [x] Quote builder (line items, PDF export)
+- [x] Trust pillars + site settings admin
+- [x] Careers / job applications
+- [x] Material catalog (experience center)
 
 ### Phase 3 — Client Portal & Automation (3–4 weeks)
 
-- [ ] Client login to view quote & project timeline
-- [ ] Google Reviews sync
-- [ ] Payment on quote acceptance
-- [ ] Analytics dashboard
+- [x] Client login to view quote & project timeline
+- [x] Google Reviews sync (API + curated fallback)
+- [x] Payment on quote acceptance (Stripe + sandbox)
+- [x] Analytics dashboard
+
+**Still open / polish:** quote email-send, service reorder UI, login rate-limit, Cloudinary/SMTP/Stripe production keys, per-page SEO meta.
 
 ---
 

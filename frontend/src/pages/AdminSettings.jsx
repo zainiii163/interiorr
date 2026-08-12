@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Save, RefreshCw } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useSite } from '../context/SiteContext';
 
 const emptySettings = {
   companyName: '',
@@ -21,6 +22,7 @@ const emptySettings = {
 
 export default function AdminSettings() {
   const { isAdmin } = useAuth();
+  const { refreshSettings } = useSite();
   const [settings, setSettings] = useState(emptySettings);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -64,11 +66,9 @@ export default function AdminSettings() {
         body: JSON.stringify(settings),
       });
       if (res.success) {
-        setMessage('Settings saved successfully.');
-        setSettings((prev) => ({
-          ...prev,
-          statistics: res.data.statistics || prev.statistics,
-        }));
+        setMessage('Settings saved successfully. Public site will reflect these changes.');
+        setSettings(res.data);
+        await refreshSettings();
       }
     } catch (err) {
       setMessage(err.message || 'Failed to save settings.');

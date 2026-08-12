@@ -48,6 +48,7 @@ router.get('/quotes/:id/pdf', optionalProtect, c.exportQuotePDF);
 // Media
 router.get('/media', c.listMedia);
 router.post('/media', protect, c.createMedia);
+router.put('/media/:id', protect, c.updateMedia);
 router.delete('/media/:id', protect, authorize('admin'), c.deleteMedia);
 
 // Materials

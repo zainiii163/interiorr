@@ -283,6 +283,15 @@ export const createMedia = asyncHandler(async (req, res) => {
   res.status(201).json(new ApiResponse(201, media, 'Media created'));
 });
 
+export const updateMedia = asyncHandler(async (req, res) => {
+  const media = await Media.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  });
+  if (!media) throw new ApiError(404, 'Media not found');
+  res.status(200).json(new ApiResponse(200, media, 'Media updated'));
+});
+
 export const deleteMedia = asyncHandler(async (req, res) => {
   const media = await Media.findByIdAndDelete(req.params.id);
   if (!media) throw new ApiError(404, 'Media not found');

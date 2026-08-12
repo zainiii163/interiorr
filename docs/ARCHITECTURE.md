@@ -370,13 +370,18 @@ npm run dev
 
 | Layer | Status |
 |-------|--------|
-| Backend structure | ✅ Scaffolded |
-| Backend models | ✅ All 12 models |
-| Backend routes/controllers | ✅ Core modules |
-| Backend seed | ✅ Demo data script |
-| Frontend structure | ✅ Folder architecture |
-| Frontend pages/components | 🔜 Stubs — implement per phase |
-| Production deploy | 🔜 Phase 1 completion |
+| Backend structure | ✅ Complete |
+| Backend models | ✅ Core + Materials, Quotes, portal fields |
+| Backend routes/controllers | ✅ CMS, auth, leads, portal, payments, analytics |
+| Backend seed | ✅ Demo data (20+ services, materials, quotes) |
+| Frontend structure | ✅ Live app via `App.jsx` (not stub routes) |
+| Frontend public pages | ✅ Home, About (CMS), Services, Projects, Materials, Portal |
+| Frontend admin CMS | ✅ Full admin sidebar CRUD + settings |
+| Production deploy | ✅ Vercel Services (`main` branch) |
+
+**Routing note:** The live SPA entry is `frontend/src/App.jsx`. Older `PublicRoutes.jsx` / `AdminRoutes.jsx` and stub pages under `pages/public` / `pages/admin` are legacy and not used by `main.jsx`.
+
+**CMS integration:** Site Settings drive hero, About, CTAs, contact, skills, Google sync keys. Admin save refreshes `SiteContext` so the public site updates without a full reload.
 
 ---
 

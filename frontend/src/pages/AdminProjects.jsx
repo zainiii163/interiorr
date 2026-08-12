@@ -20,6 +20,7 @@ export default function AdminProjects() {
     coverImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
     beforeImage: '',
     afterImage: '',
+    galleryUrls: '',
     isFeatured: false,
     isPublished: true
   });
@@ -49,6 +50,7 @@ export default function AdminProjects() {
       coverImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
       beforeImage: '',
       afterImage: '',
+      galleryUrls: '',
       isFeatured: false,
       isPublished: true
     });
@@ -67,6 +69,7 @@ export default function AdminProjects() {
       coverImage: proj.coverImage,
       beforeImage: proj.beforeImages?.[0] || '',
       afterImage: proj.afterImages?.[0] || '',
+      galleryUrls: (proj.gallery || []).map((g) => g.url || g).filter(Boolean).join('\n'),
       isFeatured: proj.isFeatured,
       isPublished: proj.isPublished
     });
@@ -75,11 +78,21 @@ export default function AdminProjects() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    const gallery = formData.galleryUrls
+      .split(/[\n,]/)
+      .map((u) => u.trim())
+      .filter(Boolean)
+      .map((url) => ({ url }));
+
     const payload = {
       ...formData,
       beforeImages: formData.beforeImage ? [formData.beforeImage] : [],
-      afterImages: formData.afterImage ? [formData.afterImage] : []
+      afterImages: formData.afterImage ? [formData.afterImage] : [],
+      gallery,
     };
+    delete payload.galleryUrls;
+    delete payload.beforeImage;
+    delete payload.afterImage;
 
     try {
       if (editId) {
@@ -243,6 +256,18 @@ export default function AdminProjects() {
                   value={formData.afterImage}
                   onChange={(url) => setFormData({ ...formData, afterImage: url })}
                 />
+              </div>
+
+              <div>
+                <label className="block font-bold text-stone-700 mb-1">Gallery Image URLs</label>
+                <textarea
+                  rows="3"
+                  value={formData.galleryUrls}
+                  onChange={(e) => setFormData({ ...formData, galleryUrls: e.target.value })}
+                  placeholder="One image URL per line"
+                  className="w-full px-3 py-2 border rounded-xl font-mono"
+                />
+                <p className="text-[10px] text-stone-400 mt-1">Paste multiple URLs (one per line). Use Upload fields above for single images, then paste URLs here for the gallery.</p>
               </div>
 
               <div>

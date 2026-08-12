@@ -1,12 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { ArrowLeft, User, Phone, Mail, MapPin, Calendar, Clock, MessageSquare, Send, CheckCircle2 } from 'lucide-react';
+import { ArrowLeft, Send, CheckCircle2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 
 export default function LeadDetailAdmin() {
   const { id } = useParams();
   const [lead, setLead] = useState(null);
   const [status, setStatus] = useState('New');
+  const [assignedTo, setAssignedTo] = useState('');
+  const [users, setUsers] = useState([]);
   const [noteContent, setNoteContent] = useState('');
   const [loading, setLoading] = useState(true);
   const [msg, setMsg] = useState('');
@@ -17,6 +19,11 @@ export default function LeadDetailAdmin() {
       if (res.success) {
         setLead(res.data);
         setStatus(res.data.status);
+        const assigneeId =
+          typeof res.data.assignedTo === 'object'
+            ? res.data.assignedTo?._id || ''
+            : res.data.assignedTo || '';
+        setAssignedTo(assigneeId);
       }
     } catch (e) {
       console.error('Error loading lead detail:', e);
@@ -25,8 +32,18 @@ export default function LeadDetailAdmin() {
     }
   };
 
+  const fetchUsers = async () => {
+    try {
+      const res = await apiFetch('/users');
+      if (res.success) setUsers(res.data || []);
+    } catch (e) {
+      console.error('Error loading users:', e);
+    }
+  };
+
   useEffect(() => {
     fetchLead();
+    fetchUsers();
   }, [id]);
 
   const handleStatusUpdate = async (newStatus) => {
@@ -34,10 +51,28 @@ export default function LeadDetailAdmin() {
     try {
       const res = await apiFetch(`/leads/${id}`, {
         method: 'PUT',
-        body: JSON.stringify({ status: newStatus })
+        body: JSON.stringify({ status: newStatus }),
       });
       if (res.success) {
+        setLead(res.data);
         setMsg('Status updated to ' + newStatus);
+        setTimeout(() => setMsg(''), 3000);
+      }
+    } catch (e) {
+      alert(e.message);
+    }
+  };
+
+  const handleAssign = async (userId) => {
+    setAssignedTo(userId);
+    try {
+      const res = await apiFetch(`/leads/${id}`, {
+        method: 'PUT',
+        body: JSON.stringify({ assignedTo: userId || null }),
+      });
+      if (res.success) {
+        setLead(res.data);
+        setMsg(userId ? 'Lead assigned successfully' : 'Assignee cleared');
         setTimeout(() => setMsg(''), 3000);
       }
     } catch (e) {
@@ -52,7 +87,7 @@ export default function LeadDetailAdmin() {
     try {
       const res = await apiFetch(`/leads/${id}/notes`, {
         method: 'POST',
-        body: JSON.stringify({ content: noteContent })
+        body: JSON.stringify({ content: noteContent }),
       });
       if (res.success) {
         setNoteContent('');
@@ -66,9 +101,13 @@ export default function LeadDetailAdmin() {
   if (loading) return <div className="p-8 text-center font-serif text-lg">Loading Lead Details...</div>;
   if (!lead) return <div className="p-8 text-center font-serif text-lg">Lead Not Found</div>;
 
+  const assigneeName =
+    typeof lead.assignedTo === 'object'
+      ? lead.assignedTo?.name
+      : users.find((u) => u._id === assignedTo)?.name;
+
   return (
     <div className="space-y-6">
-      
       <div className="flex items-center space-x-3">
         <Link to="/admin/leads" className="p-2 rounded-lg bg-white border border-stone-200 text-stone-600 hover:text-stone-900">
           <ArrowLeft className="w-4 h-4" />
@@ -86,14 +125,10 @@ export default function LeadDetailAdmin() {
       )}
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        
-        {/* Left Column: Details & Status */}
         <div className="lg:col-span-2 space-y-6">
-          
-          {/* Customer Info Card */}
           <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
             <h2 className="font-serif text-lg font-bold text-stone-900 pb-2 border-b border-stone-100">Customer & Property Details</h2>
-            
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
               <div>
                 <span className="text-stone-400 uppercase tracking-wider text-[10px] block">Full Name</span>
@@ -119,19 +154,22 @@ export default function LeadDetailAdmin() {
                 <span className="text-stone-400 uppercase tracking-wider text-[10px] block">Property Type & Location</span>
                 <span className="font-medium text-stone-800">{lead.propertyType} ({lead.location})</span>
               </div>
+              <div>
+                <span className="text-stone-400 uppercase tracking-wider text-[10px] block">Assigned To</span>
+                <span className="font-medium text-stone-800">{assigneeName || 'Unassigned'}</span>
+              </div>
             </div>
 
             {lead.message && (
               <div className="pt-3 border-t border-stone-100">
                 <span className="text-stone-400 uppercase tracking-wider text-[10px] block mb-1">Customer Message / Brief</span>
                 <p className="text-xs text-stone-700 bg-stone-50 p-3.5 rounded-xl border border-stone-200/80 leading-relaxed italic">
-                  "{lead.message}"
+                  &quot;{lead.message}&quot;
                 </p>
               </div>
             )}
           </div>
 
-          {/* FR-084: Internal Notes Stream */}
           <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
             <h2 className="font-serif text-lg font-bold text-stone-900 pb-2 border-b border-stone-100">Internal Notes & History</h2>
 
@@ -140,13 +178,10 @@ export default function LeadDetailAdmin() {
                 type="text"
                 value={noteContent}
                 onChange={(e) => setNoteContent(e.target.value)}
-                placeholder="Add internal staff note (e.g. Call attempted, quote sent via WhatsApp)..."
+                placeholder="Add internal staff note..."
                 className="flex-1 px-4 py-2.5 rounded-xl border border-stone-300 text-xs focus:ring-2 focus:ring-[#C4795A]"
               />
-              <button
-                type="submit"
-                className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1"
-              >
+              <button type="submit" className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-1">
                 <Send className="w-3.5 h-3.5" />
                 <span>Add Note</span>
               </button>
@@ -168,15 +203,28 @@ export default function LeadDetailAdmin() {
               )}
             </div>
           </div>
-
         </div>
 
-        {/* Right Column: Status Controls & Actions */}
         <div className="space-y-6">
-          
+          <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
+            <h3 className="font-serif text-base font-bold text-stone-900">Assign Staff</h3>
+            <select
+              value={assignedTo}
+              onChange={(e) => handleAssign(e.target.value)}
+              className="w-full px-4 py-2.5 rounded-xl border border-stone-300 text-xs bg-white"
+            >
+              <option value="">Unassigned</option>
+              {users.map((u) => (
+                <option key={u._id} value={u._id}>
+                  {u.name} ({u.role})
+                </option>
+              ))}
+            </select>
+          </div>
+
           <div className="bg-white p-6 rounded-2xl border border-stone-200 shadow-sm space-y-4">
             <h3 className="font-serif text-base font-bold text-stone-900">Pipeline Status</h3>
-            
+
             <div className="space-y-2">
               {['New', 'Contacted', 'Quoted', 'Won', 'Lost'].map((st) => (
                 <button
@@ -199,15 +247,12 @@ export default function LeadDetailAdmin() {
                 to={`/admin/quotes?leadId=${lead._id}`}
                 className="w-full btn-terracotta text-center py-2.5 rounded-xl text-xs font-semibold block shadow-md"
               >
-                Create Official Quotation (Q-2026)
+                Create Official Quotation
               </Link>
             </div>
           </div>
-
         </div>
-
       </div>
-
     </div>
   );
 }
