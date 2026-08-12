@@ -74,7 +74,7 @@ export default function VideoShowcase() {
             </div>
           </ScrollReveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
             {videos.map((video, index) => (
               <ScrollReveal key={video._id} delay={index * 100}>
                 <div

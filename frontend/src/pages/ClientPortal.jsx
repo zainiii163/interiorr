@@ -23,6 +23,7 @@ export default function ClientPortal() {
   const [activeTab, setActiveTab] = useState('quote'); // 'quote' | 'timeline'
   
   const [isProcessingPayment, setIsProcessingPayment] = useState(false);
+  const [downloadingPDF, setDownloadingPDF] = useState(false);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
 
@@ -96,8 +97,34 @@ export default function ClientPortal() {
     }
   };
 
-  const handlePrint = () => {
-    window.print();
+  const handlePrint = async () => {
+    if (!data?.quote) return;
+    setDownloadingPDF(true);
+    try {
+      const response = await fetch(`/api/v1/quotes/${data.quote._id}/pdf`, {
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to generate PDF');
+      }
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `Quote-${data.quote.quoteNumber}.pdf`;
+      document.body.appendChild(a);
+      a.click();
+      window.URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    } catch (e) {
+      alert('Failed to download PDF: ' + e.message);
+    } finally {
+      setDownloadingPDF(false);
+    }
   };
 
   return (
@@ -241,28 +268,30 @@ export default function ClientPortal() {
             </div>
 
             {/* Navigation Tabs */}
-            <div className="flex border-b border-stone-800 space-x-8 text-sm font-medium">
+            <div className="flex border-b border-stone-800 space-x-4 sm:space-x-8 text-xs sm:text-sm font-medium overflow-x-auto">
               <button
                 onClick={() => setActiveTab('quote')}
-                className={`pb-4 flex items-center space-x-2 border-b-2 transition ${
+                className={`pb-4 flex items-center space-x-2 border-b-2 transition whitespace-nowrap ${
                   activeTab === 'quote'
                     ? 'border-[#C4795A] text-[#C4795A] font-bold'
                     : 'border-transparent text-stone-400 hover:text-stone-200'
                 }`}
               >
                 <FileText className="w-4 h-4" />
-                <span>Quotation & Items ({data.quote.currency} {data.quote.grandTotal?.toLocaleString()})</span>
+                <span className="hidden sm:inline">Quotation & Items</span>
+                <span className="sm:hidden">Quote</span>
               </button>
               <button
                 onClick={() => setActiveTab('timeline')}
-                className={`pb-4 flex items-center space-x-2 border-b-2 transition ${
+                className={`pb-4 flex items-center space-x-2 border-b-2 transition whitespace-nowrap ${
                   activeTab === 'timeline'
                     ? 'border-[#C4795A] text-[#C4795A] font-bold'
                     : 'border-transparent text-stone-400 hover:text-stone-200'
                 }`}
               >
                 <Clock className="w-4 h-4" />
-                <span>Project Timeline & Milestones</span>
+                <span className="hidden sm:inline">Project Timeline</span>
+                <span className="sm:hidden">Timeline</span>
               </button>
             </div>
 
@@ -278,10 +307,20 @@ export default function ClientPortal() {
                     </div>
                     <button
                       onClick={handlePrint}
-                      className="px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition"
+                      disabled={downloadingPDF}
+                      className="px-3.5 py-2 bg-stone-900 hover:bg-stone-800 text-stone-300 border border-stone-700 rounded-xl text-xs font-semibold flex items-center space-x-1.5 transition disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>Download PDF</span>
+                      {downloadingPDF ? (
+                        <>
+                          <Download className="w-3.5 h-3.5 animate-pulse" />
+                          <span>Generating...</span>
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-3.5 h-3.5" />
+                          <span>Download PDF</span>
+                        </>
+                      )}
                     </button>
                   </div>
 

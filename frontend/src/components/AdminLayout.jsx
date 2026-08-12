@@ -4,6 +4,7 @@ import {
   LayoutDashboard, Users, FileText, Layers, FolderKanban,
   Settings, LogOut, ArrowLeft, Star, Handshake, Palette, Shield,
   ShieldCheck, Briefcase, ClipboardList, Compass, TrendingUp,
+  Package, Image as ImageIcon,
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 
@@ -45,6 +46,8 @@ export default function AdminLayout() {
     { name: 'Services', path: '/admin/services', icon: Layers },
     { name: 'Projects', path: '/admin/projects', icon: FolderKanban },
     { name: 'Design Styles', path: '/admin/design-styles', icon: Palette },
+    { name: 'Materials', path: '/admin/materials', icon: Package },
+    { name: 'Media Library', path: '/admin/media', icon: ImageIcon },
     { name: 'Trust Pillars', path: '/admin/trust-pillars', icon: ShieldCheck },
     { name: 'Reviews', path: '/admin/reviews', icon: Star },
     { name: 'Partners', path: '/admin/partners', icon: Handshake },

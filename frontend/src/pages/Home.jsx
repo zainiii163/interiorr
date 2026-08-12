@@ -407,6 +407,26 @@ export default function Home() {
 
       )}
 
+      {/* Materials CTA Section */}
+      <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <ScrollReveal className="text-center">
+            <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
+              Experience Center
+            </span>
+            <h2 className="font-serif text-4xl sm:text-5xl font-bold mt-2 mb-4">
+              Premium Materials for Your Dream Space
+            </h2>
+            <p className="text-stone-400 max-w-2xl mx-auto mb-8">
+              Explore our curated collection of flooring, marble, tiles, and fixtures sourced from trusted suppliers worldwide.
+            </p>
+            <Link to="/materials" className="btn-terracotta inline-flex items-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm">
+              Browse Materials <ArrowRight className="w-4 h-4" />
+            </Link>
+          </ScrollReveal>
+        </div>
+      </section>
+
 
 
       {reviews.length > 0 && (

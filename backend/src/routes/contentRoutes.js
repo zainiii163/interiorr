@@ -43,7 +43,7 @@ router.post('/quotes', protect, c.createQuote);
 router.put('/quotes/:id', protect, c.updateQuote);
 router.put('/quotes/:id/status', protect, c.updateQuoteStatus);
 router.delete('/quotes/:id', protect, authorize('admin'), c.deleteQuote);
-router.get('/quotes/:id/pdf', protect, c.exportQuotePDF);
+router.get('/quotes/:id/pdf', optionalProtect, c.exportQuotePDF);
 
 // Media
 router.get('/media', c.listMedia);

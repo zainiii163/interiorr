@@ -40,8 +40,9 @@ export default function MaterialsPage() {
     : materials.filter(m => m.category === activeCategory);
 
   const getSpecValue = (specs, key) => {
-    if (specs instanceof Map) return specs.get(key);
-    return specs[key];
+    if (!specs) return '';
+    if (typeof specs === 'object' && key in specs) return specs[key] || '';
+    return '';
   };
 
   return (
@@ -65,14 +66,14 @@ export default function MaterialsPage() {
       </section>
 
       {/* Category Filter */}
-      <section className="py-8 bg-white border-b border-stone-200 sticky top-0 z-10">
+      <section className="py-6 bg-white border-b border-stone-200 sticky top-0 z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
               <button
                 key={cat.id}
                 onClick={() => setActiveCategory(cat.id)}
-                className={`px-4 py-2 rounded-full text-xs font-bold uppercase transition-all ${
+                className={`px-3 py-2 rounded-full text-xs font-bold uppercase transition-all ${
                   activeCategory === cat.id
                     ? 'bg-[#C4795A] text-white'
                     : 'bg-stone-100 text-stone-700 hover:bg-stone-200'
@@ -86,7 +87,7 @@ export default function MaterialsPage() {
       </section>
 
       {/* Materials Grid */}
-      <section className="py-16 bg-stone-50">
+      <section className="py-12 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
             <div className="text-center py-12">
@@ -97,7 +98,7 @@ export default function MaterialsPage() {
               <div className="text-stone-500">No materials found in this category.</div>
             </div>
           ) : (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredMaterials.map((material, index) => (
                 <ScrollReveal key={material._id} delay={index * 50}>
                   <div

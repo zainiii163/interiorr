@@ -13,8 +13,7 @@ const materialSchema = new mongoose.Schema(
     description: { type: String, default: '' },
     images: [{ type: String }],
     specifications: {
-      type: Map,
-      of: String,
+      type: Object,
       default: {},
     },
     pricePerUnit: { type: Number, default: 0 },
@@ -28,6 +27,5 @@ const materialSchema = new mongoose.Schema(
 );
 
 materialSchema.index({ category: 1, isActive: 1 });
-materialSchema.index({ slug: 1 });
 
 export const Material = mongoose.model('Material', materialSchema);
