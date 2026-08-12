@@ -9,7 +9,12 @@ export default function PromiseGrid({ pillars = [] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
           <span className="text-[#5C7A6B] font-semibold text-xs uppercase tracking-widest">Our Promise</span>
-          <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">Why Property Owners Choose Us</h2>
+          <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">
+            Renovation Done by Professionals
+          </h2>
+          <p className="text-stone-500 text-sm mt-3 max-w-2xl mx-auto">
+            Warranty, fixed timelines, transparent pricing, free basic design, and in-house NOC support — the promises property owners expect from Dubai&apos;s top renovators.
+          </p>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">

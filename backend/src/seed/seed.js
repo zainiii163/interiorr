@@ -395,10 +395,10 @@ async function seed() {
       defaultDescription: 'Luxury interior design, renovation, joinery and fit-out services in Dubai.',
     },
     heroImage: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2000&q=80',
-    heroBadge: "Dubai's Premier Turnkey Renovation & Joinery",
-    heroTitle: 'Crafting Bespoke Luxury Interiors Across Dubai',
+    heroBadge: "Dubai's Premier Turnkey Fitout & Joinery",
+    heroTitle: "Dubai's Leading Turnkey Fitout, Joinery & Property Transformation Specialists",
     heroSubtitle: 'Design • Fitout • Joinery • Decorative Finishes • Property Inspection • Authority Approvals',
-    heroDescription: 'From Palm Jumeirah villas to Downtown penthouses — full turnkey execution with certified engineers and in-house joinery.',
+    heroDescription: 'Transforming Dubai luxury homes and commercial spaces with certified engineers and in-house joinery.',
     heroTrustBadges: [
       'DDA & Municipality Approved',
       '10-Year Structural Warranty',

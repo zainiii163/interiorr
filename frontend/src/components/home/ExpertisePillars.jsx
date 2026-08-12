@@ -8,8 +8,15 @@ export default function ExpertisePillars({ pillars = [] }) {
     <section className="py-20 bg-white border-b border-stone-100">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
-          <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">What We Do</span>
-          <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">Complete Property Transformation</h2>
+          <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
+            For Designers & Property Owners
+          </span>
+          <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">
+            Joinery, Fit-Out & Design Under One Roof
+          </h2>
+          <p className="text-stone-500 text-sm mt-3 max-w-2xl mx-auto">
+            From in-house carpentry to turnkey execution — the same specialist model Dubai trusts for luxury homes and commercial spaces.
+          </p>
         </ScrollReveal>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">

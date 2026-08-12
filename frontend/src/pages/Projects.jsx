@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Clock } from 'lucide-react';
 import { apiFetch } from '../services/api';
@@ -14,10 +14,7 @@ export default function Projects() {
     }).catch(console.error).finally(() => setIsLoading(false));
   }, []);
 
-  const categories = useMemo(() => {
-    const unique = [...new Set(allProjects.map((p) => p.category).filter(Boolean))];
-    return ['All', ...unique];
-  }, [allProjects]);
+  const categories = ['All', 'Residential', 'Commercial', 'Retail'];
 
   const projects = category === 'All'
     ? allProjects

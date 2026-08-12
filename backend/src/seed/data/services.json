@@ -46,12 +46,13 @@
   },
   {
     "title": "Property Inspection",
-    "shortDescription": "Independent snagging for new and renovated properties.",
+    "shortDescription": "Independent snagging for new homes, renovated spaces, and pre-handover units — catch finishing defects and hidden issues before they become costly problems.",
     "category": "inspection",
     "icon": "ClipboardCheck",
     "isFeatured": true,
     "order": 6,
-    "features": ["Pre-handover checks", "Detailed reports", "Defect identification"]
+    "features": ["Pre-handover checks", "Detailed reports", "Defect identification"],
+    "image": "https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80"
   },
   {
     "title": "Decorative Paints",
@@ -76,10 +77,13 @@
   },
   {
     "title": "Air Quality",
-    "shortDescription": "Advanced indoor air treatment for healthier living spaces.",
+    "shortDescription": "Advanced indoor air treatment targeting mold spores, dust allergens, pet dander, and odors — healthier living after every fit-out.",
     "category": "specialty",
     "icon": "Wind",
-    "order": 10
+    "isFeatured": true,
+    "order": 10,
+    "features": ["Mold & allergen control", "Post-renovation clean air", "Odor reduction"],
+    "image": "https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80"
   },
   {
     "title": "Custom Furniture",
