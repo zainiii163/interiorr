@@ -1,0 +1,38 @@
+[
+  {
+    "title": "Experienced Planners",
+    "description": "Custom proposals with a detailed scope of work tailored to your vision.",
+    "icon": "ClipboardList",
+    "order": 1
+  },
+  {
+    "title": "Planned Installation",
+    "description": "Average 8–10 weeks for full home renovation with quality delivery.",
+    "icon": "CalendarCheck",
+    "order": 2
+  },
+  {
+    "title": "Warranty",
+    "description": "Up to 10 years on kitchens, wardrobes and cabinets. 1 year workmanship warranty.",
+    "icon": "ShieldCheck",
+    "order": 3
+  },
+  {
+    "title": "Best Price Guarantee",
+    "description": "Transparent pricing on sanitaryware, tiles and appliances — no hidden costs.",
+    "icon": "BadgeDollarSign",
+    "order": 4
+  },
+  {
+    "title": "Free Design Services",
+    "description": "Basic 2D & 3D designs included for confirmed projects.",
+    "icon": "PencilRuler",
+    "order": 5
+  },
+  {
+    "title": "Authority Approvals",
+    "description": "In-house team for community NOCs and authority approvals.",
+    "icon": "FileCheck2",
+    "order": 6
+  }
+]

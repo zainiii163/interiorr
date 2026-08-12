@@ -1,0 +1,64 @@
+import mongoose from 'mongoose';
+
+const siteSettingSchema = new mongoose.Schema(
+  {
+    companyName: { type: String, default: 'Interior Platform' },
+    tagline: { type: String, default: "Dubai's Trusted Fit-Out & Renovation Specialists" },
+    phone: { type: String, default: '+971 55 000 0000' },
+    whatsapp: { type: String, default: '971550000000' },
+    email: { type: String, default: 'hello@interior.com' },
+    address: { type: String, default: 'Al Quoz, Dubai, UAE' },
+    businessHours: { type: String, default: 'Mon - Sat: 8:00 AM - 7:00 PM' },
+    mapEmbedUrl: { type: String, default: '' },
+    socialLinks: {
+      facebook: { type: String, default: '' },
+      instagram: { type: String, default: '' },
+      linkedin: { type: String, default: '' },
+      youtube: { type: String, default: '' },
+    },
+    stats: {
+      yearsExperience: { type: Number, default: 25 },
+      projectsCompleted: { type: Number, default: 1200 },
+      employees: { type: Number, default: 200 },
+      inspections: { type: Number, default: 10000 },
+      averageRating: { type: Number, default: 4.9 },
+    },
+    seo: {
+      defaultTitle: { type: String, default: 'Interior Platform | Fit-Out & Renovation Dubai' },
+      defaultDescription: {
+        type: String,
+        default: 'Turnkey interior fit-out, joinery, and property renovation in Dubai.',
+      },
+      ogImage: { type: String, default: '' },
+    },
+    heroVideo: { type: String, default: '' },
+    heroImage: { type: String, default: '' },
+    heroBadge: { type: String, default: '' },
+    heroTitle: { type: String, default: '' },
+    heroSubtitle: { type: String, default: '' },
+    heroDescription: { type: String, default: '' },
+    heroTrustBadges: [{ type: String }],
+    aboutTitle: { type: String, default: '' },
+    aboutSubtitle: { type: String, default: '' },
+    aboutBody: { type: String, default: '' },
+    aboutBullets: [{ type: String }],
+    aboutImage: { type: String, default: '' },
+    mission: { type: String, default: '' },
+    vision: { type: String, default: '' },
+    skillsTitle: { type: String, default: '' },
+    skillsBody: { type: String, default: '' },
+    skills: [{ label: { type: String }, value: { type: Number, default: 0 } }],
+    ctaBandTitle: { type: String, default: '' },
+    ctaBandBody: { type: String, default: '' },
+    ctaBandImage: { type: String, default: '' },
+    finalCtaTitle: { type: String, default: '' },
+    finalCtaBody: { type: String, default: '' },
+    googlePlaceId: { type: String, default: '' },
+    googleApiKey: { type: String, default: '' },
+    autoSyncGoogleReviews: { type: Boolean, default: true },
+    lastGoogleSyncAt: { type: Date },
+  },
+  { timestamps: true }
+);
+
+export const SiteSetting = mongoose.model('SiteSetting', siteSettingSchema);

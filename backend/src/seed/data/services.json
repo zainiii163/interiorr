@@ -1,0 +1,98 @@
+[
+  {
+    "title": "Villa Renovation",
+    "shortDescription": "Complete villa transformations from concept to handover.",
+    "category": "renovation",
+    "icon": "Home",
+    "isFeatured": true,
+    "order": 1,
+    "features": ["Turnkey execution", "MEP coordination", "Premium finishes"]
+  },
+  {
+    "title": "Full Home Renovation",
+    "shortDescription": "End-to-end apartment and home renovations in 8–10 weeks.",
+    "category": "renovation",
+    "icon": "Building2",
+    "isFeatured": true,
+    "order": 2,
+    "features": ["Free basic design", "NOC support", "Transparent pricing"]
+  },
+  {
+    "title": "Kitchen Renovation",
+    "shortDescription": "Custom kitchens with German & Austrian hardware.",
+    "category": "joinery",
+    "icon": "CookingPot",
+    "isFeatured": true,
+    "order": 3,
+    "features": ["Up to 10-year warranty", "Blum hardware", "Best price guarantee"]
+  },
+  {
+    "title": "Bathroom Renovation",
+    "shortDescription": "Luxury bathroom fit-outs with sanitaryware & tiling.",
+    "category": "renovation",
+    "icon": "Bath",
+    "isFeatured": true,
+    "order": 4,
+    "features": ["Waterproofing", "Premium tiles", "Smart fixtures"]
+  },
+  {
+    "title": "Bespoke Joinery",
+    "shortDescription": "In-house joinery factory for wardrobes, cabinets & custom woodwork.",
+    "category": "joinery",
+    "icon": "Hammer",
+    "isFeatured": true,
+    "order": 5,
+    "features": ["15,000 sq ft facility", "75+ craftsmen", "Value engineering"]
+  },
+  {
+    "title": "Property Inspection",
+    "shortDescription": "Independent snagging for new and renovated properties.",
+    "category": "inspection",
+    "icon": "ClipboardCheck",
+    "isFeatured": true,
+    "order": 6,
+    "features": ["Pre-handover checks", "Detailed reports", "Defect identification"]
+  },
+  {
+    "title": "Decorative Paints",
+    "shortDescription": "Artisan finishes and specialty wall treatments.",
+    "category": "specialty",
+    "icon": "Paintbrush",
+    "order": 7
+  },
+  {
+    "title": "MEP & HVAC",
+    "shortDescription": "Certified mechanical, electrical, and plumbing works.",
+    "category": "fitout",
+    "icon": "Wrench",
+    "order": 8
+  },
+  {
+    "title": "Authority Approvals",
+    "shortDescription": "In-house team for NOCs and municipality approvals.",
+    "category": "specialty",
+    "icon": "FileCheck",
+    "order": 9
+  },
+  {
+    "title": "Air Quality",
+    "shortDescription": "Advanced indoor air treatment for healthier living spaces.",
+    "category": "specialty",
+    "icon": "Wind",
+    "order": 10
+  },
+  {
+    "title": "Custom Furniture",
+    "shortDescription": "Made-to-measure furniture for residential and commercial spaces.",
+    "category": "joinery",
+    "icon": "Sofa",
+    "order": 11
+  },
+  {
+    "title": "Project Management",
+    "shortDescription": "Dedicated PMs for on-time, on-budget delivery.",
+    "category": "fitout",
+    "icon": "Kanban",
+    "order": 12
+  }
+]

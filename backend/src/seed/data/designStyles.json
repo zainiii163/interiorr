@@ -1,0 +1,13 @@
+[
+  { "name": "Contemporary", "tagline": "Sleek, current, polished", "traits": ["clean lines", "neutral palette", "modern materials"], "order": 1 },
+  { "name": "Minimalist", "tagline": "Less is more", "traits": ["open space", "simple forms", "clarity"], "order": 2 },
+  { "name": "Neoclassical", "tagline": "Timeless elegance", "traits": ["symmetry", "ornament", "luxury"], "order": 3 },
+  { "name": "Mediterranean", "tagline": "Warm coastal living", "traits": ["terracotta", "arches", "natural light"], "order": 4 },
+  { "name": "Japandi", "tagline": "Japanese meets Scandinavian", "traits": ["warm wood", "minimal", "calm"], "order": 5 },
+  { "name": "Arabian", "tagline": "Heritage-inspired luxury", "traits": ["pattern", "craft", "hospitality"], "order": 6 },
+  { "name": "Farmhouse", "tagline": "Relaxed rustic charm", "traits": ["wood", "textures", "comfort"], "order": 7 },
+  { "name": "Industrial", "tagline": "Raw urban character", "traits": ["metal", "concrete", "exposed"], "order": 8 },
+  { "name": "Ultra Luxury", "tagline": "Opulence without compromise", "traits": ["bespoke", "premium materials", "detail"], "order": 9 },
+  { "name": "Boho Chic", "tagline": "Layered and expressive", "traits": ["textiles", "color", "eclectic"], "order": 10 },
+  { "name": "Wellness", "tagline": "Spaces that restore", "traits": ["biophilic", "calm tones", "air quality"], "order": 11 }
+]
