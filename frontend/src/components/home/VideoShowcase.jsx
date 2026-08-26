@@ -119,13 +119,15 @@ export default function VideoShowcase() {
 
       {/* Video Modal */}
       {selectedVideo && (
-        <div className="fixed inset-0 z-50 bg-black/90 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="modal-overlay bg-black/90 items-center p-3 sm:p-4">
           <div className="relative w-full max-w-5xl">
             <button
+              type="button"
               onClick={() => setSelectedVideo(null)}
-              className="absolute -top-12 right-0 text-white hover:text-[#C4795A] transition-colors"
+              className="absolute top-2 right-2 sm:-top-12 sm:right-0 text-white hover:text-[#C4795A] transition-colors z-10 p-2 rounded-full bg-stone-900/80 sm:bg-transparent"
+              aria-label="Close video"
             >
-              <X className="w-8 h-8" />
+              <X className="w-6 h-6 sm:w-8 sm:h-8" />
             </button>
 
             <div className="aspect-video bg-black rounded-2xl overflow-hidden">

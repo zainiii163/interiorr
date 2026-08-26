@@ -1,4 +1,5 @@
 import { Router } from 'express';
+import rateLimit from 'express-rate-limit';
 import authRoutes from './authRoutes.js';
 import leadRoutes from './leadRoutes.js';
 import serviceRoutes from './serviceRoutes.js';
@@ -14,6 +15,27 @@ import analyticsRoutes from './analyticsRoutes.js';
 import { getIntegrationStatus } from '../config/integrations.js';
 
 const router = Router();
+
+// Global rate limiter — 200 requests per 15 minutes per IP
+const globalLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 200,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests. Please try again later.' },
+  keyGenerator: (req) => req.ip || req.headers['x-forwarded-for'] || 'unknown',
+});
+
+// Strict limiter for public endpoints
+const publicWriteLimiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 10,
+  standardHeaders: true,
+  legacyHeaders: false,
+  message: { success: false, message: 'Too many requests. Please try again later.' },
+});
+
+router.use(globalLimiter);
 
 router.get('/health', (req, res) => {
   res.json({ success: true, message: 'API OK', timestamp: new Date().toISOString() });

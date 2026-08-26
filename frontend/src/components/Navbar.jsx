@@ -45,9 +45,19 @@ function Logo({ settings, onClick }) {
   );
 }
 
-function NavActions({ user, onNavigate }) {
+function NavActions({ user, onNavigate, phone }) {
   return (
-    <div className="flex items-center gap-3 shrink-0">
+    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+      {phone && (
+        <a
+          href={`tel:${phone.replace(/[^\d+]/g, '')}`}
+          onClick={onNavigate}
+          className="hidden 2xl:inline-flex text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap"
+          aria-label={`Call ${phone}`}
+        >
+          {phone}
+        </a>
+      )}
       {user && (
         <Link
           to="/admin/dashboard"
@@ -234,7 +244,7 @@ export default function Navbar() {
               <div />
             )}
 
-            <NavActions user={user} onNavigate={closeMegaMenu} />
+            <NavActions user={user} onNavigate={closeMegaMenu} phone={settings.phone} />
           </div>
         </div>
 

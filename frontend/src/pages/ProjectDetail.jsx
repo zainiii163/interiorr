@@ -69,7 +69,7 @@ export default function ProjectDetail() {
         {hasBeforeAfter && (
           <div className="bg-stone-900 text-white p-8 rounded-2xl space-y-6">
             <h2 className="font-serif text-3xl font-bold text-[#C4795A] text-center">Before & After Transformation</h2>
-            <div className="relative w-full max-w-4xl mx-auto h-[450px] rounded-2xl overflow-hidden shadow-2xl select-none">
+            <div className="relative w-full max-w-4xl mx-auto h-[240px] sm:h-[360px] lg:h-[450px] rounded-2xl overflow-hidden shadow-2xl select-none">
               
               {/* After Image (Full width background) */}
               <img

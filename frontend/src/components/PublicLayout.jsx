@@ -10,7 +10,7 @@ export default function PublicLayout() {
     <>
       <SeoHead />
       <Navbar />
-      <main className="flex-grow">
+      <main className="flex-grow min-w-0 overflow-x-clip">
         <Outlet />
       </main>
       <Footer />

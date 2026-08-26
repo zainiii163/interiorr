@@ -1,15 +1,21 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
-import { Calendar, ShieldCheck, CheckCircle2, Send, ArrowRight } from 'lucide-react';
+import { Calendar, ShieldCheck, CheckCircle2, Send, ArrowRight, Loader2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
+import FormPrivacyNote from '../components/FormPrivacyNote';
 
 export default function Consultation() {
+  const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [searchParams] = useSearchParams();
   const initialService = searchParams.get('service') || '';
   const materialHint = searchParams.get('material') || '';
   const styleHint = searchParams.get('style') || '';
 
   const [activeServices, setActiveServices] = useState([]);
+  const [servicesLoading, setServicesLoading] = useState(true);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -42,6 +48,8 @@ export default function Consultation() {
         }
       } catch (e) {
         console.error('Error fetching services:', e);
+      } finally {
+        setServicesLoading(false);
       }
     };
     fetchServices();
@@ -87,16 +95,16 @@ export default function Consultation() {
       
       <section className="bg-stone-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">Private Appointment</span>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">Book a Design & Renovation Consultation</h1>
+          <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">{copy.consultBadge}</span>
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">{copy.consultTitle}</h1>
           <p className="text-stone-300 mt-3 max-w-2xl mx-auto text-sm">
-            Meet with our senior Dubai architectural team at your property or in our Design District studio.
+            {copy.consultSubtitle}
           </p>
         </div>
       </section>
 
       <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-8 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-[minmax(0,1fr)_minmax(0,320px)] gap-8 items-start">
         
         {submittedLead ? (
           <div className="bg-white p-10 rounded-2xl border border-stone-200 shadow-xl text-center space-y-6">
@@ -131,12 +139,14 @@ export default function Consultation() {
               
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="consult-fullName" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Full Name *
                   </label>
                   <input
+                    id="consult-fullName"
                     type="text"
                     required
+                    autoComplete="name"
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="e.g. Hassan Al-Rashid"
@@ -145,12 +155,14 @@ export default function Consultation() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="consult-email" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Email Address *
                   </label>
                   <input
+                    id="consult-email"
                     type="email"
                     required
+                    autoComplete="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="hassan@domain.ae"
@@ -161,12 +173,14 @@ export default function Consultation() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="consult-phone" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Phone Number (+971 UAE) *
                   </label>
                   <input
-                    type="text"
+                    id="consult-phone"
+                    type="tel"
                     required
+                    autoComplete="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+971 50 123 4567"
@@ -175,10 +189,11 @@ export default function Consultation() {
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="consult-propertyType" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Property Type *
                   </label>
                   <select
+                    id="consult-propertyType"
                     value={formData.propertyType}
                     onChange={(e) => setFormData({ ...formData, propertyType: e.target.value })}
                     className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-[#C4795A] text-sm bg-white"
@@ -195,29 +210,37 @@ export default function Consultation() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
-                    Required Service (FR-072 Dynamic) *
+                  <label htmlFor="consult-service" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                    Service Required *
                   </label>
-                  <select
-                    value={formData.service}
-                    onChange={(e) => setFormData({ ...formData, service: e.target.value })}
-                    className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-[#C4795A] text-sm bg-white"
-                  >
-                    {activeServices.length > 0 ? (
-                      activeServices.map(s => (
-                        <option key={s._id} value={s.name}>{s.name}</option>
-                      ))
-                    ) : (
-                      <option value="">Loading services…</option>
+                  <div className="relative">
+                    <select
+                      id="consult-service"
+                      value={formData.service}
+                      onChange={(e) => setFormData({ ...formData, service: e.target.value })}
+                      disabled={servicesLoading}
+                      className="w-full px-4 py-3 rounded-xl border border-stone-300 focus:ring-2 focus:ring-[#C4795A] text-sm bg-white disabled:opacity-60"
+                    >
+                      {activeServices.length > 0 ? (
+                        activeServices.map(s => (
+                          <option key={s._id} value={s.name}>{s.name}</option>
+                        ))
+                      ) : (
+                        <option value="">Loading services...</option>
+                      )}
+                    </select>
+                    {servicesLoading && (
+                      <Loader2 className="w-4 h-4 text-[#C4795A] animate-spin absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none" />
                     )}
-                  </select>
+                  </div>
                 </div>
 
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="consult-location" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Property Location in Dubai *
                   </label>
                   <input
+                    id="consult-location"
                     type="text"
                     required
                     value={formData.location}
@@ -232,10 +255,11 @@ export default function Consultation() {
                 <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                   Preferred Contact Method *
                 </label>
-                <div className="flex space-x-6">
+                <div className="flex flex-wrap gap-4 sm:gap-6" role="radiogroup" aria-label="Preferred contact method">
                   {['WhatsApp', 'Phone', 'Email'].map((method) => (
-                    <label key={method} className="flex items-center space-x-2 text-sm text-stone-800 cursor-pointer">
+                    <label key={method} htmlFor={`consult-contact-${method}`} className="flex items-center space-x-2 text-sm text-stone-800 cursor-pointer">
                       <input
+                        id={`consult-contact-${method}`}
                         type="radio"
                         name="preferredContactMethod"
                         value={method}
@@ -250,10 +274,11 @@ export default function Consultation() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                <label htmlFor="consult-message" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                   Project Notes & Timeline
                 </label>
                 <textarea
+                  id="consult-message"
                   rows="3"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -265,30 +290,40 @@ export default function Consultation() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full btn-terracotta py-4 rounded-xl font-semibold text-sm flex items-center justify-center space-x-2 shadow-lg"
+                aria-busy={loading}
+                className="w-full btn-terracotta py-4 rounded-xl font-semibold text-sm flex items-center justify-center space-x-2 shadow-lg disabled:opacity-60"
               >
                 <Send className="w-4 h-4" />
                 <span>{loading ? 'Submitting Request...' : 'Confirm Consultation Request'}</span>
               </button>
+
+              <FormPrivacyNote />
 
             </form>
           </div>
         )}
 
           <aside className="space-y-4">
-            <div className="p-6 rounded-2xl bg-stone-900 text-white">
-              <Calendar className="w-6 h-6 text-[#C4795A] mb-3" />
-              <h3 className="font-serif text-lg font-bold mb-2">What happens next</h3>
-              <p className="text-sm text-stone-300 leading-relaxed">
-                A planner contacts you within 2 hours, then we schedule a free site visit and prepare a detailed scope of work.
+            <div className="p-6 rounded-2xl bg-emerald-950/5 border border-emerald-200/60">
+              <ShieldCheck className="w-6 h-6 text-emerald-600 mb-3" />
+              <h3 className="font-serif text-lg font-bold text-stone-900 mb-2">Your privacy matters</h3>
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Consultation requests are handled by our in-house team only. We never share your details with
+                third-party marketers.{' '}
+                <Link to="/privacy" className="text-[#C4795A] font-semibold hover:underline">
+                  Read our privacy policy
+                </Link>
               </p>
             </div>
-            {[
-              { icon: ShieldCheck, title: 'Warranty', body: 'Up to 10 years on kitchens, wardrobes and cabinets.' },
-              { icon: CheckCircle2, title: 'Free basic design', body: '2D and 3D drawings included for confirmed projects.' },
-              { icon: ArrowRight, title: 'Job applications', body: 'Apply via Careers — inquiry forms are not used for hiring.', to: '/careers' },
-            ].map((item) => {
-              const Icon = item.icon;
+            <div className="p-6 rounded-2xl bg-stone-900 text-white">
+              <Calendar className="w-6 h-6 text-[#C4795A] mb-3" />
+              <h3 className="font-serif text-lg font-bold mb-2">{copy.consultNextTitle}</h3>
+              <p className="text-sm text-stone-300 leading-relaxed">
+                {copy.consultNextBody}
+              </p>
+            </div>
+            {(copy.consultCards || []).map((item) => {
+              const Icon = item.link ? ArrowRight : item.title?.toLowerCase().includes('warrant') ? ShieldCheck : CheckCircle2;
               const inner = (
                 <>
                   <Icon className="w-5 h-5 text-[#5C7A6B] mb-2" />
@@ -296,8 +331,8 @@ export default function Consultation() {
                   <p className="text-xs text-stone-600 mt-1">{item.body}</p>
                 </>
               );
-              return item.to ? (
-                <Link key={item.title} to={item.to} className="block p-6 rounded-2xl bg-white border border-stone-200 hover:border-[#C4795A]/40 transition">
+              return item.link ? (
+                <Link key={item.title} to={item.link} className="block p-6 rounded-2xl bg-white border border-stone-200 hover:border-[#C4795A]/40 transition">
                   {inner}
                 </Link>
               ) : (

@@ -17,7 +17,9 @@ import { JobOpening } from '../models/JobOpening.js';
 import { NavItem } from '../models/NavItem.js';
 import { Material } from '../models/Material.js';
 import { Media } from '../models/Media.js';
+import { Faq } from '../models/Faq.js';
 import { slugify } from '../utils/slugify.js';
+import { DEFAULT_PAGE_COPY, SERVICE_IMAGES, REVIEW_PHOTOS } from './pageCopy.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -45,6 +47,7 @@ async function seed() {
     NavItem.deleteMany({}),
     Material.deleteMany({}),
     Media.deleteMany({}),
+    Faq.deleteMany({}),
   ]);
 
   console.log('Creating admin user...');
@@ -72,26 +75,13 @@ async function seed() {
   });
 
   console.log('Seeding services...');
-  const serviceImages = {
-    'Villa Renovation': 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80',
-    'Full Home Renovation': 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
-    'Kitchen Renovation': 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1200&q=80',
-    'Bathroom Renovation': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80',
-    'Bespoke Joinery': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-    'Property Inspection': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
-    'Marble & Stone Works': 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1200&q=80',
-    'Tile & Flooring': 'https://images.unsplash.com/photo-1581858726788-75bc52f3788f?auto=format&fit=crop&w=1200&q=80',
-    'Gypsum & False Ceiling': 'https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1200&q=80',
-    'Office Fit-Out': 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-    'Windows & Doors': 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1200&q=80',
-  };
   const servicesData = loadJson('services.json');
   const services = await Service.insertMany(
     servicesData.map((s) => ({
       ...s,
       slug: slugify(s.title),
       fullDescription: s.fullDescription || s.shortDescription,
-      image: s.image || serviceImages[s.title] || 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?auto=format&fit=crop&w=1200&q=80',
+      image: s.image || SERVICE_IMAGES[s.title] || SERVICE_IMAGES['Full Home Renovation'],
       isActive: true,
     }))
   );
@@ -125,7 +115,7 @@ async function seed() {
   await TrustPillar.insertMany(loadJson('trustPillars.json'));
 
   console.log('Seeding reviews...');
-  await Review.insertMany([
+  const reviewSeeds = [
     {
       authorName: 'Timur G',
       authorTitle: 'Property Owner',
@@ -166,7 +156,10 @@ async function seed() {
       isFeatured: true,
       isPublished: true,
     },
-  ]);
+  ];
+  await Review.insertMany(
+    reviewSeeds.map((r, i) => ({ ...r, authorPhoto: REVIEW_PHOTOS[i % REVIEW_PHOTOS.length] }))
+  );
 
   console.log('Seeding partners...');
   await Partner.insertMany([
@@ -510,7 +503,11 @@ async function seed() {
     ctaBandImage: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=80',
     finalCtaTitle: 'Ready to Transform Your Property?',
     finalCtaBody: 'Schedule an in-person consultation with our senior Dubai team today.',
+    pageCopy: DEFAULT_PAGE_COPY,
   });
+
+  console.log('Seeding FAQs...');
+  await Faq.insertMany(loadJson('faqs.json'));
 
   console.log('Seeding job openings...');
   await JobOpening.insertMany([

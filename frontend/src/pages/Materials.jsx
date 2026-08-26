@@ -1,8 +1,10 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, X } from 'lucide-react';
 import ScrollReveal from '../components/ui/ScrollReveal';
 import { apiFetch } from '../services/api';
+import SkeletonGrid from '../components/ui/Skeleton';
+import EmptyState from '../components/ui/EmptyState';
 
 const categories = [
   { id: 'all', name: 'All Materials' },
@@ -17,6 +19,21 @@ export default function MaterialsPage() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [loading, setLoading] = useState(true);
   const [selectedMaterial, setSelectedMaterial] = useState(null);
+
+  const handleEscape = useCallback((e) => {
+    if (e.key === 'Escape') setSelectedMaterial(null);
+  }, []);
+
+  useEffect(() => {
+    if (selectedMaterial) {
+      document.addEventListener('keydown', handleEscape);
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.removeEventListener('keydown', handleEscape);
+        document.body.style.overflow = '';
+      };
+    }
+  }, [selectedMaterial, handleEscape]);
 
   useEffect(() => {
     const fetchMaterials = async () => {
@@ -47,7 +64,7 @@ export default function MaterialsPage() {
   };
 
   return (
-    <div className="page-content">
+    <div className="page-content page-offset">
       {/* Hero Section */}
       <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -67,7 +84,7 @@ export default function MaterialsPage() {
       </section>
 
       {/* Category Filter */}
-      <section className="py-6 bg-white border-b border-stone-200 sticky top-0 z-10">
+      <section className="py-4 sm:py-6 bg-white border-b border-stone-200 sticky z-10" style={{ top: 'var(--nav-height, 5rem)' }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
@@ -91,13 +108,13 @@ export default function MaterialsPage() {
       <section className="py-12 bg-stone-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {loading ? (
-            <div className="text-center py-12">
-              <div className="text-stone-500">Loading materials...</div>
-            </div>
+            <SkeletonGrid count={8} cols="grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4" gap="gap-4 sm:gap-6" />
           ) : filteredMaterials.length === 0 ? (
-            <div className="text-center py-12">
-              <div className="text-stone-500">No materials found in this category.</div>
-            </div>
+            <EmptyState
+              icon="search"
+              title="No materials found"
+              description="No materials available in this category. Try selecting a different category or check back later."
+            />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
               {filteredMaterials.map((material, index) => (
@@ -172,11 +189,11 @@ export default function MaterialsPage() {
 
       {/* Material Detail Modal */}
       {selectedMaterial && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-6">
-                <div>
+        <div className="modal-overlay" onClick={() => setSelectedMaterial(null)}>
+          <div className="modal-panel max-w-4xl max-h-[92dvh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div>
+              <div className="flex flex-col xs:flex-row xs:justify-between xs:items-start gap-4 mb-6">
+                <div className="min-w-0">
                   <span className="text-[#C4795A] font-bold text-xs uppercase tracking-wider">
                     {selectedMaterial.category}
                   </span>
@@ -189,9 +206,10 @@ export default function MaterialsPage() {
                 </div>
                 <button
                   onClick={() => setSelectedMaterial(null)}
-                  className="p-2 hover:bg-stone-100 rounded-full"
+                  className="p-2 hover:bg-stone-100 rounded-full transition"
+                  aria-label="Close material details"
                 >
-                  <ChevronRight className="w-6 h-6 rotate-180" />
+                  <X className="w-6 h-6" />
                 </button>
               </div>
 
@@ -220,7 +238,7 @@ export default function MaterialsPage() {
               {selectedMaterial.specifications && Object.keys(selectedMaterial.specifications).length > 0 && (
                 <div className="mb-6">
                   <h3 className="font-bold text-stone-900 mb-3">Specifications</h3>
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 xs:grid-cols-2 gap-3">
                     {Object.entries(selectedMaterial.specifications).map(([key, value]) => (
                       <div key={key} className="bg-stone-50 p-3 rounded-lg">
                         <div className="text-xs text-stone-500 uppercase tracking-wider mb-1">
@@ -234,7 +252,7 @@ export default function MaterialsPage() {
               )}
 
               {/* Price and Stock */}
-              <div className="flex items-center justify-between pt-4 border-t border-stone-200">
+              <div className="flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 pt-4 border-t border-stone-200">
                 <div>
                   {selectedMaterial.pricePerUnit > 0 && (
                     <div className="font-bold text-[#C4795A] text-lg">

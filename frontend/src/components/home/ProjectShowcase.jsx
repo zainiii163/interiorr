@@ -60,7 +60,7 @@ export default function ProjectShowcase({ projects = [] }) {
           <ScrollReveal key={project._id} delay={(i % 3) * 70}>
             <Link
               to={`/projects/${project.slug}`}
-              className="group relative overflow-hidden bg-stone-900 flex flex-col h-[440px] block border-b border-r border-stone-800"
+              className="group relative overflow-hidden bg-stone-900 flex flex-col min-h-[280px] sm:min-h-[340px] lg:h-[440px] block border-b border-r border-stone-800"
             >
               {project.coverImage && (
                 <img

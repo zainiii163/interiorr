@@ -62,7 +62,7 @@ export default function DesignStyleExplorer({ styles = [] }) {
           </ScrollReveal>
 
           <ScrollReveal delay={80}>
-            <div className="relative rounded-3xl overflow-hidden min-h-[420px] bg-stone-900 text-white shadow-xl">
+            <div className="relative rounded-3xl overflow-hidden min-h-[280px] sm:min-h-[360px] lg:min-h-[420px] bg-stone-900 text-white shadow-xl">
               {active.image && (
                 <img
                   src={active.image}

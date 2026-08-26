@@ -17,7 +17,7 @@ export default function AdminProjects() {
     scope: 'Turnkey Villa Fit-out',
     duration: '12 Weeks',
     description: '',
-    coverImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+    coverImage: '',
     beforeImage: '',
     afterImage: '',
     galleryUrls: '',
@@ -47,7 +47,7 @@ export default function AdminProjects() {
       scope: 'Turnkey Villa Fit-out',
       duration: '12 Weeks',
       description: '',
-      coverImage: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=800&q=80',
+      coverImage: '',
       beforeImage: '',
       afterImage: '',
       galleryUrls: '',
@@ -120,7 +120,7 @@ export default function AdminProjects() {
   return (
     <div className="space-y-6">
       
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl font-bold text-stone-900">Project Portfolio Administration</h1>
           <p className="text-xs text-stone-500 mt-1">Manage completed project showcases and Before/After slider images</p>
@@ -134,7 +134,7 @@ export default function AdminProjects() {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm admin-table-wrap">
         <table className="w-full text-left text-xs text-stone-700">
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
             <tr>
@@ -187,13 +187,13 @@ export default function AdminProjects() {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-xl space-y-4">
             <h2 className="font-serif text-xl font-bold text-stone-900">
               {editId ? 'Edit Project' : 'Create Project'}
             </h2>
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-stone-700 mb-1">Project Title *</label>
                   <input
@@ -218,7 +218,7 @@ export default function AdminProjects() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-stone-700 mb-1">Location *</label>
                   <input
@@ -239,13 +239,24 @@ export default function AdminProjects() {
                 </div>
               </div>
 
+              <div>
+                <label className="block font-bold text-stone-700 mb-1">Scope of Work</label>
+                <input
+                  type="text"
+                  value={formData.scope}
+                  onChange={(e) => setFormData({ ...formData, scope: e.target.value })}
+                  placeholder="Design, joinery, MEP, finishes"
+                  className="w-full px-3 py-2 border rounded-xl"
+                />
+              </div>
+
               <ImageUploadField
                 label="Cover Image URL *"
                 value={formData.coverImage}
                 onChange={(url) => setFormData({ ...formData, coverImage: url })}
               />
 
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <ImageUploadField
                   label="Before Image URL (Optional)"
                   value={formData.beforeImage}

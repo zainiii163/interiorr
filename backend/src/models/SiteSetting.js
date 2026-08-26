@@ -58,6 +58,7 @@ const siteSettingSchema = new mongoose.Schema(
     googleApiKey: { type: String, default: '' },
     autoSyncGoogleReviews: { type: Boolean, default: true },
     lastGoogleSyncAt: { type: Date },
+    pageCopy: { type: mongoose.Schema.Types.Mixed, default: {} },
   },
   { timestamps: true }
 );

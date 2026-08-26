@@ -5,6 +5,8 @@ node_modules/
 .env
 .env.local
 .env.*.local
+.env.production
+.env.staging
 
 # Build / runtime
 dist/
@@ -24,3 +26,7 @@ Thumbs.db
 # Coverage
 coverage/
 .nyc_output/
+
+# Debug
+*.pid
+*.seed

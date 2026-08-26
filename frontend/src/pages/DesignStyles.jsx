@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import EmptyState from '../components/ui/EmptyState';
 
 export default function DesignStyles() {
   const [styles, setStyles] = useState([]);
@@ -82,7 +83,11 @@ export default function DesignStyles() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-stone-600">No design styles available right now.</div>
+          <EmptyState
+            icon="empty"
+            title="No design styles available"
+            description="We're curating our design style collection. Check back soon for inspiration tailored to Dubai luxury living."
+          />
         )}
       </section>
 

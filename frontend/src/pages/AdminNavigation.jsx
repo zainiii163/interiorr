@@ -12,6 +12,9 @@ const KNOWN_ROUTES = [
   { label: 'Design Styles', path: '/design-styles' },
   { label: 'Reviews', path: '/reviews' },
   { label: 'Contact', path: '/contact' },
+  { label: 'Commercial', path: '/commercial' },
+  { label: 'Materials', path: '/materials' },
+  { label: 'Consultation', path: '/consultation' },
   { label: 'Careers', path: '/careers' },
 ];
 
@@ -212,12 +215,12 @@ export default function AdminNavigation() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-2xl space-y-4">
             <h2 className="font-serif text-xl font-bold">{editId ? 'Edit Link' : 'Add Navigation Link'}</h2>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold mb-1">Menu Label *</label>
                   <input type="text" required value={formData.label} onChange={(e) => setFormData({ ...formData, label: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
@@ -228,7 +231,7 @@ export default function AdminNavigation() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold mb-1">Menu Type</label>
                   <select
@@ -256,7 +259,7 @@ export default function AdminNavigation() {
 
               {formData.menuType === 'mega' && (
                 <div className="p-4 rounded-xl bg-stone-50 border space-y-3">
-                  <div className="grid grid-cols-2 gap-3">
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     <input type="text" placeholder="Panel title (optional)" value={formData.megaMenuTitle} onChange={(e) => setFormData({ ...formData, megaMenuTitle: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
                     <input type="text" placeholder="CTA button label" value={formData.megaMenuCtaLabel} onChange={(e) => setFormData({ ...formData, megaMenuCtaLabel: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
                   </div>
@@ -269,11 +272,11 @@ export default function AdminNavigation() {
                         <button type="button" onClick={addChild} className="text-[#C4795A] font-bold">+ Add sub-link</button>
                       </div>
                       {formData.children.map((child, i) => (
-                        <div key={i} className="grid grid-cols-12 gap-2 items-center">
-                          <input type="text" placeholder="Label" value={child.label} onChange={(e) => updateChild(i, 'label', e.target.value)} className="col-span-3 px-2 py-1.5 border rounded-lg" />
-                          <input type="text" placeholder="/path" value={child.path} onChange={(e) => updateChild(i, 'path', e.target.value)} className="col-span-4 px-2 py-1.5 border rounded-lg font-mono" />
-                          <input type="text" placeholder="Image URL" value={child.image} onChange={(e) => updateChild(i, 'image', e.target.value)} className="col-span-4 px-2 py-1.5 border rounded-lg" />
-                          <button type="button" onClick={() => removeChild(i)} className="col-span-1 text-rose-600"><Trash2 className="w-4 h-4" /></button>
+                        <div key={i} className="space-y-2 p-3 rounded-xl border border-stone-200 sm:p-0 sm:border-0 sm:grid sm:grid-cols-12 sm:gap-2 sm:items-center">
+                          <input type="text" placeholder="Label" value={child.label} onChange={(e) => updateChild(i, 'label', e.target.value)} className="w-full sm:col-span-3 px-2 py-1.5 border rounded-lg text-xs" />
+                          <input type="text" placeholder="/path" value={child.path} onChange={(e) => updateChild(i, 'path', e.target.value)} className="w-full sm:col-span-4 px-2 py-1.5 border rounded-lg font-mono text-xs" />
+                          <input type="text" placeholder="Image URL" value={child.image} onChange={(e) => updateChild(i, 'image', e.target.value)} className="w-full sm:col-span-4 px-2 py-1.5 border rounded-lg text-xs" />
+                          <button type="button" onClick={() => removeChild(i)} className="sm:col-span-1 text-rose-600 p-1.5 rounded-lg hover:bg-rose-50 w-fit"><Trash2 className="w-4 h-4" /></button>
                         </div>
                       ))}
                     </div>
@@ -281,7 +284,7 @@ export default function AdminNavigation() {
                 </div>
               )}
 
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold mb-1">Sort Order</label>
                   <input type="number" value={formData.order} onChange={(e) => setFormData({ ...formData, order: Number(e.target.value) })} className="w-full px-3 py-2 border rounded-xl" />

@@ -1,3 +1,5 @@
+import { DEFAULT_PAGE_COPY } from '../seed/pageCopy.js';
+
 const STATUS_TO_FRONTEND = {
   new: 'New',
   contacted: 'Contacted',
@@ -65,6 +67,9 @@ export function parseServiceInput(body = {}) {
   if (payload.category && typeof payload.category === 'string') {
     payload.category = payload.category.toLowerCase();
   }
+  if (typeof payload.features === 'string') {
+    payload.features = payload.features.split('\n').map((s) => s.trim()).filter(Boolean);
+  }
   delete payload.name;
   delete payload.heroImage;
   delete payload.description;
@@ -125,6 +130,7 @@ export function formatSettings(settings) {
     aboutBullets: obj.aboutBullets || [],
     certifications: obj.certifications || [],
     skills: obj.skills || [],
+    pageCopy: { ...DEFAULT_PAGE_COPY, ...(obj.pageCopy && typeof obj.pageCopy === 'object' ? obj.pageCopy : {}) },
   };
 }
 
@@ -149,6 +155,9 @@ export function parseSettingsInput(body = {}) {
     delete payload.googleApiKey;
   }
   delete payload.googleApiKeyConfigured;
+  Object.keys(payload).forEach((key) => {
+    if (payload[key] === undefined) delete payload[key];
+  });
   return payload;
 }
 

@@ -41,7 +41,7 @@ export default function ServiceDetail() {
     <div className="page-offset pb-20">
       
       {/* Hero */}
-      <section className="relative h-[60vh] flex items-center justify-center bg-stone-900 text-white overflow-hidden">
+      <section className="relative min-h-[280px] h-[50vh] sm:h-[60vh] flex items-center justify-center bg-stone-900 text-white overflow-hidden">
         <img
           src={service.heroImage}
           alt={service.name}
@@ -52,7 +52,7 @@ export default function ServiceDetail() {
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest bg-stone-900/80 px-4 py-1.5 rounded-full border border-stone-700">
             {service.category}
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl font-bold mt-4">{service.name}</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 break-words">{service.name}</h1>
           <p className="text-stone-300 mt-4 max-w-2xl mx-auto text-base">{service.shortDescription}</p>
         </div>
       </section>

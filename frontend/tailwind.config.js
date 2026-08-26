@@ -6,6 +6,9 @@ export default {
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '475px',
+      },
       colors: {
         terracotta: {
           DEFAULT: '#C4795A',

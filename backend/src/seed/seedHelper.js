@@ -14,7 +14,9 @@ import { Quote } from '../models/Quote.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { JobOpening } from '../models/JobOpening.js';
 import { NavItem } from '../models/NavItem.js';
+import { Faq } from '../models/Faq.js';
 import { slugify } from '../utils/slugify.js';
+import { DEFAULT_PAGE_COPY, SERVICE_IMAGES } from './pageCopy.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -39,22 +41,13 @@ export async function seedData() {
     role: 'editor',
   });
 
-  const serviceImages = {
-    'Villa Renovation': 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1200&q=80',
-    'Full Home Renovation': 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
-    'Kitchen Renovation': 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1200&q=80',
-    'Bathroom Renovation': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1200&q=80',
-    'Bespoke Joinery': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&q=80',
-    'Property Inspection': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
-    'Office Fit-Out': 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1200&q=80',
-  };
   const servicesData = loadJson('services.json');
   const services = await Service.insertMany(
     servicesData.map((s) => ({
       ...s,
       slug: slugify(s.title),
-      fullDescription: s.shortDescription,
-      image: serviceImages[s.title] || 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?auto=format&fit=crop&w=1200&q=80',
+      fullDescription: s.fullDescription || s.shortDescription,
+      image: s.image || SERVICE_IMAGES[s.title] || SERVICE_IMAGES['Full Home Renovation'],
       isActive: true,
     }))
   );
@@ -108,7 +101,10 @@ export async function seedData() {
     whatsapp: '971501234567',
     email: 'info@aurainteriors.ae',
     address: 'Design District (D3), Building 4, Suite 302, Dubai, UAE',
+    pageCopy: DEFAULT_PAGE_COPY,
   });
+
+  await Faq.insertMany(loadJson('faqs.json'));
 
   const lead = await Lead.create({
     fullName: 'Sarah Al Maktoum',

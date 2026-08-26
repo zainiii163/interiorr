@@ -2,10 +2,16 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
+import SkeletonGrid from '../components/ui/Skeleton';
+import EmptyState from '../components/ui/EmptyState';
 
 const fallbackImage = 'data:image/svg+xml;utf8,' + encodeURIComponent('<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><rect width="100%" height="100%" fill="#f5ede8"/><rect x="40" y="40" width="1120" height="720" rx="24" fill="#fff7f2" stroke="#d9b7a4" stroke-width="4"/><text x="600" y="390" text-anchor="middle" font-family="Arial" font-size="32" fill="#8a5a3d">Luxury Interior Service</text></svg>');
 
 export default function Services() {
+  const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [services, setServices] = useState([]);
   const [selectedCategory, setSelectedCategory] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
@@ -36,10 +42,10 @@ export default function Services() {
       {/* Header */}
       <section className="bg-gradient-to-r from-stone-900 to-[#1A1817] text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <span className="text-[#C4795A] font-semibold text-sm uppercase tracking-widest">Architectural Capabilities</span>
-          <h1 className="font-serif text-4xl sm:text-6xl font-bold mt-4">Renovation & Fit-Out Services</h1>
+          <span className="text-[#C4795A] font-semibold text-sm uppercase tracking-widest">{copy.servicesHeroBadge}</span>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4 break-words">{copy.servicesHeroTitle}</h1>
           <p className="text-stone-300 mt-6 max-w-3xl mx-auto text-lg">
-            Discover our comprehensive suite of Dubai residential, commercial, and bespoke joinery services.
+            {copy.servicesHeroBody}
           </p>
         </div>
       </section>
@@ -64,19 +70,7 @@ export default function Services() {
 
         {/* Services Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {Array.from({ length: 6 }).map((_, index) => (
-              <div key={index} className="bg-white rounded-3xl overflow-hidden shadow-lg border border-stone-200 animate-pulse">
-                <div className="h-80 bg-stone-200" />
-                <div className="p-8 space-y-4">
-                  <div className="h-5 bg-stone-200 rounded w-24" />
-                  <div className="h-7 bg-stone-200 rounded w-3/4" />
-                  <div className="h-4 bg-stone-200 rounded" />
-                  <div className="h-4 bg-stone-200 rounded w-5/6" />
-                </div>
-              </div>
-            ))}
-          </div>
+          <SkeletonGrid count={6} cols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3" gap="gap-10" />
         ) : filteredServices.length > 0 ? (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
             {filteredServices.map((service) => (
@@ -120,9 +114,11 @@ export default function Services() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-stone-600">
-            No services available right now.
-          </div>
+          <EmptyState
+            icon="empty"
+            title="No services available"
+            description="We're currently updating our service offerings. Please check back soon or contact us for more information."
+          />
         )}
       </section>
 

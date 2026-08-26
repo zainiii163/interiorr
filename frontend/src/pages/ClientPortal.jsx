@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useSearchParams, Link } from 'react-router-dom';
 import { 
   FileText, Calendar, CheckCircle2, Clock, AlertCircle, ShieldCheck, 
-  CreditCard, ArrowRight, Download, Check, Sparkles, Phone, MessageSquare, Building2, ChevronRight, Lock
+  CreditCard, ArrowRight, Download, Check, Sparkles, Phone, MessageSquare, Building2, ChevronRight, Lock, X
 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useSite } from '../context/SiteContext';
@@ -26,6 +26,21 @@ export default function ClientPortal() {
   const [downloadingPDF, setDownloadingPDF] = useState(false);
   const [rejectModalOpen, setRejectModalOpen] = useState(false);
   const [rejectReason, setRejectReason] = useState('');
+
+  const handleRejectEscape = useCallback((e) => {
+    if (e.key === 'Escape') setRejectModalOpen(false);
+  }, []);
+
+  useEffect(() => {
+    if (rejectModalOpen) {
+      document.addEventListener('keydown', handleRejectEscape);
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.removeEventListener('keydown', handleRejectEscape);
+        document.body.style.overflow = '';
+      };
+    }
+  }, [rejectModalOpen, handleRejectEscape]);
 
   const fetchPortalData = async (accessCode) => {
     if (!accessCode) return;
@@ -136,8 +151,8 @@ export default function ClientPortal() {
       
       {/* Top Banner */}
       <header className="bg-stone-950 border-b border-stone-800 py-4 px-6 sticky top-0 z-30 shadow-lg">
-        <div className="max-w-7xl mx-auto flex items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3">
+        <div className="max-w-7xl mx-auto flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 min-w-0">
+          <Link to="/" className="flex items-center space-x-3 min-w-0 shrink-0">
             <div className="w-9 h-9 rounded-full bg-[#C4795A] text-white flex items-center justify-center font-serif font-bold text-lg shadow-md">
               {(settings?.companyName || 'A').charAt(0)}
             </div>
@@ -150,15 +165,16 @@ export default function ClientPortal() {
               </span>
             </div>
           </Link>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <a
               href={`https://wa.me/${settings?.whatsapp || '971550000000'}`}
               target="_blank"
               rel="noreferrer"
-              className="btn-terracotta px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md hover:scale-105 transition"
+              className="btn-terracotta px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md hover:scale-105 transition whitespace-nowrap"
             >
               <MessageSquare className="w-3.5 h-3.5" />
-              <span>Contact Project Manager</span>
+              <span className="hidden xs:inline">Contact Project Manager</span>
+              <span className="xs:hidden">Contact</span>
             </a>
           </div>
         </div>
@@ -254,7 +270,7 @@ export default function ClientPortal() {
                 </div>
 
                 {/* Overall Timeline Progress Indicator */}
-                <div className="bg-stone-900/80 p-4 rounded-2xl border border-stone-800 min-w-[240px]">
+                <div className="bg-stone-900/80 p-4 rounded-2xl border border-stone-800 w-full sm:w-auto">
                   <div className="flex items-center justify-between text-xs font-semibold mb-2">
                     <span className="text-stone-400">Project Progress</span>
                     <span className="text-[#C4795A] font-bold">{data.project.overallProgress}%</span>
@@ -375,7 +391,7 @@ export default function ClientPortal() {
                       </p>
                     </div>
 
-                    <div className="bg-stone-900 p-5 rounded-2xl border border-stone-800 space-y-3 min-w-[280px]">
+                    <div className="bg-stone-900 p-5 rounded-2xl border border-stone-800 space-y-3 w-full sm:min-w-[280px]">
                       <div className="flex justify-between text-xs text-stone-400">
                         <span>Subtotal:</span>
                         <span className="font-mono text-white">{data.quote.subtotal?.toLocaleString()} {data.quote.currency}</span>
@@ -536,9 +552,18 @@ export default function ClientPortal() {
 
         {/* Decline Quote Modal */}
         {rejectModalOpen && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-            <div className="bg-stone-950 p-6 rounded-2xl border border-stone-800 max-w-md w-full space-y-4">
-              <h3 className="font-serif text-lg font-bold text-white">Decline Quotation</h3>
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setRejectModalOpen(false)}>
+            <div className="bg-stone-950 p-6 rounded-2xl border border-stone-800 max-w-md w-full space-y-4" onClick={(e) => e.stopPropagation()}>
+              <div className="flex items-center justify-between">
+                <h3 className="font-serif text-lg font-bold text-white">Decline Quotation</h3>
+                <button
+                  onClick={() => setRejectModalOpen(false)}
+                  className="p-1 hover:bg-stone-800 rounded-lg transition"
+                  aria-label="Close decline modal"
+                >
+                  <X className="w-5 h-5 text-stone-400" />
+                </button>
+              </div>
               <p className="text-stone-400 text-xs">
                 Please provide feedback so we can adjust our proposal to meet your requirements.
               </p>

@@ -125,9 +125,9 @@ export default function AdminMedia() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">Media Library</h1>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="font-serif font-bold text-stone-900">Media Library</h1>
           <p className="text-xs text-stone-500 mt-1">Manage images and videos for the website</p>
         </div>
         <button
@@ -191,8 +191,8 @@ export default function AdminMedia() {
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-lg space-y-4">
             <h2 className="font-serif text-xl font-bold text-stone-900">
               {editId ? 'Edit Media' : 'Add New Media'}
             </h2>

@@ -38,15 +38,15 @@ export default function AdminJobOpenings() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">Job Openings</h1>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="font-serif font-bold text-stone-900">Job Openings</h1>
           <p className="text-xs text-stone-500 mt-1">Positions shown on the public Careers page</p>
         </div>
         <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2"><Plus className="w-4 h-4" /><span>Add Opening</span></button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm admin-table-wrap">
         <table className="w-full text-left text-xs text-stone-700">
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b">
             <tr>
@@ -75,8 +75,8 @@ export default function AdminJobOpenings() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-lg space-y-4">
             <h2 className="font-serif text-xl font-bold">{editId ? 'Edit Opening' : 'Add Opening'}</h2>
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <input type="text" required placeholder="Job title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />

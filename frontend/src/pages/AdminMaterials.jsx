@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Trash2, Edit, Image as ImageIcon } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import ImageUploadField from '../components/admin/ImageUploadField';
+import MultiImageField from '../components/admin/MultiImageField';
 
 export default function AdminMaterials() {
   const { isAdmin } = useAuth();
@@ -132,7 +132,7 @@ export default function AdminMaterials() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl font-bold text-stone-900">Material Catalog</h1>
           <p className="text-xs text-stone-500 mt-1">Manage flooring, marble, tiles, and fixtures</p>
@@ -214,14 +214,14 @@ export default function AdminMaterials() {
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-2xl space-y-4 max-h-[92dvh] overflow-y-auto">
             <h2 className="font-serif text-xl font-bold text-stone-900">
               {editId ? 'Edit Material' : 'Add New Material'}
             </h2>
 
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-stone-700 mb-1">Name *</label>
                   <input
@@ -273,7 +273,7 @@ export default function AdminMaterials() {
 
               <div>
                 <label className="block font-bold text-stone-700 mb-1">Images</label>
-                <ImageUploadField
+                <MultiImageField
                   images={formData.images}
                   onChange={(images) => setFormData({ ...formData, images })}
                   maxImages={4}
@@ -322,7 +322,7 @@ export default function AdminMaterials() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-3 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block font-bold text-stone-700 mb-1">Price</label>
                   <input

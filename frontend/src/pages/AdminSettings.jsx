@@ -3,6 +3,7 @@ import { Save, RefreshCw } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { useSite } from '../context/SiteContext';
+import ImageUploadField from '../components/admin/ImageUploadField';
 
 const emptySettings = {
   companyName: '',
@@ -224,7 +225,11 @@ export default function AdminSettings() {
             <input type="text" placeholder="Hero title" value={settings.heroTitle || ''} onChange={(e) => handleChange('heroTitle', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <input type="text" placeholder="Hero subtitle" value={settings.heroSubtitle || ''} onChange={(e) => handleChange('heroSubtitle', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="Hero description" value={settings.heroDescription || ''} onChange={(e) => handleChange('heroDescription', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
-            <input type="text" placeholder="Hero image URL" value={settings.heroImage || ''} onChange={(e) => handleChange('heroImage', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
+            <ImageUploadField
+              label="Hero image (upload a real project photo)"
+              value={settings.heroImage || ''}
+              onChange={(url) => handleChange('heroImage', url)}
+            />
             <input type="text" placeholder="Trust badges (comma-separated)" value={(settings.heroTrustBadges || []).join(', ')} onChange={(e) => handleChange('heroTrustBadges', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
           </div>
         </div>
@@ -237,7 +242,11 @@ export default function AdminSettings() {
             <textarea placeholder="About body" value={settings.aboutBody || ''} onChange={(e) => handleChange('aboutBody', e.target.value)} disabled={!isAdmin} rows={3} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <input type="text" placeholder="About bullets (comma-separated)" value={(settings.aboutBullets || []).join(', ')} onChange={(e) => handleChange('aboutBullets', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <input type="text" placeholder="Certifications (comma-separated)" value={(settings.certifications || []).join(', ')} onChange={(e) => handleChange('certifications', e.target.value.split(',').map((s) => s.trim()).filter(Boolean))} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
-            <input type="text" placeholder="About image URL" value={settings.aboutImage || ''} onChange={(e) => handleChange('aboutImage', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
+            <ImageUploadField
+              label="About image"
+              value={settings.aboutImage || ''}
+              onChange={(url) => handleChange('aboutImage', url)}
+            />
             <textarea placeholder="Mission" value={settings.mission || ''} onChange={(e) => handleChange('mission', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="Vision" value={settings.vision || ''} onChange={(e) => handleChange('vision', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
           </div>
@@ -269,7 +278,11 @@ export default function AdminSettings() {
             <input type="text" placeholder="Map embed URL" value={settings.mapEmbedUrl || ''} onChange={(e) => handleChange('mapEmbedUrl', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <input type="text" placeholder="CTA band title" value={settings.ctaBandTitle || ''} onChange={(e) => handleChange('ctaBandTitle', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="CTA band body" value={settings.ctaBandBody || ''} onChange={(e) => handleChange('ctaBandBody', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
-            <input type="text" placeholder="CTA band image URL" value={settings.ctaBandImage || ''} onChange={(e) => handleChange('ctaBandImage', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
+            <ImageUploadField
+              label="CTA band image"
+              value={settings.ctaBandImage || ''}
+              onChange={(url) => handleChange('ctaBandImage', url)}
+            />
             <input type="text" placeholder="Final CTA title" value={settings.finalCtaTitle || ''} onChange={(e) => handleChange('finalCtaTitle', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="Final CTA body" value={settings.finalCtaBody || ''} onChange={(e) => handleChange('finalCtaBody', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
           </div>

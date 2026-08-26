@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Star, MessageSquare, ShieldCheck, CheckCircle2, Globe } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import EmptyState from '../components/ui/EmptyState';
 
 export default function Reviews() {
   const [reviews, setReviews] = useState([]);
@@ -178,7 +179,11 @@ export default function Reviews() {
             ))}
           </div>
         ) : (
-          <div className="text-center py-16 text-stone-600">No reviews found matching the selected filter.</div>
+          <EmptyState
+            icon="search"
+            title="No reviews found"
+            description="No reviews match the selected filter. Try a different filter or check back later."
+          />
         )}
       </section>
 

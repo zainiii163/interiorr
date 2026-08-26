@@ -2,6 +2,7 @@ import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { validatePasswordStrength } from '../middleware/validate.js';
 
 function formatUser(user) {
   const obj = user.toObject ? user.toObject() : { ...user };
@@ -42,8 +43,13 @@ export const createUser = asyncHandler(async (req, res) => {
   if (!name || !email || !password) {
     throw new ApiError(400, 'Name, email, and password are required');
   }
-  if (password.length < 8) {
-    throw new ApiError(400, 'Password must be at least 8 characters');
+
+  if (name.length > 100) throw new ApiError(400, 'Name is too long');
+  if (email.length > 254) throw new ApiError(400, 'Email is too long');
+
+  const passwordErrors = validatePasswordStrength(password);
+  if (passwordErrors.length > 0) {
+    throw new ApiError(400, `Password too weak: ${passwordErrors.join('; ')}`);
   }
 
   const exists = await User.findOne({ email: email.toLowerCase() });
@@ -56,13 +62,14 @@ export const createUser = asyncHandler(async (req, res) => {
   const active = status ? status === 'active' : isActive !== false;
 
   const user = await User.create({
-    name,
-    email: email.toLowerCase(),
+    name: name.trim(),
+    email: email.toLowerCase().trim(),
     password,
     role: role || 'editor',
     isActive: active,
   });
 
+  console.log(`[USER] Created: ${user.email} (${user.role}) by ${req.user.email}`);
   res.status(201).json(new ApiResponse(201, formatUser(user), 'User created'));
 });
 
@@ -72,8 +79,11 @@ export const updateUser = asyncHandler(async (req, res) => {
 
   const { name, email, role, password, isActive, status } = req.body;
 
-  if (name) user.name = name;
-  if (email) user.email = email.toLowerCase();
+  if (name) {
+    if (name.length > 100) throw new ApiError(400, 'Name is too long');
+    user.name = name.trim();
+  }
+  if (email) user.email = email.toLowerCase().trim();
   if (role) {
     if (!['admin', 'manager', 'editor'].includes(role)) {
       throw new ApiError(400, 'Role must be admin, manager, or editor');
@@ -83,11 +93,15 @@ export const updateUser = asyncHandler(async (req, res) => {
   if (status !== undefined) user.isActive = status === 'active';
   else if (isActive !== undefined) user.isActive = isActive;
   if (password) {
-    if (password.length < 8) throw new ApiError(400, 'Password must be at least 8 characters');
+    const passwordErrors = validatePasswordStrength(password);
+    if (passwordErrors.length > 0) {
+      throw new ApiError(400, `Password too weak: ${passwordErrors.join('; ')}`);
+    }
     user.password = password;
   }
 
   await user.save();
+  console.log(`[USER] Updated: ${user.email} by ${req.user.email}`);
   res.status(200).json(new ApiResponse(200, formatUser(user), 'User updated'));
 });
 
@@ -98,5 +112,6 @@ export const deleteUser = asyncHandler(async (req, res) => {
 
   const user = await User.findByIdAndDelete(req.params.id);
   if (!user) throw new ApiError(404, 'User not found');
+  console.log(`[USER] Deleted: ${user.email} by ${req.user.email}`);
   res.status(200).json(new ApiResponse(200, null, 'User deleted'));
 });

@@ -4,6 +4,7 @@ import { ArrowRight, Star, ChevronRight } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
 import HeroSection from '../components/home/HeroSection';
+import TrustStrip from '../components/TrustStrip';
 import ExpertisePillars from '../components/home/ExpertisePillars';
 import PromiseGrid from '../components/home/PromiseGrid';
 import ProcessGrid from '../components/home/ProcessGrid';
@@ -16,9 +17,11 @@ import DesignStyleExplorer from '../components/home/DesignStyleExplorer';
 import Marquee from '../components/ui/Marquee';
 import ScrollReveal from '../components/ui/ScrollReveal';
 import AnimatedCounter from '../components/ui/AnimatedCounter';
+import { usePageCopy } from '../utils/pageCopy';
 
 export default function Home() {
   const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [services, setServices] = useState([]);
   const [projects, setProjects] = useState([]);
   const [designStyles, setDesignStyles] = useState([]);
@@ -73,15 +76,16 @@ export default function Home() {
   return (
     <div className="page-content">
       <HeroSection settings={settings} />
+      <TrustStrip />
 
       {partners.length > 0 && (
         <section className="py-10 bg-stone-900 border-y border-stone-800">
           <ScrollReveal className="text-center mb-2 px-4">
             <span className="text-stone-500 text-xs uppercase tracking-widest font-semibold">
-              Our Trusted Partners
+              {copy.homePartnersLabel}
             </span>
             <p className="text-stone-600 text-[11px] mt-1">
-              Property owners, interior designers, consultants & contractors
+              {copy.homePartnersBody}
             </p>
           </ScrollReveal>
           <Marquee items={partners} speed={28} />
@@ -96,12 +100,12 @@ export default function Home() {
         <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white border-y border-stone-800">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <ScrollReveal className="text-center mb-12">
-              <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">About Us</span>
+              <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">{copy.homeStatsBadge}</span>
               <h2 className="font-serif text-3xl md:text-4xl font-bold mt-2">
-                Dubai&apos;s Most Trusted Fitout & Property Transformation Specialists
+                {copy.homeStatsTitle}
               </h2>
               <p className="text-stone-400 mt-3 max-w-2xl mx-auto text-sm">
-                Full turnkey execution with certified engineers, in-house joinery, and transparent delivery for homes and commercial spaces.
+                {copy.homeStatsBody}
               </p>
               <Link
                 to="/about"
@@ -110,7 +114,7 @@ export default function Home() {
                 Learn more about us <ChevronRight className="w-4 h-4" />
               </Link>
             </ScrollReveal>
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+            <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center">
               {[
                 { val: stats.yearsExperience, suffix: '+', label: 'Years Experience' },
                 { val: stats.completedProjects, suffix: '+', label: 'Projects Delivered' },
@@ -122,7 +126,7 @@ export default function Home() {
                 .map((s, i) => (
                   <ScrollReveal key={s.label} delay={i * 80}>
                     <div className="p-6 glass-panel-dark rounded-2xl hover-lift">
-                      <div className="font-serif text-4xl md:text-5xl font-bold text-[#C4795A]">
+                      <div className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold text-[#C4795A]">
                         <AnimatedCounter value={s.val} suffix={s.suffix} decimals={s.decimals || 0} />
                       </div>
                       <div className="text-xs uppercase tracking-wider text-stone-400 mt-2 font-medium">{s.label}</div>
@@ -138,7 +142,7 @@ export default function Home() {
 
       <PromiseGrid pillars={promisePillars} />
 
-      <HomeConsultation />
+      <HomeConsultation copy={copy} />
 
       {services.length > 0 && (
         <section className="py-24 bg-white">
@@ -146,10 +150,10 @@ export default function Home() {
             <ScrollReveal>
               <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
                 <div>
-                  <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">Complete Range</span>
-                  <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">Our Complete Range of Services</h2>
+                  <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">{copy.homeServicesBadge}</span>
+                  <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">{copy.homeServicesTitle}</h2>
                   <p className="text-stone-500 text-sm mt-2 max-w-xl">
-                    From concept to completion — design, fit-out, joinery, and property services under one roof.
+                    {copy.homeServicesBody}
                   </p>
                 </div>
                 <Link to="/services" className="text-[#5C7A6B] font-semibold flex items-center gap-2 hover:gap-3 transition-all shrink-0">
@@ -157,7 +161,7 @@ export default function Home() {
                 </Link>
               </div>
             </ScrollReveal>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
               {services.map((service, i) => (
                 <ScrollReveal key={service._id} delay={(i % 4) * 40}>
                   <Link
@@ -185,7 +189,7 @@ export default function Home() {
                   <Star key={i} className="w-5 h-5 fill-current" />
                 ))}
               </div>
-              <h2 className="font-serif text-4xl font-bold text-stone-900">What Our Clients Say</h2>
+              <h2 className="font-serif text-4xl font-bold text-stone-900">{copy.homeReviewsTitle}</h2>
               {avgRating > 0 && (
                 <p className="text-stone-600 mt-2">
                   {avgRating} average from Google reviews
@@ -202,10 +206,19 @@ export default function Home() {
                       ))}
                     </div>
                     <p className="text-stone-700 leading-relaxed italic flex-1">&ldquo;{rev.reviewText}&rdquo;</p>
-                    <div className="mt-6 pt-4 border-t border-stone-200 flex items-center justify-between">
-                      <div>
-                        <span className="font-serif font-bold text-stone-900">{rev.customerName}</span>
-                        <span className="block text-xs text-stone-500">{rev.authorTitle || 'Client'}</span>
+                    <div className="mt-6 pt-4 border-t border-stone-200 flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3">
+                      <div className="flex items-center gap-3">
+                        {rev.authorPhoto ? (
+                          <img src={rev.authorPhoto} alt="" className="w-10 h-10 rounded-full object-cover" />
+                        ) : (
+                          <div className="w-10 h-10 rounded-full bg-stone-100 text-[#C4795A] font-bold flex items-center justify-center">
+                            {(rev.customerName || 'C').charAt(0)}
+                          </div>
+                        )}
+                        <div>
+                          <span className="font-serif font-bold text-stone-900">{rev.customerName}</span>
+                          <span className="block text-xs text-stone-500">{rev.authorTitle || 'Client'}</span>
+                        </div>
                       </div>
                       {rev.source && (
                         <span className="text-[10px] font-bold uppercase text-stone-400 bg-stone-100 px-2 py-1 rounded">
@@ -238,13 +251,13 @@ export default function Home() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal className="text-center">
             <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
-              Experience Center
+              {copy.homeMaterialsBadge}
             </span>
             <h2 className="font-serif text-4xl sm:text-5xl font-bold mt-2 mb-4">
-              Material Selection Made Simple
+              {copy.homeMaterialsTitle}
             </h2>
             <p className="text-stone-400 max-w-2xl mx-auto mb-8">
-              Visit our curated catalog of kitchens, wardrobes, tiles, sanitaryware, flooring, and marble — the same experience-center approach Dubai renovators trust.
+              {copy.homeMaterialsBody}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link

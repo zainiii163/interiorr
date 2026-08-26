@@ -11,6 +11,7 @@ import { Project } from '../models/Project.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { Material } from '../models/Material.js';
 import { Service } from '../models/Service.js';
+import { Faq } from '../models/Faq.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
@@ -47,7 +48,12 @@ export const listReviews = asyncHandler(async (req, res) => {
 });
 
 export const createReview = asyncHandler(async (req, res) => {
-  const review = await Review.create(parseReviewInput(req.body));
+  const parsed = parseReviewInput(req.body);
+  if (!parsed.authorName) throw new ApiError(400, 'Author name is required');
+  if (!parsed.rating || parsed.rating < 1 || parsed.rating > 5) throw new ApiError(400, 'Rating must be between 1 and 5');
+  if (parsed.authorName && parsed.authorName.length > 100) throw new ApiError(400, 'Author name is too long');
+  if (parsed.content && parsed.content.length > 2000) throw new ApiError(400, 'Review content is too long');
+  const review = await Review.create(parsed);
   res.status(201).json(new ApiResponse(201, formatReview(review), 'Review created'));
 });
 
@@ -74,6 +80,9 @@ export const listPartners = asyncHandler(async (req, res) => {
 });
 
 export const createPartner = asyncHandler(async (req, res) => {
+  if (!req.body.name) throw new ApiError(400, 'Partner name is required');
+  if (req.body.name.length > 200) throw new ApiError(400, 'Partner name is too long');
+  if (req.body.website && req.body.website.length > 2048) throw new ApiError(400, 'Website URL is too long');
   const partner = await Partner.create(req.body);
   res.status(201).json(new ApiResponse(201, partner, 'Partner created'));
 });
@@ -146,6 +155,9 @@ export const listTrustPillars = asyncHandler(async (req, res) => {
 });
 
 export const createTrustPillar = asyncHandler(async (req, res) => {
+  if (!req.body.title) throw new ApiError(400, 'Trust pillar title is required');
+  if (req.body.title.length > 200) throw new ApiError(400, 'Title is too long');
+  if (req.body.description && req.body.description.length > 1000) throw new ApiError(400, 'Description is too long');
   const pillar = await TrustPillar.create(req.body);
   res.status(201).json(new ApiResponse(201, pillar, 'Trust pillar created'));
 });
@@ -167,6 +179,40 @@ export const reorderTrustPillars = asyncHandler(async (req, res) => {
   res.status(200).json(new ApiResponse(200, null, 'Trust pillars reordered'));
 });
 
+// FAQs
+export const listFaqs = asyncHandler(async (req, res) => {
+  const filter = req.user ? {} : { isActive: true };
+  if (req.query.page) filter.page = req.query.page;
+  const faqs = await Faq.find(filter).sort({ order: 1, createdAt: 1 });
+  res.status(200).json(new ApiResponse(200, faqs));
+});
+
+export const createFaq = asyncHandler(async (req, res) => {
+  if (!req.body.question) throw new ApiError(400, 'FAQ question is required');
+  if (!req.body.answer) throw new ApiError(400, 'FAQ answer is required');
+  if (req.body.question.length > 500) throw new ApiError(400, 'Question is too long');
+  if (req.body.answer.length > 2000) throw new ApiError(400, 'Answer is too long');
+  const faq = await Faq.create(req.body);
+  res.status(201).json(new ApiResponse(201, faq, 'FAQ created'));
+});
+
+export const updateFaq = asyncHandler(async (req, res) => {
+  const faq = await Faq.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+  if (!faq) throw new ApiError(404, 'FAQ not found');
+  res.status(200).json(new ApiResponse(200, faq, 'FAQ updated'));
+});
+
+export const deleteFaq = asyncHandler(async (req, res) => {
+  const faq = await Faq.findByIdAndDelete(req.params.id);
+  if (!faq) throw new ApiError(404, 'FAQ not found');
+  res.status(200).json(new ApiResponse(200, null, 'FAQ deleted'));
+});
+
+export const reorderFaqs = asyncHandler(async (req, res) => {
+  await applyReorder(Faq, req.body.items);
+  res.status(200).json(new ApiResponse(200, null, 'FAQs reordered'));
+});
+
 // Settings
 export const getSettings = asyncHandler(async (req, res) => {
   let settings = await SiteSetting.findOne();
@@ -176,13 +222,41 @@ export const getSettings = asyncHandler(async (req, res) => {
 
 export const updateSettings = asyncHandler(async (req, res) => {
   const payload = parseSettingsInput(req.body);
+
+  if (payload.companyName && payload.companyName.length > 200) throw new ApiError(400, 'Company name is too long');
+  if (payload.tagline && payload.tagline.length > 300) throw new ApiError(400, 'Tagline is too long');
+  if (payload.email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(payload.email)) throw new ApiError(400, 'Invalid email format');
+  if (payload.phone && payload.phone.length > 20) throw new ApiError(400, 'Phone number is too long');
+  if (payload.address && payload.address.length > 500) throw new ApiError(400, 'Address is too long');
+
   let settings = await SiteSetting.findOne();
   if (!settings) settings = await SiteSetting.create(payload);
   else {
-    Object.assign(settings, payload);
+    const allowedKeys = Object.keys(settings.toObject()).filter(
+      (k) => !['_id', 'createdAt', 'updatedAt', '__v'].includes(k)
+    );
+    for (const key of Object.keys(payload)) {
+      if (allowedKeys.includes(key)) {
+        settings[key] = payload[key];
+      }
+    }
     await settings.save();
   }
   res.status(200).json(new ApiResponse(200, formatSettings(settings), 'Settings updated'));
+});
+
+export const updatePageCopy = asyncHandler(async (req, res) => {
+  const incoming =
+    req.body?.pageCopy && typeof req.body.pageCopy === 'object' ? req.body.pageCopy : req.body;
+  if (!incoming || typeof incoming !== 'object' || Array.isArray(incoming)) {
+    throw new ApiError(400, 'Page copy payload is required');
+  }
+  let settings = await SiteSetting.findOne();
+  if (!settings) settings = await SiteSetting.create({});
+  settings.pageCopy = { ...(settings.pageCopy || {}), ...incoming };
+  settings.markModified('pageCopy');
+  await settings.save();
+  res.status(200).json(new ApiResponse(200, formatSettings(settings), 'Page copy updated'));
 });
 
 // Quotes
@@ -348,6 +422,10 @@ export const listMedia = asyncHandler(async (req, res) => {
 });
 
 export const createMedia = asyncHandler(async (req, res) => {
+  if (!req.body.title) throw new ApiError(400, 'Media title is required');
+  if (!req.body.url) throw new ApiError(400, 'Media URL is required');
+  if (req.body.title.length > 200) throw new ApiError(400, 'Title is too long');
+  if (req.body.url.length > 2048) throw new ApiError(400, 'URL is too long');
   const media = await Media.create(req.body);
   res.status(201).json(new ApiResponse(201, media, 'Media created'));
 });
@@ -396,6 +474,8 @@ export const getMaterialBySlug = asyncHandler(async (req, res) => {
 
 export const createMaterial = asyncHandler(async (req, res) => {
   const data = req.body;
+  if (!data.name) throw new ApiError(400, 'Material name is required');
+  if (data.name.length > 200) throw new ApiError(400, 'Name is too long');
   
   // Generate slug if not provided
   if (!data.slug && data.name) {

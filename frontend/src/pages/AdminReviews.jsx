@@ -2,13 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2, Star } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import ImageUploadField from '../components/admin/ImageUploadField';
 
 const emptyForm = {
   customerName: '',
   authorTitle: 'Client',
   rating: 5,
   reviewText: '',
-  source: 'google',
+  source: 'direct',
+  authorPhoto: '',
   isFeatured: false,
   isPublished: true,
 };
@@ -46,7 +48,8 @@ export default function AdminReviews() {
       authorTitle: review.authorTitle || 'Client',
       rating: review.rating,
       reviewText: review.reviewText,
-      source: review.source || 'google',
+      source: review.source || 'direct',
+      authorPhoto: review.authorPhoto || '',
       isFeatured: review.isFeatured,
       isPublished: review.isPublished,
     });
@@ -110,7 +113,7 @@ export default function AdminReviews() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
           <h1 className="font-serif text-3xl font-bold text-stone-900">Customer & Google Reviews</h1>
           <p className="text-xs text-stone-500 mt-1">Manage testimonials and auto-synced Google Business Profile reviews</p>
@@ -131,7 +134,7 @@ export default function AdminReviews() {
         </div>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm admin-table-wrap">
         <table className="w-full text-left text-xs text-stone-700">
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
             <tr>
@@ -183,11 +186,11 @@ export default function AdminReviews() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-lg space-y-4">
             <h2 className="font-serif text-xl font-bold">{editId ? 'Edit Review' : 'Add Review'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold mb-1">Customer Name *</label>
                   <input type="text" required value={formData.customerName} onChange={(e) => setFormData({ ...formData, customerName: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
@@ -207,6 +210,18 @@ export default function AdminReviews() {
                 <label className="block font-bold mb-1">Review Text *</label>
                 <textarea rows="4" required value={formData.reviewText} onChange={(e) => setFormData({ ...formData, reviewText: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
               </div>
+              <div>
+                <label className="block font-bold mb-1">Source</label>
+                <select value={formData.source} onChange={(e) => setFormData({ ...formData, source: e.target.value })} className="w-full px-3 py-2 border rounded-xl bg-white">
+                  <option value="direct">Direct / website</option>
+                  <option value="google">Google Business</option>
+                </select>
+              </div>
+              <ImageUploadField
+                label="Author photo (optional)"
+                value={formData.authorPhoto}
+                onChange={(url) => setFormData({ ...formData, authorPhoto: url })}
+              />
               <div className="flex items-center gap-4">
                 <label className="flex items-center gap-2"><input type="checkbox" checked={formData.isFeatured} onChange={(e) => setFormData({ ...formData, isFeatured: e.target.checked })} /> Featured on Home</label>
                 <label className="flex items-center gap-2"><input type="checkbox" checked={formData.isPublished} onChange={(e) => setFormData({ ...formData, isPublished: e.target.checked })} /> Published</label>

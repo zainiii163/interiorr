@@ -4,6 +4,7 @@ import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
+import { validatePasswordStrength } from '../middleware/validate.js';
 
 const MAX_FAILED_ATTEMPTS = 5;
 const LOCK_MINUTES = 15;
@@ -15,7 +16,7 @@ function signAccessToken(user) {
 }
 
 function signRefreshToken(user) {
-  return jwt.sign({ id: user._id }, env.jwtRefreshSecret, {
+  return jwt.sign({ id: user._id, jti: crypto.randomUUID() }, env.jwtRefreshSecret, {
     expiresIn: env.jwtRefreshExpires,
   });
 }
@@ -37,6 +38,7 @@ async function registerFailedLogin(user) {
   user.failedLoginAttempts = (user.failedLoginAttempts || 0) + 1;
   if (user.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
     user.lockUntil = new Date(Date.now() + LOCK_MINUTES * 60 * 1000);
+    console.warn(`[SECURITY] Account locked: ${user.email} after ${MAX_FAILED_ATTEMPTS} failed attempts`);
   }
   await user.save({ validateBeforeSave: false });
 }
@@ -45,7 +47,7 @@ export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
   if (!email || !password) throw new ApiError(400, 'Email and password are required');
 
-  const user = await User.findOne({ email: email.toLowerCase() }).select(
+  const user = await User.findOne({ email: email.toLowerCase().trim() }).select(
     '+password +refreshToken'
   );
 
@@ -68,6 +70,8 @@ export const login = asyncHandler(async (req, res) => {
   user.refreshToken = refreshToken;
   await user.save({ validateBeforeSave: false });
   setRefreshCookie(res, refreshToken);
+
+  console.log(`[AUTH] Login successful: ${user.email} (${user.role})`);
 
   res.status(200).json(
     new ApiResponse(200, {
@@ -93,6 +97,8 @@ export const refresh = asyncHandler(async (req, res) => {
   if (!user || user.refreshToken !== token) {
     throw new ApiError(401, 'Invalid refresh token');
   }
+
+  if (!user.isActive) throw new ApiError(403, 'Account is inactive');
 
   const accessToken = signAccessToken(user);
   const refreshToken = signRefreshToken(user);
@@ -126,3 +132,6 @@ export const me = asyncHandler(async (req, res) => {
     })
   );
 });
+
+// Must import crypto for randomUUID
+import crypto from 'crypto';

@@ -3,10 +3,11 @@ import { Link } from 'react-router-dom';
 import { CheckCircle2, Send, Briefcase } from 'lucide-react';
 import { apiFetch } from '../../services/api';
 import ScrollReveal from '../ui/ScrollReveal';
+import FormPrivacyNote from '../FormPrivacyNote';
 
 const PROPERTY_TYPES = ['Villa', 'Apartment', 'Office', 'Commercial', 'Retail', 'Other'];
 
-export default function HomeConsultation() {
+export default function HomeConsultation({ copy = {} }) {
   const [services, setServices] = useState([]);
   const [formData, setFormData] = useState({
     fullName: '',
@@ -67,23 +68,22 @@ export default function HomeConsultation() {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
           <ScrollReveal>
             <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
-              Book Online
+              {copy.homeConsultBadge || 'Book Online'}
             </span>
             <h2 className="font-serif text-4xl sm:text-5xl font-bold mt-3 mb-4">
-              Book a Consultation With Us
+              {copy.homeConsultTitle || 'Book a Consultation With Us'}
             </h2>
             <p className="text-stone-400 leading-relaxed mb-8">
-              We would love to meet you in person. Share your property details and our planners will
-              prepare a custom proposal with a detailed scope of work — no hidden costs, free basic
-              design for confirmed projects.
+              {copy.homeConsultBody ||
+                'We would love to meet you in person. Share your property details and our planners will prepare a custom proposal with a detailed scope of work — no hidden costs, free basic design for confirmed projects.'}
             </p>
             <ul className="space-y-3 text-sm text-stone-300 mb-10">
-              {[
+              {(copy.homeConsultBullets || [
                 'Free site visit and transparent quotation',
                 '8–10 week average timeline for full home renovation',
                 'In-house NOC and authority approvals team',
                 'Up to 10-year warranty on kitchens and wardrobes',
-              ].map((item) => (
+              ]).map((item) => (
                 <li key={item} className="flex items-start gap-3">
                   <CheckCircle2 className="w-5 h-5 text-[#C4795A] shrink-0 mt-0.5" />
                   <span>{item}</span>
@@ -208,6 +208,7 @@ export default function HomeConsultation() {
                     <Send className="w-4 h-4" />
                     {loading ? 'Submitting…' : 'Book Free Consultation'}
                   </button>
+                  <FormPrivacyNote />
                 </form>
               )}
             </div>

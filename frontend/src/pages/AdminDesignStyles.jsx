@@ -8,7 +8,7 @@ const emptyForm = {
   name: '',
   tagline: '',
   description: '',
-  image: 'https://images.unsplash.com/photo-1618221195710-dd6b41fa6046?auto=format&fit=crop&w=800&q=80',
+  image: '',
   characteristics: '',
   order: 0,
   isActive: true,
@@ -81,9 +81,9 @@ export default function AdminDesignStyles() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">Design Styles</h1>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="font-serif font-bold text-stone-900">Design Styles</h1>
           <p className="text-xs text-stone-500 mt-1">Interior design style catalog for the public gallery</p>
         </div>
         <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
@@ -124,8 +124,8 @@ export default function AdminDesignStyles() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-lg space-y-4">
             <h2 className="font-serif text-xl font-bold">{editId ? 'Edit Design Style' : 'Add Design Style'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div>

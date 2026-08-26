@@ -176,9 +176,9 @@ export default function AdminQuotes() {
   return (
     <div className="space-y-6">
       
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">Quotation Management (AED)</h1>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="font-serif font-bold text-stone-900">Quotation Management (AED)</h1>
           <p className="text-xs text-stone-500 mt-1">Generate official BOQ quotes with 5% UAE VAT calculation and unique numbers Q-YYYY-NNNN</p>
         </div>
         <button
@@ -225,7 +225,7 @@ export default function AdminQuotes() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 text-xs">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs">
             <div>
               <span className="text-stone-400 uppercase">Client / Lead:</span>
               <div className="font-bold text-stone-900 text-sm">{selectedQuote.leadName}</div>
@@ -273,7 +273,7 @@ export default function AdminQuotes() {
       )}
 
       {/* Table */}
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm admin-table-wrap">
         <table className="w-full text-left text-xs text-stone-700">
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
             <tr>
@@ -377,13 +377,13 @@ export default function AdminQuotes() {
 
       {/* Generator Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-2xl w-full shadow-2xl space-y-4 max-h-[90vh] overflow-y-auto">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-2xl space-y-4">
             <h2 className="font-serif text-xl font-bold text-stone-900">Create New Quotation</h2>
             
             <form onSubmit={handleCreateQuote} className="space-y-4 text-xs">
               
-              <div className="grid grid-cols-2 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block font-bold text-stone-700 mb-1">Select Lead / Client</label>
                   <select

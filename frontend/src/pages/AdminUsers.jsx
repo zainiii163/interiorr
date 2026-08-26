@@ -84,9 +84,9 @@ export default function AdminUsers() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">User Management</h1>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="font-serif font-bold text-stone-900">User Management</h1>
           <p className="text-xs text-stone-500 mt-1">Admin, manager, and editor accounts for the staff portal</p>
         </div>
         <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
@@ -95,7 +95,7 @@ export default function AdminUsers() {
         </button>
       </div>
 
-      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+      <div className="bg-white rounded-2xl border border-stone-200 shadow-sm admin-table-wrap">
         <table className="w-full text-left text-xs text-stone-700">
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
             <tr>
@@ -148,8 +148,8 @@ export default function AdminUsers() {
       </div>
 
       {showModal && (
-        <div className="fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4">
+        <div className="modal-overlay">
+          <div className="modal-panel max-w-lg space-y-4">
             <h2 className="font-serif text-xl font-bold">{editId ? 'Edit User' : 'Create User'}</h2>
             <form onSubmit={handleSubmit} className="space-y-4 text-xs">
               <div>
@@ -164,7 +164,7 @@ export default function AdminUsers() {
                 <label className="block font-bold mb-1">{editId ? 'New Password (leave blank to keep)' : 'Password *'}</label>
                 <input type="password" required={!editId} minLength={8} value={formData.password} onChange={(e) => setFormData({ ...formData, password: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block font-bold mb-1">Role</label>
                   <select value={formData.role} onChange={(e) => setFormData({ ...formData, role: e.target.value })} className="w-full px-3 py-2 border rounded-xl">

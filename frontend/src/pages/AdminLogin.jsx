@@ -31,7 +31,7 @@ export default function AdminLogin() {
 
   return (
     <div className="min-h-screen bg-stone-900 flex items-center justify-center p-4">
-      <div className="w-full max-w-md bg-stone-950 p-8 rounded-2xl border border-stone-800 shadow-2xl space-y-6 text-white">
+      <div className="w-full max-w-md bg-stone-950 p-6 sm:p-8 rounded-2xl border border-stone-800 shadow-2xl space-y-6 text-white">
         
         {/* Header */}
         <div className="text-center space-y-2">
@@ -52,14 +52,16 @@ export default function AdminLogin() {
 
         <form onSubmit={handleLogin} className="space-y-4">
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1">
+            <label htmlFor="admin-email" className="block text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1">
               Email Address
             </label>
             <div className="relative">
-              <Mail className="w-4 h-4 text-stone-500 absolute left-3 top-3.5" />
+              <Mail className="w-4 h-4 text-stone-500 absolute left-3 top-3.5" aria-hidden="true" />
               <input
+                id="admin-email"
                 type="email"
                 required
+                autoComplete="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="admin@interior.com"
@@ -69,14 +71,16 @@ export default function AdminLogin() {
           </div>
 
           <div>
-            <label className="block text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1">
+            <label htmlFor="admin-password" className="block text-[11px] font-bold uppercase tracking-wider text-stone-400 mb-1">
               Password
             </label>
             <div className="relative">
-              <Lock className="w-4 h-4 text-stone-500 absolute left-3 top-3.5" />
+              <Lock className="w-4 h-4 text-stone-500 absolute left-3 top-3.5" aria-hidden="true" />
               <input
+                id="admin-password"
                 type="password"
                 required
+                autoComplete="current-password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="••••••••"
@@ -88,7 +92,8 @@ export default function AdminLogin() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full btn-terracotta py-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 shadow-lg"
+            aria-busy={loading}
+            className="w-full btn-terracotta py-3.5 rounded-xl font-semibold text-xs flex items-center justify-center space-x-2 shadow-lg disabled:opacity-60"
           >
             <span>{loading ? 'Authenticating...' : 'Sign In to Portal'}</span>
             <ArrowRight className="w-4 h-4" />

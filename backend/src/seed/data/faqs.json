@@ -1,0 +1,44 @@
+[
+  {
+    "question": "How long does a commercial fit-out take in Dubai?",
+    "answer": "A typical office of 2,000–5,000 sq ft takes 4–8 weeks. Clinics, gyms, and retail may take 6–12 weeks depending on technical scope and approvals.",
+    "page": "commercial",
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "question": "What is included in a turnkey commercial package?",
+    "answer": "Design, approvals, partitions, ceilings, flooring, MEP, joinery, painting, and finishing — from concept to handover under one contract.",
+    "page": "commercial",
+    "order": 2,
+    "isActive": true
+  },
+  {
+    "question": "Do you handle NOCs and authority approvals?",
+    "answer": "Yes. An in-house team manages community, building management, and authority approvals so your programme is not delayed by paperwork.",
+    "page": "commercial",
+    "order": 3,
+    "isActive": true
+  },
+  {
+    "question": "Do you work on villas as well as commercial spaces?",
+    "answer": "Yes. We deliver villa renovations, apartment fit-outs, and commercial projects with the same in-house joinery, MEP, and project-management team.",
+    "page": "home",
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "question": "Is the consultation and site visit free?",
+    "answer": "Yes. A planner contacts you within two hours, then we schedule a free site visit and prepare a detailed scope of work with transparent pricing.",
+    "page": "consultation",
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "question": "What warranty do you offer?",
+    "answer": "Up to 10 years on kitchens, wardrobes, and cabinetry, with documented waterproofing and snag-free handover on renovation packages.",
+    "page": "consultation",
+    "order": 2,
+    "isActive": true
+  }
+]

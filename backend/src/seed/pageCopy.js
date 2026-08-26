@@ -1,0 +1,87 @@
+/** Default marketing copy managed from Admin → Page Copy. */
+export const DEFAULT_PAGE_COPY = {
+  homePartnersLabel: 'Our Trusted Partners',
+  homePartnersBody: 'Property owners, interior designers, consultants & contractors',
+  homeStatsBadge: 'About Us',
+  homeStatsTitle: "Dubai's Most Trusted Fitout & Property Transformation Specialists",
+  homeStatsBody:
+    'Full turnkey execution with certified engineers, in-house joinery, and transparent delivery for homes and commercial spaces.',
+  homeServicesBadge: 'Complete Range',
+  homeServicesTitle: 'Our Complete Range of Services',
+  homeServicesBody: 'From concept to completion — design, fit-out, joinery, and property services under one roof.',
+  homeReviewsTitle: 'What Our Clients Say',
+  homeMaterialsBadge: 'Experience Center',
+  homeMaterialsTitle: 'Material Selection Made Simple',
+  homeMaterialsBody:
+    'Visit our curated catalog of kitchens, wardrobes, tiles, sanitaryware, flooring, and marble — the same experience-center approach Dubai renovators trust.',
+  homeConsultBadge: 'Book Online',
+  homeConsultTitle: 'Book a Consultation With Us',
+  homeConsultBody:
+    'We would love to meet you in person. Share your property details and our planners will prepare a custom proposal with a detailed scope of work — no hidden costs, free basic design for confirmed projects.',
+  homeConsultBullets: [
+    'Free site visit and transparent quotation',
+    '8–10 week average timeline for full home renovation',
+    'In-house NOC and authority approvals team',
+    'Up to 10-year warranty on kitchens and wardrobes',
+  ],
+  servicesHeroBadge: 'Architectural Capabilities',
+  servicesHeroTitle: 'Renovation & Fit-Out Services',
+  servicesHeroBody: 'Discover our comprehensive suite of Dubai residential, commercial, and bespoke joinery services.',
+  commercialHeroBadge: 'Commercial Fit-Out Dubai',
+  commercialHeroTitle: 'High-Performance Commercial Spaces for Businesses in Dubai',
+  commercialHeroSubtitle: 'Offices, clinics, gyms, and retail — rapid execution, technical accuracy, and a premium finish.',
+  commercialHeroImage: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=2000&q=80',
+  commercialSpacesTitle: 'Spaces We Fit Out',
+  commercialSpaces: [
+    { title: 'Offices & Co-working', body: 'Brand-aligned workspaces with partitions, joinery, lighting, and MEP.' },
+    { title: 'Clinics & Wellness', body: 'Authority-ready clinical fit-outs with hygiene finishes and HVAC coordination.' },
+    { title: 'Retail & Showrooms', body: 'Customer-facing interiors with custom displays and decorative finishes.' },
+    { title: 'Gyms, Salons & F&B', body: 'High-performance commercial spaces built for operations and brand experience.' },
+  ],
+  commercialFaqTitle: 'Commercial Fit-Out FAQs',
+  commercialCtaTitle: 'Start Your Commercial Transformation',
+  commercialCtaBody: 'Our team will contact you within 24 hours to schedule a free consultation and site visit.',
+  consultBadge: 'Private Appointment',
+  consultTitle: 'Book a Design & Renovation Consultation',
+  consultSubtitle: 'Meet with our senior Dubai architectural team at your property or in our Design District studio.',
+  consultNextTitle: 'What happens next',
+  consultNextBody:
+    'A planner contacts you within 2 hours, then we schedule a free site visit and prepare a detailed scope of work.',
+  consultCards: [
+    { title: 'Warranty', body: 'Up to 10 years on kitchens, wardrobes and cabinets.' },
+    { title: 'Free basic design', body: '2D and 3D drawings included for confirmed projects.' },
+    { title: 'Job applications', body: 'Apply via Careers — inquiry forms are not used for hiring.', link: '/careers' },
+  ],
+};
+
+export const SERVICE_IMAGES = {
+  'Villa Renovation': 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=1400&q=80',
+  'Full Home Renovation': 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1400&q=80',
+  'Kitchen Renovation': 'https://images.unsplash.com/photo-1556911220-bff31c812dba?auto=format&fit=crop&w=1400&q=80',
+  'Bathroom Renovation': 'https://images.unsplash.com/photo-1620626011761-996317b8d101?auto=format&fit=crop&w=1400&q=80',
+  'Bespoke Joinery': 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1400&q=80',
+  'Property Inspection': 'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1400&q=80',
+  'Decorative Paints': 'https://images.unsplash.com/photo-1562259949-e8e7449d4e1d?auto=format&fit=crop&w=1400&q=80',
+  'MEP & HVAC': 'https://images.unsplash.com/photo-1621905251189-08b45d6a269e?auto=format&fit=crop&w=1400&q=80',
+  'Authority Approvals': 'https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&w=1400&q=80',
+  'Air Quality': 'https://images.unsplash.com/photo-1585771724684-38269d6639fd?auto=format&fit=crop&w=1400&q=80',
+  'Custom Furniture': 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=1400&q=80',
+  'Project Management': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?auto=format&fit=crop&w=1400&q=80',
+  'Marble & Stone Works': 'https://images.unsplash.com/photo-1600566753086-00f18fb6b3ea?auto=format&fit=crop&w=1400&q=80',
+  'Tile & Flooring': 'https://images.unsplash.com/photo-1581858726788-75bc52f3788f?auto=format&fit=crop&w=1400&q=80',
+  'Gypsum & False Ceiling': 'https://images.unsplash.com/photo-1600607687644-c7171b42498b?auto=format&fit=crop&w=1400&q=80',
+  'Stretch Ceiling': 'https://images.unsplash.com/photo-1600210491892-03d54c0aaf87?auto=format&fit=crop&w=1400&q=80',
+  'Microcement & Terrazzo': 'https://images.unsplash.com/photo-1615876234886-fd9a39fda97f?auto=format&fit=crop&w=1400&q=80',
+  'Smart Home Automation': 'https://images.unsplash.com/photo-1558002038-1055907df827?auto=format&fit=crop&w=1400&q=80',
+  'Window Glazing & Partitions': 'https://images.unsplash.com/photo-1497366754035-f200968a6e72?auto=format&fit=crop&w=1400&q=80',
+  'Turnkey Contracting': 'https://images.unsplash.com/photo-1503387762-592deb58ef4e?auto=format&fit=crop&w=1400&q=80',
+  'Office Fit-Out': 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=1400&q=80',
+  'Windows & Doors': 'https://images.unsplash.com/photo-1600585154526-990dced4db0d?auto=format&fit=crop&w=1400&q=80',
+};
+
+export const REVIEW_PHOTOS = [
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=200&q=80',
+  'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=200&q=80',
+];

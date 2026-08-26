@@ -92,10 +92,16 @@ export default function AdminDashboard() {
           <h2 className="font-serif text-xl font-bold text-stone-900">Quick actions</h2>
           <p className="text-xs text-stone-500 mt-1">Jump into the CMS modules you use most</p>
           <div className="mt-4 flex flex-wrap gap-3">
-            <Link to="/admin/services" className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold">
+            <Link to="/admin/pages" className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold">
+              Edit Page Copy
+            </Link>
+            <Link to="/admin/faqs" className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-900 text-white">
+              Manage FAQs
+            </Link>
+            <Link to="/admin/services" className="px-4 py-2.5 rounded-xl text-xs font-semibold border border-stone-300 text-stone-700">
               Edit Services
             </Link>
-            <Link to="/admin/projects" className="px-4 py-2.5 rounded-xl text-xs font-semibold bg-stone-900 text-white">
+            <Link to="/admin/projects" className="px-4 py-2.5 rounded-xl text-xs font-semibold border border-stone-300 text-stone-700">
               Manage Projects
             </Link>
             <Link to="/admin/media" className="px-4 py-2.5 rounded-xl text-xs font-semibold border border-stone-300 text-stone-700">

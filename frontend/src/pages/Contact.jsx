@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Send, CheckCircle2 } from 'lucide-react';
 import WhatsAppIcon from '../components/WhatsAppIcon';
+import FormPrivacyNote from '../components/FormPrivacyNote';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
 
@@ -136,14 +137,16 @@ export default function Contact() {
               </div>
             )}
 
-            <form onSubmit={handleSubmit} className="space-y-5">
+            <form onSubmit={handleSubmit} className="space-y-5" noValidate>
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                <label htmlFor="contact-fullName" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                   Full Name *
                 </label>
                 <input
+                  id="contact-fullName"
                   type="text"
                   required
+                  autoComplete="name"
                   value={formData.fullName}
                   onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                   placeholder="e.g. Tariq Mansoor"
@@ -153,12 +156,14 @@ export default function Contact() {
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="contact-email" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Email Address *
                   </label>
                   <input
+                    id="contact-email"
                     type="email"
                     required
+                    autoComplete="email"
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="tariq@domain.ae"
@@ -166,12 +171,14 @@ export default function Contact() {
                   />
                 </div>
                 <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                  <label htmlFor="contact-phone" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                     Phone (+971 UAE) *
                   </label>
                   <input
-                    type="text"
+                    id="contact-phone"
+                    type="tel"
                     required
+                    autoComplete="tel"
                     value={formData.phone}
                     onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
                     placeholder="+971 50 123 4567"
@@ -181,10 +188,11 @@ export default function Contact() {
               </div>
 
               <div>
-                <label className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
+                <label htmlFor="contact-message" className="block text-xs font-bold uppercase tracking-wider text-stone-700 mb-1">
                   Message / Project Brief
                 </label>
                 <textarea
+                  id="contact-message"
                   rows="4"
                   value={formData.message}
                   onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -196,11 +204,13 @@ export default function Contact() {
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full btn-terracotta py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center space-x-2 shadow-md"
+                aria-busy={loading}
+                className="w-full btn-terracotta py-3.5 rounded-xl font-semibold text-sm flex items-center justify-center space-x-2 shadow-md disabled:opacity-60"
               >
                 <Send className="w-4 h-4" />
                 <span>{loading ? 'Submitting...' : 'Send Message'}</span>
               </button>
+              <FormPrivacyNote />
             </form>
           </div>
 

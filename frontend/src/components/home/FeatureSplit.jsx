@@ -65,7 +65,7 @@ export default function FeatureSplit({ services = [] }) {
           const isDark = index === 0;
           return (
             <ScrollReveal key={panel.key} delay={index * 100}>
-              <div className={`relative min-h-[480px] flex flex-col justify-end overflow-hidden ${isDark ? 'bg-stone-900 text-white' : 'bg-white text-stone-900'}`}>
+              <div className={`relative min-h-[320px] sm:min-h-[400px] lg:min-h-[480px] flex flex-col justify-end overflow-hidden ${isDark ? 'bg-stone-900 text-white' : 'bg-white text-stone-900'}`}>
                 <img
                   src={panel.image}
                   alt={panel.title}
@@ -78,7 +78,7 @@ export default function FeatureSplit({ services = [] }) {
                       : 'bg-gradient-to-t from-white via-white/90 to-white/50'
                   }`}
                 />
-                <div className="relative z-10 p-10 lg:p-14 max-w-xl">
+                <div className="relative z-10 p-6 sm:p-10 lg:p-14 max-w-xl">
                   <div
                     className={`w-12 h-12 rounded-xl flex items-center justify-center mb-5 ${
                       isDark ? 'bg-[#C4795A]/20 text-[#C4795A]' : 'bg-[#5C7A6B]/15 text-[#5C7A6B]'

@@ -4,6 +4,7 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { sendAdminLeadAlert, sendClientConfirmation } from '../services/emailService.js';
+import { escapeRegex } from '../middleware/validate.js';
 import {
   formatLead,
   parseLeadInput,
@@ -13,7 +14,8 @@ import {
 async function resolveServiceRef(serviceValue) {
   if (!serviceValue) return undefined;
   if (typeof serviceValue === 'string' && !/^[a-f\d]{24}$/i.test(serviceValue)) {
-    const match = await Service.findOne({ title: new RegExp(`^${serviceValue}$`, 'i') });
+    const safe = escapeRegex(serviceValue);
+    const match = await Service.findOne({ title: new RegExp(`^${safe}$`, 'i') });
     return match?._id;
   }
   return serviceValue;
@@ -28,6 +30,12 @@ export const createLead = asyncHandler(async (req, res) => {
     throw new ApiError(400, 'Full name, email, and phone are required');
   }
 
+  if (fullName.length > 100) throw new ApiError(400, 'Name is too long');
+  if (email.length > 254) throw new ApiError(400, 'Email is too long');
+  if (phone.length > 20) throw new ApiError(400, 'Phone number is too long');
+  if (message && message.length > 2000) throw new ApiError(400, 'Message is too long');
+  if (location && location.length > 500) throw new ApiError(400, 'Location is too long');
+
   const serviceName = typeof req.body.service === 'string' ? req.body.service : undefined;
   const serviceId = await resolveServiceRef(service);
 
@@ -36,15 +44,15 @@ export const createLead = asyncHandler(async (req, res) => {
     (String(parsed.source || '').toLowerCase().includes('contact') ? 'contact' : 'consultation');
 
   const lead = await Lead.create({
-    fullName,
-    email,
-    phone,
+    fullName: fullName.trim(),
+    email: email.toLowerCase().trim(),
+    phone: phone.trim(),
     propertyType,
     service: serviceId,
-    location,
-    message: serviceName && !serviceId ? `[Inquiry: ${serviceName}] ${message || ''}`.trim() : message,
+    location: location?.trim(),
+    message: serviceName && !serviceId ? `[Inquiry: ${serviceName}] ${message || ''}`.trim() : message?.trim(),
     preferredContact,
-    source: source || req.headers.referer || 'website',
+    source: source?.trim() || req.headers.referer || 'website',
     leadType,
     utmSource: parsed.utmSource || '',
     utmMedium: parsed.utmMedium || '',
@@ -58,6 +66,7 @@ export const createLead = asyncHandler(async (req, res) => {
   const formatted = formatLead(lead);
   if (serviceName && !formatted.service) formatted.service = serviceName;
 
+  console.log(`[LEAD] New ${leadType}: ${fullName} (${email})`);
   res.status(201).json(new ApiResponse(201, formatted, 'Consultation request submitted'));
 });
 
@@ -71,11 +80,11 @@ export const listLeads = asyncHandler(async (req, res) => {
   if (req.query.leadType) filter.leadType = req.query.leadType;
 
   if (req.query.search) {
-    const term = req.query.search.trim();
+    const term = escapeRegex(req.query.search.trim().substring(0, 100));
     filter.$or = [
-      { fullName: new RegExp(term, 'i') },
-      { email: new RegExp(term, 'i') },
-      { phone: new RegExp(term, 'i') },
+      { fullName: { $regex: term, $options: 'i' } },
+      { email: { $regex: term, $options: 'i' } },
+      { phone: { $regex: term, $options: 'i' } },
     ];
   }
 
@@ -119,7 +128,7 @@ export const updateLead = asyncHandler(async (req, res) => {
   if (status) lead.status = status;
   if (assignedTo !== undefined) lead.assignedTo = assignedTo || null;
   if (noteText) {
-    lead.notes.push({ text: noteText, author: req.user._id });
+    lead.notes.push({ text: noteText.substring(0, 2000), author: req.user._id });
   }
 
   await lead.save();

@@ -7,8 +7,16 @@ backend/node_modules/
 .env
 .env.local
 .env.*.local
+.env.production
+.env.staging
 frontend/.env
+frontend/.env.local
+frontend/.env.*.local
 backend/.env
+backend/.env.local
+backend/.env.*.local
+backend/.env.production
+backend/.env.staging
 
 # Build
 frontend/dist/
@@ -34,3 +42,4 @@ backend/.mongo-data/
 # Coverage
 coverage/
 .nyc_output/
+.tools/

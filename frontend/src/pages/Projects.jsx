@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Clock } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import SkeletonGrid from '../components/ui/Skeleton';
+import EmptyState from '../components/ui/EmptyState';
 
 export default function Projects() {
   const [allProjects, setAllProjects] = useState([]);
@@ -25,7 +27,7 @@ export default function Projects() {
       <section className="bg-gradient-to-r from-stone-900 to-[#1A1817] text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <span className="text-[#C4795A] font-semibold text-sm uppercase tracking-widest">Completed Transformations</span>
-          <h1 className="font-serif text-4xl sm:text-6xl font-bold mt-4">Project Portfolio</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4">Project Portfolio</h1>
         </div>
       </section>
 
@@ -48,9 +50,13 @@ export default function Projects() {
         )}
 
         {isLoading ? (
-          <p className="text-center text-stone-500">Loading projects…</p>
+          <SkeletonGrid count={6} cols="grid-cols-1 md:grid-cols-2 lg:grid-cols-3" gap="gap-8" />
         ) : projects.length === 0 ? (
-          <p className="text-center text-stone-500">No projects published yet.</p>
+          <EmptyState
+            icon="empty"
+            title="No projects published yet"
+            description="We're currently showcasing our latest work. Check back soon to see our completed transformations."
+          />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {projects.map((project) => (

@@ -114,48 +114,50 @@ export default function Careers() {
 
           <form onSubmit={handleSubmit} className="space-y-5 text-sm">
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">Position *</label>
+              <label htmlFor="career-position" className="block font-semibold text-stone-700 mb-1">Position *</label>
               {openings.length > 0 ? (
-                <select value={selectedPosition} onChange={(e) => setSelectedPosition(e.target.value)} className="w-full px-4 py-3 border border-stone-200 rounded-xl" required>
+                <select id="career-position" value={selectedPosition} onChange={(e) => setSelectedPosition(e.target.value)} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" required>
                   {openings.map((j) => <option key={j._id} value={j.title}>{j.title}</option>)}
                 </select>
               ) : (
                 <input
+                  id="career-position"
                   type="text"
                   required
                   value={selectedPosition}
                   onChange={(e) => setSelectedPosition(e.target.value)}
                   placeholder="e.g. General Application / Interior Architect"
-                  className="w-full px-4 py-3 border border-stone-200 rounded-xl"
+                  className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]"
                 />
               )}
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
               <div>
-                <label className="block font-semibold text-stone-700 mb-1">Full Name *</label>
-                <input type="text" required value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+                <label htmlFor="career-fullName" className="block font-semibold text-stone-700 mb-1">Full Name *</label>
+                <input id="career-fullName" type="text" required autoComplete="name" value={formData.fullName} onChange={(e) => setFormData({ ...formData, fullName: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" />
               </div>
               <div>
-                <label className="block font-semibold text-stone-700 mb-1">Phone *</label>
-                <input type="tel" required value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+                <label htmlFor="career-phone" className="block font-semibold text-stone-700 mb-1">Phone *</label>
+                <input id="career-phone" type="tel" required autoComplete="tel" value={formData.phone} onChange={(e) => setFormData({ ...formData, phone: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" />
               </div>
             </div>
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">Email *</label>
-              <input type="email" required value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+              <label htmlFor="career-email" className="block font-semibold text-stone-700 mb-1">Email *</label>
+              <input id="career-email" type="email" required autoComplete="email" value={formData.email} onChange={(e) => setFormData({ ...formData, email: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" />
             </div>
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">Experience</label>
-              <input type="text" value={formData.experience} onChange={(e) => setFormData({ ...formData, experience: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" placeholder="e.g. 5 years residential fit-out" />
+              <label htmlFor="career-experience" className="block font-semibold text-stone-700 mb-1">Experience</label>
+              <input id="career-experience" type="text" value={formData.experience} onChange={(e) => setFormData({ ...formData, experience: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" placeholder="e.g. 5 years residential fit-out" />
             </div>
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">Upload Resume (PDF / Word)</label>
-              <label className="flex items-center gap-3 px-4 py-3 border border-dashed border-stone-300 rounded-xl cursor-pointer hover:border-[#C4795A] transition">
+              <label htmlFor="career-resume" className="block font-semibold text-stone-700 mb-1">Upload Resume (PDF / Word)</label>
+              <label htmlFor="career-resume" className="flex items-center gap-3 px-4 py-3 border border-dashed border-stone-300 rounded-xl cursor-pointer hover:border-[#C4795A] transition">
                 <Upload className="w-4 h-4 text-[#C4795A]" />
                 <span className="text-stone-600 text-xs">
                   {resumeFile ? resumeFile.name : 'Choose file (max 8MB)'}
                 </span>
                 <input
+                  id="career-resume"
                   type="file"
                   accept=".pdf,.doc,.docx,application/pdf,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document"
                   className="hidden"
@@ -164,14 +166,14 @@ export default function Careers() {
               </label>
             </div>
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">Or Resume / Portfolio URL</label>
-              <input type="url" value={formData.resumeUrl} onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" placeholder="https://drive.google.com/..." />
+              <label htmlFor="career-resumeUrl" className="block font-semibold text-stone-700 mb-1">Or Resume / Portfolio URL</label>
+              <input id="career-resumeUrl" type="url" value={formData.resumeUrl} onChange={(e) => setFormData({ ...formData, resumeUrl: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" placeholder="https://drive.google.com/..." />
             </div>
             <div>
-              <label className="block font-semibold text-stone-700 mb-1">Cover Letter</label>
-              <textarea rows={4} value={formData.coverLetter} onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl" />
+              <label htmlFor="career-coverLetter" className="block font-semibold text-stone-700 mb-1">Cover Letter</label>
+              <textarea id="career-coverLetter" rows={4} value={formData.coverLetter} onChange={(e) => setFormData({ ...formData, coverLetter: e.target.value })} className="w-full px-4 py-3 border border-stone-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#C4795A]" />
             </div>
-            <button type="submit" disabled={loading} className="btn-terracotta px-8 py-3 rounded-xl font-semibold text-sm flex items-center space-x-2 disabled:opacity-60">
+            <button type="submit" disabled={loading} aria-busy={loading} className="btn-terracotta px-8 py-3 rounded-xl font-semibold text-sm flex items-center space-x-2 disabled:opacity-60">
               <Send className="w-4 h-4" />
               <span>{loading ? 'Submitting…' : 'Submit Application'}</span>
             </button>

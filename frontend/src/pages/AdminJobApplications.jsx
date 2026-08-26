@@ -50,9 +50,9 @@ export default function AdminJobApplications() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="font-serif text-3xl font-bold text-stone-900">Job Applications</h1>
+      <div className="admin-page-header">
+        <div className="min-w-0">
+          <h1 className="font-serif font-bold text-stone-900">Job Applications</h1>
           <p className="text-xs text-stone-500 mt-1">Careers page submissions</p>
         </div>
         <select value={filter} onChange={(e) => setFilter(e.target.value)} className="text-xs border rounded-xl px-3 py-2">
@@ -64,7 +64,7 @@ export default function AdminJobApplications() {
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-stone-200 shadow-sm overflow-hidden">
+        <div className="lg:col-span-2 bg-white rounded-2xl border border-stone-200 shadow-sm admin-table-wrap">
           <table className="w-full text-left text-xs text-stone-700">
             <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
               <tr>

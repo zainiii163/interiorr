@@ -48,14 +48,14 @@ export default function About() {
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
             {subtitle}
           </span>
-          <h1 className="font-serif text-4xl sm:text-6xl font-bold mt-2">{title}</h1>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl font-bold mt-2 break-words">{title}</h1>
           <p className="text-stone-300 mt-4 max-w-2xl mx-auto text-base">{body}</p>
         </div>
       </section>
 
       {statCards.length > 0 && (
         <section className="bg-[#C4795A] text-white py-10">
-          <div className="max-w-7xl mx-auto px-4 grid grid-cols-2 md:grid-cols-5 gap-6 text-center">
+          <div className="max-w-7xl mx-auto px-4 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 sm:gap-6 text-center">
             {statCards.map((s) => (
               <div key={s.label}>
                 <div className="font-serif text-3xl font-bold">
@@ -88,7 +88,7 @@ export default function About() {
             <img
               src={aboutImage}
               alt={company}
-              className="rounded-2xl shadow-2xl object-cover h-[450px] w-full"
+              className="rounded-2xl shadow-2xl object-cover h-[240px] sm:h-[360px] lg:h-[450px] w-full"
             />
           </div>
         </div>
