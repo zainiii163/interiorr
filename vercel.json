@@ -1,34 +1,8 @@
 {
-  "services": {
-    "frontend": {
-      "root": "frontend",
-      "framework": "vite",
-      "rewrites": [
-        {
-          "source": "/((?!assets/).*)",
-          "destination": "/index.html"
-        }
-      ]
-    },
-    "backend": {
-      "root": "backend",
-      "framework": "express",
-      "entrypoint": "src/index.js"
-    }
-  },
   "rewrites": [
     {
-      "source": "/api(/.*)?",
-      "destination": {
-        "service": "backend"
-      }
-    },
-    {
-      "source": "/((?!api/|assets/|logo\\.jpg|favicon\\.jpg|robots\\.txt).*)",
-      "destination": {
-        "service": "frontend",
-        "path": "/index.html"
-      }
+      "source": "/api/:path*",
+      "destination": "https://interiorr-api.onrender.com/api/:path*"
     }
   ]
 }

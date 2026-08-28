@@ -68,7 +68,9 @@ export const apiFetch = async (endpoint, options = {}, retried = false) => {
       credentials: 'include',
     });
 
-    const data = await res.json();
+    const contentType = res.headers.get('content-type') || '';
+    const isJson = contentType.includes('application/json');
+    const data = isJson ? await res.json() : { message: (await res.text()).slice(0, 200) };
 
     if (
       res.status === 401 &&
