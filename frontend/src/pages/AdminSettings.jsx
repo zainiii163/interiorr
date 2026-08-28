@@ -283,7 +283,14 @@ export default function AdminSettings() {
           <h2 className="font-serif text-lg font-bold text-stone-900 mb-4">CTA Sections & Contact</h2>
           <div className="space-y-3">
             <input type="text" placeholder="Business hours" value={settings.businessHours || ''} onChange={(e) => handleChange('businessHours', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
-            <input type="text" placeholder="Map embed URL" value={settings.mapEmbedUrl || ''} onChange={(e) => handleChange('mapEmbedUrl', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
+            <input
+              type="text"
+              placeholder="Map embed URL (OpenStreetMap or Google Maps → Share → Embed)"
+              value={settings.mapEmbedUrl || ''}
+              onChange={(e) => handleChange('mapEmbedUrl', e.target.value)}
+              disabled={!isAdmin}
+              className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50"
+            />
             <input type="text" placeholder="CTA band title" value={settings.ctaBandTitle || ''} onChange={(e) => handleChange('ctaBandTitle', e.target.value)} disabled={!isAdmin} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <textarea placeholder="CTA band body" value={settings.ctaBandBody || ''} onChange={(e) => handleChange('ctaBandBody', e.target.value)} disabled={!isAdmin} rows={2} className="w-full px-4 py-3 rounded-xl border text-sm disabled:bg-stone-50" />
             <ImageUploadField

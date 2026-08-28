@@ -7,7 +7,8 @@ export const BRAND_DEFAULTS = {
   email: 'hello.hamts@yahoo.com',
   address: 'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates',
   businessHours: 'Mon - Sat: 8:00 AM - 7:00 PM',
-  mapEmbedUrl: 'https://maps.google.com/maps?q=Al+Murar+Deira+Dubai+UAE&output=embed',
+  mapEmbedUrl:
+    'https://www.openstreetmap.org/export/embed.html?bbox=55.3050%2C25.2650%2C55.3450%2C25.2850&layer=mapnik&marker=25.275%2C55.325',
   logoUrl: '/logo.jpg',
   socialLinks: {
     instagram: 'https://www.instagram.com/hululalmadina?igsi=MWw5ZWkxZGp2MGNqMg==',

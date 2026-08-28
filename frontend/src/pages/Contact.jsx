@@ -4,6 +4,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon';
 import FormPrivacyNote from '../components/FormPrivacyNote';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
+import { googleMapsSearchUrl } from '../utils/mapEmbed';
 
 export default function Contact() {
   const { settings } = useSite();
@@ -223,15 +224,27 @@ export default function Contact() {
         </div>
 
         {settings.mapEmbedUrl && (
-        <div className="mt-16 rounded-2xl overflow-hidden shadow-lg border border-stone-200 bg-stone-200 h-80">
-          <iframe
-            title="Office Location"
-            src={settings.mapEmbedUrl}
-            className="w-full h-full border-0"
-            loading="lazy"
-            referrerPolicy="no-referrer-when-downgrade"
-            allowFullScreen
-          />
+        <div className="mt-16 space-y-3">
+          <div className="rounded-2xl overflow-hidden shadow-lg border border-stone-200 bg-stone-200 h-80 sm:h-96">
+            <iframe
+              title="Office Location"
+              src={settings.mapEmbedUrl}
+              className="w-full h-full border-0"
+              loading="lazy"
+              referrerPolicy="no-referrer-when-downgrade"
+              allowFullScreen
+            />
+          </div>
+          <p className="text-center text-sm text-stone-600">
+            <a
+              href={googleMapsSearchUrl(settings.address)}
+              target="_blank"
+              rel="noreferrer"
+              className="font-semibold text-[#C4795A] hover:underline"
+            >
+              Open directions in Google Maps →
+            </a>
+          </p>
         </div>
         )}
       </section>
