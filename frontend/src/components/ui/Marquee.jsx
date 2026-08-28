@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { resolveMediaUrl } from '../utils/mediaUrl';
+import { resolveMediaUrl } from '../../utils/mediaUrl';
 
 export default function Marquee({ items, speed = 30 }) {
   const [failedIds, setFailedIds] = useState(() => new Set());
