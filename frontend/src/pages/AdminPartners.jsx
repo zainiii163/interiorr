@@ -3,6 +3,7 @@ import { Plus, Edit, Trash2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ImageUploadField from '../components/admin/ImageUploadField';
+import { resolveMediaUrl } from '../utils/mediaUrl';
 
 const emptyForm = {
   name: '',
@@ -80,7 +81,9 @@ export default function AdminPartners() {
       <div className="admin-page-header">
         <div className="min-w-0">
           <h1 className="font-serif font-bold text-stone-900">Brand Partners</h1>
-          <p className="text-xs text-stone-500 mt-1">Logos and names shown in the partners section on the home page</p>
+          <p className="text-xs text-stone-500 mt-1">
+            Logos shown in the partners strip on the home page. Upload images or paste a URL. Company logo is under Site Settings.
+          </p>
         </div>
         <button onClick={openCreate} className="btn-terracotta px-4 py-2.5 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md">
           <Plus className="w-4 h-4" />
@@ -92,6 +95,7 @@ export default function AdminPartners() {
         <table className="w-full text-left text-xs text-stone-700">
           <thead className="bg-stone-50 text-stone-500 uppercase tracking-wider text-[10px] border-b border-stone-200">
             <tr>
+              <th className="py-3.5 px-4">Logo</th>
               <th className="py-3.5 px-4">Partner</th>
               <th className="py-3.5 px-4">Website</th>
               <th className="py-3.5 px-4">Order</th>
@@ -102,6 +106,17 @@ export default function AdminPartners() {
           <tbody className="divide-y divide-stone-100">
             {partners.map((p) => (
               <tr key={p._id} className="hover:bg-stone-50">
+                <td className="py-3.5 px-4">
+                  {p.logo ? (
+                    <img
+                      src={resolveMediaUrl(p.logo)}
+                      alt={p.name}
+                      className="h-8 w-16 object-contain rounded border bg-white p-1"
+                    />
+                  ) : (
+                    <span className="text-stone-400">—</span>
+                  )}
+                </td>
                 <td className="py-3.5 px-4 font-bold text-stone-900">{p.name}</td>
                 <td className="py-3.5 px-4 text-stone-500 truncate max-w-xs">{p.website || '—'}</td>
                 <td className="py-3.5 px-4">{p.order}</td>

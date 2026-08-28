@@ -1,0 +1,30 @@
+[
+  {
+    "name": "Bosch",
+    "logo": "https://cdn.worldvectorlogo.com/logos/bosch.svg",
+    "website": "https://bosch.com",
+    "order": 1,
+    "isActive": true
+  },
+  {
+    "name": "Blum",
+    "logo": "https://cdn.worldvectorlogo.com/logos/blum.svg",
+    "website": "https://blum.com",
+    "order": 2,
+    "isActive": true
+  },
+  {
+    "name": "Grohe",
+    "logo": "https://cdn.worldvectorlogo.com/logos/grohe.svg",
+    "website": "https://grohe.com",
+    "order": 3,
+    "isActive": true
+  },
+  {
+    "name": "Dulux",
+    "logo": "https://cdn.worldvectorlogo.com/logos/dulux.svg",
+    "website": "https://dulux.com",
+    "order": 4,
+    "isActive": true
+  }
+]

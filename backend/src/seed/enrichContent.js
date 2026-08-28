@@ -10,6 +10,7 @@ import { Service } from '../models/Service.js';
 import { Review } from '../models/Review.js';
 import { SiteSetting } from '../models/SiteSetting.js';
 import { Faq } from '../models/Faq.js';
+import { Partner } from '../models/Partner.js';
 import { TrustPillar } from '../models/TrustPillar.js';
 import { slugify } from '../utils/slugify.js';
 import { DEFAULT_PAGE_COPY, SERVICE_IMAGES, REVIEW_PHOTOS } from './pageCopy.js';
@@ -103,6 +104,16 @@ async function enrich() {
   const pillars = loadJson('trustPillars.json');
   await TrustPillar.deleteMany({});
   await TrustPillar.insertMany(pillars);
+
+  console.log('Updating partner logos...');
+  const partners = loadJson('partners.json');
+  for (const partner of partners) {
+    await Partner.findOneAndUpdate(
+      { name: partner.name },
+      { $set: { logo: partner.logo, website: partner.website, order: partner.order, isActive: partner.isActive } },
+      { upsert: true }
+    );
+  }
 
   console.log('Adding review photos where missing...');
   const reviews = await Review.find({ $or: [{ authorPhoto: '' }, { authorPhoto: { $exists: false } }] });

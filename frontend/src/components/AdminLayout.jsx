@@ -9,6 +9,7 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { canAccessPath, roleLabel } from '../utils/roles';
 import { useSite } from '../context/SiteContext';
+import BrandLogo from './BrandLogo';
 
 const NAV_SECTIONS = [
   {
@@ -52,19 +53,20 @@ const NAV_SECTIONS = [
   },
 ];
 
-function SidebarContent({ sections, location, brandInitial, brandName, portalSubtitle, user, onNavigate, onLogout }) {
+function SidebarContent({ sections, location, settings, brandName, portalSubtitle, user, onNavigate, onLogout }) {
   return (
     <>
-      <div className="p-4 sm:p-6 border-b border-stone-800 flex items-center justify-between">
-        <Link to="/" onClick={onNavigate} className="flex items-center space-x-2 min-w-0">
-          <div className="w-8 h-8 rounded-full bg-[#C4795A] text-white flex items-center justify-center font-serif font-bold shrink-0">
-            {brandInitial}
-          </div>
-          <div className="min-w-0">
-            <span className="font-serif font-bold text-lg text-white block truncate">{brandName}</span>
-            <span className="block text-[9px] uppercase tracking-widest text-stone-400">{portalSubtitle}</span>
-          </div>
-        </Link>
+      <div className="p-4 sm:p-6 border-b border-stone-800 flex items-center gap-3 min-w-0">
+        <BrandLogo
+          settings={settings}
+          onClick={onNavigate}
+          showText={false}
+          imageClassName="h-9 w-9 rounded-lg object-cover bg-white/95 p-0.5 shrink-0 ring-1 ring-white/10"
+        />
+        <div className="min-w-0 flex-1">
+          <span className="font-serif font-bold text-lg text-white block truncate">{brandName}</span>
+          <span className="block text-[9px] uppercase tracking-widest text-stone-400">{portalSubtitle}</span>
+        </div>
       </div>
 
       <div className="p-4 bg-stone-950/60 border-b border-stone-800 flex items-center space-x-3 text-xs">
@@ -138,7 +140,6 @@ export default function AdminLayout() {
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
   const brandName = settings?.companyName?.split(' ')[0] || 'HAMTS';
-  const brandInitial = brandName.charAt(0).toUpperCase();
 
   useEffect(() => {
     if (!loading && !user) {
@@ -196,7 +197,7 @@ export default function AdminLayout() {
   const sidebarProps = {
     sections,
     location,
-    brandInitial,
+    settings,
     brandName,
     portalSubtitle,
     user,
@@ -247,9 +248,17 @@ export default function AdminLayout() {
           >
             <Menu className="w-5 h-5" />
           </button>
-          <div className="min-w-0 flex-1 text-center">
-            <span className="font-serif font-bold text-sm truncate block">{brandName}</span>
-            <span className="text-[9px] uppercase tracking-widest text-stone-400">{portalSubtitle}</span>
+          <div className="min-w-0 flex-1 flex items-center justify-center gap-2">
+            <BrandLogo
+              settings={settings}
+              onClick={false}
+              showText={false}
+              imageClassName="h-8 w-8 rounded-lg object-cover bg-white/95 p-0.5 shrink-0"
+            />
+            <div className="min-w-0 text-left">
+              <span className="font-serif font-bold text-sm truncate block">{brandName}</span>
+              <span className="text-[9px] uppercase tracking-widest text-stone-400">{portalSubtitle}</span>
+            </div>
           </div>
           <div className="w-9 h-9 rounded-full bg-stone-800 text-[#C4795A] font-bold flex items-center justify-center uppercase text-xs shrink-0">
             {user.name?.charAt(0) || 'U'}

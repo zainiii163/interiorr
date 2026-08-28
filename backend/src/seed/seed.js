@@ -163,12 +163,7 @@ async function seed() {
   );
 
   console.log('Seeding partners...');
-  await Partner.insertMany([
-    { name: 'Bosch', logo: 'https://upload.wikimedia.org/wikipedia/commons/1/16/Bosch-logo.svg', website: 'https://bosch.com', order: 1, isActive: true },
-    { name: 'Blum', logo: 'https://upload.wikimedia.org/wikipedia/commons/5/5e/Blum_logo.svg', website: 'https://blum.com', order: 2, isActive: true },
-    { name: 'Grohe', logo: 'https://upload.wikimedia.org/wikipedia/commons/3/3a/GROHE_logo.svg', website: 'https://grohe.com', order: 3, isActive: true },
-    { name: 'Dulux', logo: 'https://upload.wikimedia.org/wikipedia/en/7/7e/Dulux_logo.svg', website: 'https://dulux.com', order: 4, isActive: true },
-  ]);
+  await Partner.insertMany(loadJson('partners.json'));
 
   console.log('Seeding projects...');
   const projects = await Project.insertMany([
