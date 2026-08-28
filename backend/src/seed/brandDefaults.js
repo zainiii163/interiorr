@@ -8,7 +8,7 @@ export const BRAND_DEFAULTS = {
   address: 'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates',
   businessHours: 'Mon - Sat: 8:00 AM - 7:00 PM',
   mapEmbedUrl: 'https://maps.google.com/maps?q=Al+Murar+Deira+Dubai+UAE&output=embed',
-  logoUrl: '/assets/brand-logo.jpg',
+  logoUrl: '/logo.jpg',
   socialLinks: {
     instagram: 'https://www.instagram.com/hululalmadina?igsi=MWw5ZWkxZGp2MGNqMg==',
     facebook: 'https://www.facebook.com/share/1K6NUaGN8y/',

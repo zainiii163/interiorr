@@ -19,7 +19,7 @@ export const ENV_SITE_DEFAULTS = {
   whatsapp: WHATSAPP,
   email: CONTACT_EMAIL,
   address: CONTACT_ADDRESS,
-  logoUrl: '/assets/brand-logo.jpg',
+  logoUrl: '/logo.jpg',
   socialMedia: {
     instagram: INSTAGRAM_URL,
     facebook: FACEBOOK_URL,

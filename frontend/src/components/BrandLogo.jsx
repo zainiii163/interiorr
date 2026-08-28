@@ -2,9 +2,17 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import defaultLogo from '../assets/brand-logo.jpg';
 
+const BUNDLED_LOGO_PATHS = new Set([
+  '/logo.jpg',
+  '/favicon.jpg',
+  '/assets/brand-logo.jpg',
+  'assets/brand-logo.jpg',
+  'brand-logo.jpg',
+]);
+
 function resolveLogoSrc(settings) {
   const url = settings?.logoUrl?.trim();
-  if (!url || url === '/logo.jpg' || url === '/favicon.jpg') return defaultLogo;
+  if (!url || BUNDLED_LOGO_PATHS.has(url)) return defaultLogo;
   if (url.startsWith('http://') || url.startsWith('https://')) return url;
   if (url.startsWith('/')) return url;
   return `/${url}`;
