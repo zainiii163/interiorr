@@ -1,8 +1,10 @@
 {
+  "$schema": "https://openapi.vercel.sh/vercel.json",
   "services": {
     "frontend": {
       "root": "frontend",
-      "framework": "vite"
+      "framework": "vite",
+      "outputDirectory": "dist"
     },
     "backend": {
       "root": "backend",
@@ -16,18 +18,13 @@
       "destination": { "service": "backend" }
     },
     {
-      "source": "/assets/:path*",
-      "destination": { "service": "frontend" }
+      "handle": "filesystem"
     },
     {
-      "source": "/(logo\\.jpg|favicon\\.jpg|robots\\.txt)",
-      "destination": { "service": "frontend" }
-    },
-    {
-      "source": "/(.*)",
+      "source": "/((?!api/).*)",
       "destination": {
         "service": "frontend",
-        "path": "/index.html"
+        "path": "index.html"
       }
     }
   ]
