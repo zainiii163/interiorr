@@ -4,7 +4,11 @@
     "frontend": {
       "root": "frontend",
       "framework": "vite",
-      "outputDirectory": "dist"
+      "outputDirectory": "dist",
+      "rewrites": [
+        { "handle": "filesystem" },
+        { "source": "/(.*)", "destination": "/index.html" }
+      ]
     },
     "backend": {
       "root": "backend",
@@ -18,14 +22,8 @@
       "destination": { "service": "backend" }
     },
     {
-      "handle": "filesystem"
-    },
-    {
-      "source": "/((?!api/).*)",
-      "destination": {
-        "service": "frontend",
-        "path": "index.html"
-      }
+      "source": "/(.*)",
+      "destination": { "service": "frontend" }
     }
   ]
 }
