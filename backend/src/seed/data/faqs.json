@@ -1,42 +1,49 @@
 [
   {
-    "question": "How long does a commercial fit-out take in Dubai?",
-    "answer": "A typical office of 2,000–5,000 sq ft takes 4–8 weeks. Clinics, gyms, and retail may take 6–12 weeks depending on technical scope and approvals.",
+    "question": "How long does commercial maintenance or renovation take in Dubai?",
+    "answer": "Small office or shop maintenance jobs are often completed in 1–3 days. Larger commercial renovations or fit-out work typically take 4–12 weeks depending on scope, materials, and authority approvals.",
     "page": "commercial",
     "order": 1,
     "isActive": true
   },
   {
-    "question": "What is included in a turnkey commercial package?",
-    "answer": "Design, approvals, partitions, ceilings, flooring, MEP, joinery, painting, and finishing — from concept to handover under one contract.",
+    "question": "What commercial services does HAMTS provide?",
+    "answer": "We provide office and retail maintenance, painting, carpentry, electrical and plumbing repairs, minor civil works, and light commercial fit-out for clinics, salons, shops, and offices across Dubai.",
     "page": "commercial",
     "order": 2,
     "isActive": true
   },
   {
-    "question": "Do you handle NOCs and authority approvals?",
-    "answer": "Yes. An in-house team manages community, building management, and authority approvals so your programme is not delayed by paperwork.",
+    "question": "Do you handle NOCs and building approvals for commercial work?",
+    "answer": "Yes. For projects that require community, building management, or authority approvals, our team coordinates documentation so your schedule is not delayed.",
     "page": "commercial",
     "order": 3,
     "isActive": true
   },
   {
-    "question": "Do you work on villas as well as commercial spaces?",
-    "answer": "Yes. We deliver villa renovations, apartment fit-outs, and commercial projects with the same in-house joinery, MEP, and project-management team.",
+    "question": "Can you maintain properties while our business stays open?",
+    "answer": "Yes. We schedule commercial maintenance and renovation work to minimise disruption, including after-hours or phased execution where needed.",
+    "page": "commercial",
+    "order": 4,
+    "isActive": true
+  },
+  {
+    "question": "Do you work on villas and apartments as well as commercial spaces?",
+    "answer": "Yes. HAMTS provides maintenance, renovation, painting, and technical services for villas, apartments, and commercial properties across Dubai.",
     "page": "home",
     "order": 1,
     "isActive": true
   },
   {
     "question": "Is the consultation and site visit free?",
-    "answer": "Yes. A planner contacts you within two hours, then we schedule a free site visit and prepare a detailed scope of work with transparent pricing.",
+    "answer": "Yes. Our team contacts you within two hours on business days, then we schedule a free site visit and prepare a detailed scope of work with transparent pricing.",
     "page": "consultation",
     "order": 1,
     "isActive": true
   },
   {
-    "question": "What warranty do you offer?",
-    "answer": "Up to 10 years on kitchens, wardrobes, and cabinetry, with documented waterproofing and snag-free handover on renovation packages.",
+    "question": "What warranty do you offer on maintenance and renovation work?",
+    "answer": "Workmanship warranty applies to completed jobs as stated in your quotation. Specific warranty periods depend on the type of work — painting, carpentry, or renovation packages.",
     "page": "consultation",
     "order": 2,
     "isActive": true

@@ -18,6 +18,12 @@ import {
   Package,
   HardHat,
   Palette,
+  Wrench,
+  MapPin,
+  Search,
+  CheckCircle2,
+  Handshake,
+  HeartHandshake,
 } from 'lucide-react';
 
 const ICON_MAP = {
@@ -40,6 +46,12 @@ const ICON_MAP = {
   Package,
   HardHat,
   Palette,
+  Wrench,
+  MapPin,
+  Search,
+  CheckCircle2,
+  Handshake,
+  HeartHandshake,
 };
 
 export function getPillarIcon(name) {

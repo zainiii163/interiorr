@@ -10,6 +10,7 @@ import { Service } from '../models/Service.js';
 import { Review } from '../models/Review.js';
 import { SiteSetting } from '../models/SiteSetting.js';
 import { Faq } from '../models/Faq.js';
+import { TrustPillar } from '../models/TrustPillar.js';
 import { slugify } from '../utils/slugify.js';
 import { DEFAULT_PAGE_COPY, SERVICE_IMAGES, REVIEW_PHOTOS } from './pageCopy.js';
 import { BRAND_DEFAULTS } from './brandDefaults.js';
@@ -18,6 +19,16 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 function loadJson(name) {
   return JSON.parse(fs.readFileSync(path.join(__dirname, 'data', name), 'utf-8'));
+}
+
+function mergePageCopy(existing = {}) {
+  const merged = { ...DEFAULT_PAGE_COPY };
+  for (const [key, value] of Object.entries(existing)) {
+    if (value === undefined || value === null || value === '') continue;
+    if (Array.isArray(value) && value.length === 0) continue;
+    merged[key] = value;
+  }
+  return merged;
 }
 
 async function enrich() {
@@ -60,7 +71,7 @@ async function enrich() {
       ...BRAND_DEFAULTS,
       socialLinks: { ...BRAND_DEFAULTS.socialLinks },
       seo: { ...BRAND_DEFAULTS.seo, ...(settings.seo || {}) },
-      pageCopy: { ...DEFAULT_PAGE_COPY, ...(settings.pageCopy || {}) },
+      pageCopy: mergePageCopy(settings.pageCopy),
     });
     settings.markModified('pageCopy');
     settings.markModified('socialLinks');
@@ -74,6 +85,11 @@ async function enrich() {
     await Faq.insertMany(loadJson('faqs.json'));
   } else {
     const faqs = loadJson('faqs.json');
+    const seedQuestions = faqs.map((f) => f.question);
+    await Faq.updateMany(
+      { page: 'commercial', question: { $nin: seedQuestions } },
+      { $set: { isActive: false } }
+    );
     for (const faq of faqs) {
       await Faq.findOneAndUpdate(
         { question: faq.question },
@@ -82,6 +98,11 @@ async function enrich() {
       );
     }
   }
+
+  console.log('Syncing trust pillars...');
+  const pillars = loadJson('trustPillars.json');
+  await TrustPillar.deleteMany({});
+  await TrustPillar.insertMany(pillars);
 
   console.log('Adding review photos where missing...');
   const reviews = await Review.find({ $or: [{ authorPhoto: '' }, { authorPhoto: { $exists: false } }] });
