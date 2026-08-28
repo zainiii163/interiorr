@@ -20,6 +20,7 @@ import { Media } from '../models/Media.js';
 import { Faq } from '../models/Faq.js';
 import { slugify } from '../utils/slugify.js';
 import { DEFAULT_PAGE_COPY, SERVICE_IMAGES, REVIEW_PHOTOS } from './pageCopy.js';
+import { BRAND_DEFAULTS } from './brandDefaults.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -439,70 +440,16 @@ async function seed() {
 
   console.log('Seeding site settings...');
   await SiteSetting.create({
-    companyName: 'Aura Luxury Interiors & Renovations Dubai',
-    tagline: 'Bespoke Fit-Out, Joinery & Architectural Renovation in Dubai',
-    phone: '+971 4 800 9988',
-    whatsapp: '971501234567',
-    email: 'info@aurainteriors.ae',
-    address: 'Design District (D3), Building 4, Suite 302, Dubai, UAE',
-    businessHours: 'Mon - Sat: 8:00 AM - 7:00 PM',
-    mapEmbedUrl: 'https://maps.google.com/maps?q=Design+District+D3+Dubai+UAE&output=embed',
-    socialLinks: {
-      instagram: 'https://www.instagram.com/',
-      facebook: 'https://www.facebook.com/',
-      linkedin: 'https://www.linkedin.com/',
-    },
+    ...BRAND_DEFAULTS,
+    socialLinks: BRAND_DEFAULTS.socialLinks,
     stats: {
-      yearsExperience: 14,
-      projectsCompleted: 350,
-      employees: 45,
-      inspections: 820,
+      yearsExperience: 10,
+      projectsCompleted: 500,
+      employees: 25,
+      inspections: 1200,
       averageRating: 4.9,
     },
-    seo: {
-      defaultTitle: 'Aura Luxury Interiors & Renovations Dubai | Turnkey Fit-Out & Joinery',
-      defaultDescription: 'Luxury interior design, renovation, joinery and fit-out services in Dubai.',
-    },
-    heroImage: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2000&q=80',
-    heroBadge: "Dubai's Premier Turnkey Fitout & Joinery",
-    heroTitle: "Dubai's Leading Turnkey Fitout, Joinery & Property Transformation Specialists",
-    heroSubtitle: 'Design • Fitout • Joinery • Decorative Finishes • Property Inspection • Authority Approvals',
-    heroDescription: 'Transforming Dubai luxury homes and commercial spaces with certified engineers and in-house joinery.',
-    heroTrustBadges: [
-      'DDA & Municipality Approved',
-      '10-Year Structural Warranty',
-      '15,000 sq.ft Joinery Factory',
-    ],
-    aboutTitle: 'Transforming Residences into Architectural Masterpieces Since 2012',
-    aboutSubtitle: "Dubai's leading interior fit-out, bespoke joinery, and architectural contracting firm.",
-    aboutBody: 'Founded in Dubai, Aura Luxury Interiors provides full end-to-end renovation services encompassing interior architecture, custom joinery fabrication in our private Dubai workshop, MEP engineering, and official authority permits.',
-    aboutBullets: [
-      'In-House Cabinetry & Millwork Workshop in Dubai',
-      'Dedicated Project Managers & Thermal Snagging Engineers',
-      'Full Transparency with Detailed BOQ & Fixed Timeline Guarantee',
-    ],
-    certifications: [
-      'Dubai Municipality Approved Contractor',
-      'DEWA Registered Electrical Works',
-      'Civil Defence Fire Safety Compliant',
-      'Trakhees / DDA Fit-Out Approvals',
-    ],
-    aboutImage: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1000&q=80',
-    mission: 'To deliver world-class turnkey interior fit-outs with uncompromising craftsmanship, transparent communication, and flawless Dubai authority approvals.',
-    vision: 'To remain the most trusted interior renovation and joinery brand across the United Arab Emirates.',
-    skillsTitle: 'Skills That Shape Your Dream Home',
-    skillsBody: 'Our dedicated team of designers and project engineers works closely with you to understand your vision and bring it to life.',
-    skills: [
-      { label: 'Space Planning & Layout', value: 95 },
-      { label: 'Project Challenges & Solutions', value: 85 },
-      { label: 'Sustainability & Eco-Friendly Features', value: 75 },
-      { label: 'Authority Approvals & NOCs', value: 90 },
-    ],
-    ctaBandTitle: "Dubai's Trusted Fit-Out Specialists",
-    ctaBandBody: 'For property owners, investors & designers — book a free site visit and receive a transparent quote.',
-    ctaBandImage: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=2000&q=80',
-    finalCtaTitle: 'Ready to Transform Your Property?',
-    finalCtaBody: 'Schedule an in-person consultation with our senior Dubai team today.',
+    seo: BRAND_DEFAULTS.seo,
     pageCopy: DEFAULT_PAGE_COPY,
   });
 

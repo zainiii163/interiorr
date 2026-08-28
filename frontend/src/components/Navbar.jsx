@@ -2,6 +2,7 @@ import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Menu, X, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import MegaMenuPanel from './MegaMenuPanel';
+import BrandLogo from './BrandLogo';
 import { useSite } from '../context/SiteContext';
 import { useAuth } from '../context/AuthContext';
 import { apiFetch } from '../services/api';
@@ -26,23 +27,7 @@ function NavLinkItem({ link, isActive, onClick, className }) {
 }
 
 function Logo({ settings, onClick }) {
-  return (
-    <Link to="/" onClick={onClick} className="flex items-center gap-3 group min-w-0 shrink-0">
-      <div className="w-11 h-11 rounded-full bg-gradient-to-tr from-[#C4795A] to-[#5C7A6B] flex items-center justify-center text-white font-serif font-bold text-xl shadow-xl ring-2 ring-white/20 shrink-0">
-        {settings.companyName?.charAt(0) || 'A'}
-      </div>
-      <div className="min-w-0 hidden sm:block">
-        <span className="block font-serif text-xl font-bold tracking-wider text-white group-hover:text-[#C4795A] transition-colors truncate">
-          {settings.companyName?.split(' ')[0] || settings.companyName || 'Home'}
-        </span>
-        {settings.tagline && (
-          <span className="block text-[10px] tracking-widest text-stone-400 uppercase font-sans font-semibold truncate max-w-[200px] 2xl:max-w-[280px]">
-            {settings.tagline}
-          </span>
-        )}
-      </div>
-    </Link>
-  );
+  return <BrandLogo settings={settings} onClick={onClick} />;
 }
 
 function NavActions({ user, onNavigate, phone }) {

@@ -5,7 +5,7 @@ import { useSite } from '../context/SiteContext';
 export default function About() {
   const { settings } = useSite();
   const stats = settings.statistics || {};
-  const company = settings.companyName || 'Aura Interiors';
+  const company = settings.companyName || 'Hulul Al Madina Interiors';
   const subtitle = settings.aboutSubtitle || 'Heritage & Excellence';
   const title = settings.aboutTitle || `About ${company}`;
   const body =

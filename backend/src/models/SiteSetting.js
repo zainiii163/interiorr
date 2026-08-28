@@ -2,12 +2,13 @@ import mongoose from 'mongoose';
 
 const siteSettingSchema = new mongoose.Schema(
   {
-    companyName: { type: String, default: 'Interior Platform' },
-    tagline: { type: String, default: "Dubai's Trusted Fit-Out & Renovation Specialists" },
-    phone: { type: String, default: '+971 55 000 0000' },
-    whatsapp: { type: String, default: '971550000000' },
-    email: { type: String, default: 'hello@interior.com' },
-    address: { type: String, default: 'Al Quoz, Dubai, UAE' },
+    companyName: { type: String, default: 'Hulul Al Madina Interiors' },
+    tagline: { type: String, default: 'Maintenance • Renovation • Reliable Solutions' },
+    logoUrl: { type: String, default: '/logo.jpg' },
+    phone: { type: String, default: '+971 56 178 7007' },
+    whatsapp: { type: String, default: '971561787007' },
+    email: { type: String, default: 'hello.hamts@yahoo.com' },
+    address: { type: String, default: 'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates' },
     businessHours: { type: String, default: 'Mon - Sat: 8:00 AM - 7:00 PM' },
     mapEmbedUrl: { type: String, default: '' },
     socialLinks: {

@@ -137,7 +137,7 @@ export default function AdminLayout() {
   const navigate = useNavigate();
   const location = useLocation();
   const [mobileOpen, setMobileOpen] = useState(false);
-  const brandName = settings?.companyName?.split(' ')[0] || 'AURA';
+  const brandName = settings?.companyName?.split(' ')[0] || 'HAMTS';
   const brandInitial = brandName.charAt(0).toUpperCase();
 
   useEffect(() => {

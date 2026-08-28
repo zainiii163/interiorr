@@ -4,6 +4,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon';
 import FormPrivacyNote from '../components/FormPrivacyNote';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
+import { CONTACT_EMAIL } from '../utils/constants';
 
 export default function Contact() {
   const { settings } = useSite();
@@ -87,7 +88,7 @@ export default function Contact() {
                 </div>
               </div>
 
-              <a href={`tel:${(settings.phone || '+97148009988').replace(/[^+\d]/g, '')}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
+              <a href={`tel:${(settings.phone || CONTACT_PHONE).replace(/[^+\d]/g, '')}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
                 <Phone className="w-6 h-6 text-[#C4795A] shrink-0 mt-1" />
                 <div>
                   <h4 className="font-serif font-bold text-stone-900 text-base">Telephone</h4>
@@ -95,7 +96,7 @@ export default function Contact() {
                 </div>
               </a>
 
-              <a href={`mailto:${settings.email || 'info@aurainteriors.ae'}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
+              <a href={`mailto:${settings.email || CONTACT_EMAIL}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
                 <Mail className="w-6 h-6 text-[#C4795A] shrink-0 mt-1" />
                 <div>
                   <h4 className="font-serif font-bold text-stone-900 text-base">Email Inquiry</h4>

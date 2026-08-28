@@ -40,7 +40,7 @@ export default function AdminLogin() {
           </div>
           <h1 className="font-serif text-2xl font-bold tracking-tight">Staff Portal Login</h1>
           <p className="text-stone-400 text-xs">
-            Aura Interior Management & Renovation System
+            HAMTS Admin Portal
           </p>
         </div>
 

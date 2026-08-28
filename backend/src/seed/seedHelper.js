@@ -17,6 +17,7 @@ import { NavItem } from '../models/NavItem.js';
 import { Faq } from '../models/Faq.js';
 import { slugify } from '../utils/slugify.js';
 import { DEFAULT_PAGE_COPY, SERVICE_IMAGES } from './pageCopy.js';
+import { BRAND_DEFAULTS } from './brandDefaults.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -95,12 +96,8 @@ export async function seedData() {
   ]);
 
   await SiteSetting.create({
-    companyName: 'Aura Luxury Interiors & Renovations Dubai',
-    tagline: 'Bespoke Fit-Out, Joinery & Architectural Renovation in Dubai',
-    phone: '+971 4 800 9988',
-    whatsapp: '971501234567',
-    email: 'info@aurainteriors.ae',
-    address: 'Design District (D3), Building 4, Suite 302, Dubai, UAE',
+    ...BRAND_DEFAULTS,
+    socialLinks: BRAND_DEFAULTS.socialLinks,
     pageCopy: DEFAULT_PAGE_COPY,
   });
 

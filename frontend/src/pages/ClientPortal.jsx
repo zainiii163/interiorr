@@ -6,6 +6,7 @@ import {
 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useSite } from '../context/SiteContext';
+import BrandLogo from '../components/BrandLogo';
 
 export default function ClientPortal() {
   const { code: routeCode } = useParams();
@@ -152,22 +153,19 @@ export default function ClientPortal() {
       {/* Top Banner */}
       <header className="bg-stone-950 border-b border-stone-800 py-4 px-6 sticky top-0 z-30 shadow-lg">
         <div className="max-w-7xl mx-auto flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3 min-w-0">
-          <Link to="/" className="flex items-center space-x-3 min-w-0 shrink-0">
-            <div className="w-9 h-9 rounded-full bg-[#C4795A] text-white flex items-center justify-center font-serif font-bold text-lg shadow-md">
-              {(settings?.companyName || 'A').charAt(0)}
-            </div>
-            <div>
-              <span className="font-serif font-bold text-xl tracking-wide text-white">
-                {(settings?.companyName || 'AURA').split(' ')[0]}
-              </span>
-              <span className="block text-[9px] uppercase tracking-widest text-[#C4795A] font-semibold">
-                CLIENT PORTAL
-              </span>
-            </div>
-          </Link>
+          <div className="flex items-center gap-3 min-w-0">
+            <BrandLogo
+              settings={settings}
+              onClick={false}
+              imageClassName="h-10 w-auto object-contain bg-white rounded-md p-0.5"
+            />
+            <span className="text-[9px] uppercase tracking-widest text-[#C4795A] font-semibold whitespace-nowrap">
+              Client Portal
+            </span>
+          </div>
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
             <a
-              href={`https://wa.me/${settings?.whatsapp || '971550000000'}`}
+              href={`https://wa.me/${settings?.whatsapp || '971561787007'}`}
               target="_blank"
               rel="noreferrer"
               className="btn-terracotta px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md hover:scale-105 transition whitespace-nowrap"

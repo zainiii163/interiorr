@@ -112,6 +112,14 @@ export default function AdminSettings() {
       <form onSubmit={handleSubmit} className="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm space-y-6">
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div className="sm:col-span-2">
+            <ImageUploadField
+              label="Company Logo"
+              value={settings.logoUrl || '/logo.jpg'}
+              onChange={(url) => handleChange('logoUrl', url)}
+              disabled={!isAdmin}
+            />
+          </div>
+          <div className="sm:col-span-2">
             <label className="block text-xs font-bold uppercase tracking-wider text-stone-600 mb-1">
               Company Name
             </label>

@@ -1,5 +1,33 @@
-export const APP_NAME = import.meta.env.VITE_SITE_NAME || 'Interior Platform';
-export const WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER || '971550000000';
+/** Public contact defaults from Vite env (HAMTS). CMS settings override these at runtime. */
+export const APP_NAME = import.meta.env.VITE_SITE_NAME || 'Hulul Al Madina Interiors';
+export const WHATSAPP = import.meta.env.VITE_WHATSAPP_NUMBER || '971561787007';
+export const CONTACT_PHONE = import.meta.env.VITE_CONTACT_PHONE || '+971 56 178 7007';
+export const CONTACT_EMAIL = import.meta.env.VITE_CONTACT_EMAIL || 'hello.hamts@yahoo.com';
+export const CONTACT_ADDRESS =
+  import.meta.env.VITE_CONTACT_ADDRESS ||
+  'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates';
+export const INSTAGRAM_URL =
+  import.meta.env.VITE_INSTAGRAM_URL || 'https://www.instagram.com/hululalmadina';
+
+export const ENV_SITE_DEFAULTS = {
+  companyName: APP_NAME,
+  tagline: 'Maintenance • Renovation • Reliable Solutions',
+  phone: CONTACT_PHONE,
+  whatsapp: WHATSAPP,
+  email: CONTACT_EMAIL,
+  address: CONTACT_ADDRESS,
+  logoUrl: '/logo.jpg',
+  socialMedia: {
+    instagram: INSTAGRAM_URL,
+    facebook: '',
+    linkedin: '',
+  },
+  socialLinks: {
+    instagram: INSTAGRAM_URL,
+    facebook: '',
+    linkedin: '',
+  },
+};
 
 export const PROPERTY_TYPES = [
   { value: 'villa', label: 'Villa' },

@@ -3,9 +3,9 @@ export const DEFAULT_PAGE_COPY = {
   homePartnersLabel: 'Our Trusted Partners',
   homePartnersBody: 'Property owners, interior designers, consultants & contractors',
   homeStatsBadge: 'About Us',
-  homeStatsTitle: "Dubai's Most Trusted Fitout & Property Transformation Specialists",
+  homeStatsTitle: 'Trusted Maintenance & Renovation Specialists in Dubai',
   homeStatsBody:
-    'Full turnkey execution with certified engineers, in-house joinery, and transparent delivery for homes and commercial spaces.',
+    'HAMTS delivers maintenance, renovation, painting, and technical services for villas, apartments, and commercial properties across Dubai.',
   homeServicesBadge: 'Complete Range',
   homeServicesTitle: 'Our Complete Range of Services',
   homeServicesBody: 'From concept to completion — design, fit-out, joinery, and property services under one roof.',
@@ -43,7 +43,7 @@ export const DEFAULT_PAGE_COPY = {
   commercialCtaBody: 'Our team will contact you within 24 hours to schedule a free consultation and site visit.',
   consultBadge: 'Private Appointment',
   consultTitle: 'Book a Design & Renovation Consultation',
-  consultSubtitle: 'Meet with our senior Dubai architectural team at your property or in our Design District studio.',
+  consultSubtitle: 'Meet our HAMTS team at your property or at our Deira office — Al Murar, Dubai.',
   consultNextTitle: 'What happens next',
   consultNextBody:
     'A planner contacts you within 2 hours, then we schedule a free site visit and prepare a detailed scope of work.',

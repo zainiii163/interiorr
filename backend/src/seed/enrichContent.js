@@ -12,6 +12,7 @@ import { SiteSetting } from '../models/SiteSetting.js';
 import { Faq } from '../models/Faq.js';
 import { slugify } from '../utils/slugify.js';
 import { DEFAULT_PAGE_COPY, SERVICE_IMAGES, REVIEW_PHOTOS } from './pageCopy.js';
+import { BRAND_DEFAULTS } from './brandDefaults.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -46,12 +47,24 @@ async function enrich() {
     );
   }
 
-  console.log('Merging page copy into site settings...');
+  console.log('Merging brand settings and page copy...');
   let settings = await SiteSetting.findOne();
-  if (!settings) settings = await SiteSetting.create({ pageCopy: DEFAULT_PAGE_COPY });
-  else {
-    settings.pageCopy = { ...DEFAULT_PAGE_COPY, ...(settings.pageCopy || {}) };
+  if (!settings) {
+    settings = await SiteSetting.create({
+      ...BRAND_DEFAULTS,
+      socialLinks: BRAND_DEFAULTS.socialLinks,
+      pageCopy: DEFAULT_PAGE_COPY,
+    });
+  } else {
+    Object.assign(settings, {
+      ...BRAND_DEFAULTS,
+      socialLinks: { ...BRAND_DEFAULTS.socialLinks, ...(settings.socialLinks || {}) },
+      seo: { ...BRAND_DEFAULTS.seo, ...(settings.seo || {}) },
+      pageCopy: { ...DEFAULT_PAGE_COPY, ...(settings.pageCopy || {}) },
+    });
     settings.markModified('pageCopy');
+    settings.markModified('socialLinks');
+    settings.markModified('seo');
     await settings.save();
   }
 
