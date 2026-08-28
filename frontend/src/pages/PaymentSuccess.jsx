@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, ShieldCheck, Download, Sparkles, Building2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { useSite } from '../context/SiteContext';
 
 export default function PaymentSuccess() {
+  const { settings } = useSite();
   const [searchParams] = useSearchParams();
   const quoteId = searchParams.get('quoteId');
   const sessionId = searchParams.get('session_id');
@@ -73,7 +75,7 @@ export default function PaymentSuccess() {
               </span>
               <h1 className="font-serif text-3xl font-bold text-white mt-2">Contract Confirmed!</h1>
               <p className="text-stone-400 text-xs mt-1">
-                Thank you for confirming your quote. Your fit-out project phase 1 is now active.
+                Thank you for confirming your quote. Your project is now active with {settings?.companyName || 'our team'}.
               </p>
             </div>
 

@@ -3,7 +3,7 @@ import { Play, X } from 'lucide-react';
 import ScrollReveal from '../ui/ScrollReveal';
 import { apiFetch } from '../../services/api';
 
-export default function VideoShowcase() {
+export default function VideoShowcase({ copy = {} }) {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState(null);
@@ -62,15 +62,14 @@ export default function VideoShowcase() {
           <ScrollReveal>
             <div className="text-center mb-12">
               <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
-                Our Work in Motion
+                {copy.homeVideoBadge || 'Our Work in Motion'}
               </span>
               <h2 className="font-serif text-4xl sm:text-5xl font-bold text-stone-100 mt-2">
-                Project Video Showcase
+                {copy.homeVideoTitle || 'Project Video Showcase'}
               </h2>
-              <p className="text-stone-400 mt-4 max-w-2xl mx-auto">
-                Watch our transformation projects come to life. From concept to completion, 
-                see the craftsmanship and attention to detail that goes into every interior.
-              </p>
+              {copy.homeVideoBody && (
+                <p className="text-stone-400 mt-4 max-w-2xl mx-auto">{copy.homeVideoBody}</p>
+              )}
             </div>
           </ScrollReveal>
 

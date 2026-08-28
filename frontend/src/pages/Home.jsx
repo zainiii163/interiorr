@@ -239,9 +239,9 @@ export default function Home() {
         </section>
       )}
 
-      <VideoShowcase />
+      <VideoShowcase copy={copy} />
 
-      <DesignStyleExplorer styles={designStyles} />
+      <DesignStyleExplorer styles={designStyles} copy={copy} />
 
       <SkillsSection settings={settings} />
 
@@ -270,13 +270,13 @@ export default function Home() {
                 to="/commercial"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm border border-stone-600 text-stone-200 hover:bg-white/10 transition"
               >
-                Commercial Fit-Out
+                {copy.homeCtaCommercial || 'Commercial Services'}
               </Link>
               <Link
                 to="/careers"
                 className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-2xl font-semibold text-sm border border-stone-600 text-stone-200 hover:bg-white/10 transition"
               >
-                Join Our Team
+                {copy.homeCtaCareers || 'Careers'}
               </Link>
             </div>
           </ScrollReveal>

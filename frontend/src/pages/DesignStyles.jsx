@@ -3,8 +3,12 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import EmptyState from '../components/ui/EmptyState';
+import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
 
 export default function DesignStyles() {
+  const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [styles, setStyles] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -27,10 +31,12 @@ export default function DesignStyles() {
       
       <section className="bg-stone-900 text-white py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">Aesthetic Direction</span>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">Interior Design Styles</h1>
+          <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
+            {copy.stylesHeroBadge}
+          </span>
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">{copy.stylesHeroTitle}</h1>
           <p className="text-stone-300 mt-3 max-w-2xl mx-auto text-sm">
-            Explore curated design philosophies tailored for Dubai luxury living.
+            {copy.stylesHeroBody}
           </p>
         </div>
       </section>
@@ -86,7 +92,7 @@ export default function DesignStyles() {
           <EmptyState
             icon="empty"
             title="No design styles available"
-            description="We're curating our design style collection. Check back soon for inspiration tailored to Dubai luxury living."
+            description="We're curating our design style collection. Check back soon for inspiration."
           />
         )}
       </section>

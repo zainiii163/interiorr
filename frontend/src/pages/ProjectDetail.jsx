@@ -65,7 +65,6 @@ export default function ProjectDetail() {
           <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover" />
         </div>
 
-        {/* FR-033: Before & After Comparison Slider */}
         {hasBeforeAfter && (
           <div className="bg-stone-900 text-white p-8 rounded-2xl space-y-6">
             <h2 className="font-serif text-3xl font-bold text-[#C4795A] text-center">Before & After Transformation</h2>

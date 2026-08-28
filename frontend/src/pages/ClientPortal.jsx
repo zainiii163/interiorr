@@ -252,7 +252,7 @@ export default function ClientPortal() {
                   </div>
 
                   <h1 className="font-serif text-2xl sm:text-3xl font-bold text-white">
-                    {data.quote.leadName ? `${data.quote.leadName}'s Fit-out Project` : 'Interior Quotation'}
+                    {data.quote.leadName ? `${data.quote.leadName}'s Project` : 'Project Quotation'}
                   </h1>
 
                   <div className="flex flex-wrap items-center gap-4 text-stone-400 text-xs mt-2">
@@ -325,7 +325,7 @@ export default function ClientPortal() {
                   <div className="flex items-center justify-between border-b border-stone-800 pb-4">
                     <div>
                       <h2 className="font-serif text-xl font-bold text-white">Itemized Scope & Cost Breakdown</h2>
-                      <p className="text-stone-400 text-xs mt-1">Turnkey fit-out & bespoke joinery detailed quote</p>
+                      <p className="text-stone-400 text-xs mt-1">Detailed project quotation from {settings?.companyName}</p>
                     </div>
                     <button
                       onClick={handlePrint}

@@ -1,6 +1,7 @@
 import { Link } from 'react-router-dom';
 import { MapPin, Phone, Mail, Clock, Instagram, Facebook, Linkedin, ShieldCheck, Lock } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
 import { apiFetch } from '../services/api';
 import { useState, useEffect } from 'react';
 import BrandLogo from './BrandLogo';
@@ -19,6 +20,7 @@ function FooterNavLink({ item }) {
 
 export default function Footer() {
   const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [services, setServices] = useState([]);
   const [footerLinks, setFooterLinks] = useState([]);
 
@@ -42,15 +44,15 @@ export default function Footer() {
         <div className="flex flex-wrap items-center justify-center gap-6 sm:gap-10 pb-12 mb-12 border-b border-stone-800/80 text-xs sm:text-sm text-stone-400">
           <span className="inline-flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-[#C4795A]" aria-hidden="true" />
-            Licensed UAE Contractor
+            {copy.footerTrustLicensed || certifications[0] || settings.heroTrustBadges?.[0]}
           </span>
           <span className="inline-flex items-center gap-2">
             <Lock className="w-4 h-4 text-[#C4795A]" aria-hidden="true" />
-            Secure HTTPS & Encrypted Forms
+            {copy.footerTrustSecure}
           </span>
           <span className="hidden sm:inline text-stone-600">|</span>
           <span className="text-center sm:text-left">
-            Trusted by homeowners, investors & commercial clients across Dubai
+            {copy.footerTrustClients}
           </span>
         </div>
 

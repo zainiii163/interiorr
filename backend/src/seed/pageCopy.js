@@ -70,6 +70,23 @@ export const DEFAULT_PAGE_COPY = {
   reviewsHeroBody: 'Feedback from property owners and businesses who trust HAMTS for maintenance and renovation.',
   projectsHeroTitle: 'Project Portfolio',
   projectsHeroBody: 'Completed maintenance, renovation and technical services across Dubai.',
+  projectsHeroBadge: 'Our Work',
+  homeVideoBadge: 'Our Work in Motion',
+  homeVideoTitle: 'Project Video Showcase',
+  homeVideoBody:
+    'Watch our maintenance and renovation projects — see the quality and attention to detail in every job.',
+  homeStylesBadge: 'Interior Design Styles',
+  homeStylesTitle: 'Styles We Execute',
+  homeStylesBody:
+    'From contemporary to traditional — explore design directions for villas, apartments and commercial spaces in Dubai.',
+  stylesHeroBadge: 'Design Inspiration',
+  stylesHeroTitle: 'Interior Design Styles',
+  stylesHeroBody: 'Explore design philosophies for residential and commercial properties across Dubai.',
+  footerTrustLicensed: 'Licensed UAE Technical Services',
+  footerTrustSecure: 'Secure HTTPS & Encrypted Forms',
+  footerTrustClients: 'Trusted by homeowners and businesses across Dubai',
+  homeCtaCommercial: 'Commercial Services',
+  homeCtaCareers: 'Careers',
 };
 
 export const SERVICE_IMAGES = {

@@ -41,27 +41,7 @@ export default function Commercial() {
       .catch(() => {});
   }, []);
 
-  const fallbackFaqs = [
-    {
-      _id: 'fallback-1',
-      question: 'How long does a commercial fit-out take in Dubai?',
-      answer:
-        'A typical office of 2,000–5,000 sq ft takes 4–8 weeks. Clinics, gyms, and retail may take 6–12 weeks depending on technical scope and approvals.',
-    },
-    {
-      _id: 'fallback-2',
-      question: 'What is included in a turnkey commercial package?',
-      answer:
-        'Design, approvals, partitions, ceilings, flooring, MEP, joinery, painting, and finishing — from concept to handover under one contract.',
-    },
-    {
-      _id: 'fallback-3',
-      question: 'Do you handle NOCs and authority approvals?',
-      answer:
-        'Yes. An in-house team manages community, building management, and authority approvals so your programme is not delayed by paperwork.',
-    },
-  ];
-  const displayFaqs = faqs.length ? faqs : fallbackFaqs;
+  const displayFaqs = faqs;
 
   const spaces = copy.commercialSpaces?.length ? copy.commercialSpaces : [];
   const heroImage = copy.commercialHeroImage;
@@ -85,7 +65,7 @@ export default function Commercial() {
           <p className="text-stone-300 mt-4 max-w-2xl">{copy.commercialHeroSubtitle}</p>
           <div className="flex flex-col sm:flex-row gap-4 mt-8">
             <Link
-              to="/consultation?service=Turnkey%20Contracting"
+              to="/consultation?service=Commercial"
               className="btn-terracotta px-8 py-4 rounded-2xl font-semibold inline-flex items-center justify-center gap-2"
             >
               Book a Commercial Consultation <ArrowRight className="w-4 h-4" />

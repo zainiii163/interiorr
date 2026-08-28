@@ -10,6 +10,7 @@ const TABS = [
   { id: 'services', label: 'Services' },
   { id: 'commercial', label: 'Commercial' },
   { id: 'consultation', label: 'Consultation' },
+  { id: 'pages', label: 'Other Pages' },
 ];
 
 function Field({ label, value, onChange, textarea, rows = 3 }) {
@@ -152,6 +153,25 @@ export default function AdminPages() {
               textarea
               rows={4}
             />
+            <Field label="Expertise badge" value={copy.homeExpertiseBadge} onChange={(v) => set('homeExpertiseBadge', v)} />
+            <Field label="Expertise title" value={copy.homeExpertiseTitle} onChange={(v) => set('homeExpertiseTitle', v)} />
+            <Field label="Expertise body" value={copy.homeExpertiseBody} onChange={(v) => set('homeExpertiseBody', v)} textarea />
+            <Field label="Promise badge" value={copy.homePromiseBadge} onChange={(v) => set('homePromiseBadge', v)} />
+            <Field label="Promise title" value={copy.homePromiseTitle} onChange={(v) => set('homePromiseTitle', v)} />
+            <Field label="Promise body" value={copy.homePromiseBody} onChange={(v) => set('homePromiseBody', v)} textarea />
+            <Field label="Process badge" value={copy.homeProcessBadge} onChange={(v) => set('homeProcessBadge', v)} />
+            <Field label="Process title" value={copy.homeProcessTitle} onChange={(v) => set('homeProcessTitle', v)} />
+            <Field label="Process body" value={copy.homeProcessBody} onChange={(v) => set('homeProcessBody', v)} textarea />
+            <Field label="Portfolio title" value={copy.homePortfolioTitle} onChange={(v) => set('homePortfolioTitle', v)} />
+            <Field label="Portfolio body" value={copy.homePortfolioBody} onChange={(v) => set('homePortfolioBody', v)} textarea />
+            <Field label="Video badge" value={copy.homeVideoBadge} onChange={(v) => set('homeVideoBadge', v)} />
+            <Field label="Video title" value={copy.homeVideoTitle} onChange={(v) => set('homeVideoTitle', v)} />
+            <Field label="Video body" value={copy.homeVideoBody} onChange={(v) => set('homeVideoBody', v)} textarea />
+            <Field label="Styles badge" value={copy.homeStylesBadge} onChange={(v) => set('homeStylesBadge', v)} />
+            <Field label="Styles title" value={copy.homeStylesTitle} onChange={(v) => set('homeStylesTitle', v)} />
+            <Field label="Styles body" value={copy.homeStylesBody} onChange={(v) => set('homeStylesBody', v)} textarea />
+            <Field label="Home CTA — Commercial" value={copy.homeCtaCommercial} onChange={(v) => set('homeCtaCommercial', v)} />
+            <Field label="Home CTA — Careers" value={copy.homeCtaCareers} onChange={(v) => set('homeCtaCareers', v)} />
           </>
         )}
 
@@ -201,6 +221,22 @@ export default function AdminPages() {
               textarea
               rows={4}
             />
+          </>
+        )}
+
+        {tab === 'pages' && (
+          <>
+            <Field label="Projects badge" value={copy.projectsHeroBadge} onChange={(v) => set('projectsHeroBadge', v)} />
+            <Field label="Projects title" value={copy.projectsHeroTitle} onChange={(v) => set('projectsHeroTitle', v)} />
+            <Field label="Projects body" value={copy.projectsHeroBody} onChange={(v) => set('projectsHeroBody', v)} textarea />
+            <Field label="Reviews title" value={copy.reviewsHeroTitle} onChange={(v) => set('reviewsHeroTitle', v)} />
+            <Field label="Reviews body" value={copy.reviewsHeroBody} onChange={(v) => set('reviewsHeroBody', v)} textarea />
+            <Field label="Styles page badge" value={copy.stylesHeroBadge} onChange={(v) => set('stylesHeroBadge', v)} />
+            <Field label="Styles page title" value={copy.stylesHeroTitle} onChange={(v) => set('stylesHeroTitle', v)} />
+            <Field label="Styles page body" value={copy.stylesHeroBody} onChange={(v) => set('stylesHeroBody', v)} textarea />
+            <Field label="Footer trust — licensed" value={copy.footerTrustLicensed} onChange={(v) => set('footerTrustLicensed', v)} />
+            <Field label="Footer trust — secure" value={copy.footerTrustSecure} onChange={(v) => set('footerTrustSecure', v)} />
+            <Field label="Footer trust — clients" value={copy.footerTrustClients} onChange={(v) => set('footerTrustClients', v)} textarea />
           </>
         )}
 

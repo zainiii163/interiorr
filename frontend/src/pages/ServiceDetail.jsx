@@ -1,12 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { CheckCircle2, ArrowRight, PhoneCall, ShieldCheck } from 'lucide-react';
+import { CheckCircle2, ArrowRight, ShieldCheck, MessageCircleMore } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { useSite } from '../context/SiteContext';
 
 export default function ServiceDetail() {
   const { slug } = useParams();
+  const { settings } = useSite();
   const [service, setService] = useState(null);
   const [loading, setLoading] = useState(true);
+  const certifications = settings.certifications || [];
+  const whatsapp = settings.whatsapp?.replace(/\+/g, '');
 
   useEffect(() => {
     const fetchService = async () => {
@@ -39,14 +43,14 @@ export default function ServiceDetail() {
 
   return (
     <div className="page-offset pb-20">
-      
-      {/* Hero */}
       <section className="relative min-h-[280px] h-[50vh] sm:h-[60vh] flex items-center justify-center bg-stone-900 text-white overflow-hidden">
-        <img
-          src={service.heroImage}
-          alt={service.name}
-          className="absolute inset-0 w-full h-full object-cover opacity-40"
-        />
+        {service.heroImage && (
+          <img
+            src={service.heroImage}
+            alt={service.name}
+            className="absolute inset-0 w-full h-full object-cover opacity-40"
+          />
+        )}
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/50 to-transparent" />
         <div className="relative z-10 max-w-5xl mx-auto px-4 text-center">
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest bg-stone-900/80 px-4 py-1.5 rounded-full border border-stone-700">
@@ -57,11 +61,8 @@ export default function ServiceDetail() {
         </div>
       </section>
 
-      {/* Detail Content */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-12">
-          
-          {/* Main Description */}
           <div className="lg:col-span-2 space-y-8">
             <div>
               <h2 className="font-serif text-3xl font-bold text-stone-900">Overview & Scope</h2>
@@ -73,7 +74,6 @@ export default function ServiceDetail() {
               </p>
             </div>
 
-            {/* Features */}
             {service.features && service.features.length > 0 ? (
               <div className="bg-white p-8 rounded-2xl border border-stone-200 shadow-sm">
                 <h3 className="font-serif text-xl font-bold text-stone-900 mb-6">Key Specifications & Features</h3>
@@ -89,31 +89,43 @@ export default function ServiceDetail() {
             ) : null}
           </div>
 
-          {/* Sidebar CTA Card */}
           <div className="space-y-6">
             <div className="bg-stone-900 text-white p-8 rounded-2xl shadow-xl space-y-6">
               <h3 className="font-serif text-2xl font-bold text-[#C4795A]">Request Service Quote</h3>
               <p className="text-stone-300 text-xs leading-relaxed">
-                Consult with our senior Dubai renovation engineers. Fixed pricing with zero surprise charges.
+                Contact {settings.companyName} for a transparent quotation and site visit.
               </p>
               <Link
-                to={`/book-consultation?service=${encodeURIComponent(service.name)}`}
+                to={`/consultation?service=${encodeURIComponent(service.name)}`}
                 className="w-full btn-terracotta text-center py-3.5 rounded-xl font-semibold text-sm block shadow-lg"
               >
                 Book Consultation For {service.name}
               </Link>
-              <div className="pt-4 border-t border-stone-800 text-xs text-stone-400 space-y-2">
-                <div className="flex items-center space-x-2">
-                  <ShieldCheck className="w-4 h-4 text-emerald-400" />
-                  <span>DDA & Municipality Compliant</span>
+              {whatsapp && (
+                <a
+                  href={`https://wa.me/${whatsapp}?text=Hello,%20I%20need%20a%20quote%20for%20${encodeURIComponent(service.name)}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full py-3.5 rounded-xl font-semibold text-sm block border border-stone-700 text-center hover:bg-stone-800 transition flex items-center justify-center gap-2"
+                >
+                  <MessageCircleMore className="w-4 h-4" />
+                  WhatsApp Us
+                </a>
+              )}
+              {certifications.length > 0 && (
+                <div className="pt-4 border-t border-stone-800 text-xs text-stone-400 space-y-2">
+                  {certifications.slice(0, 2).map((cert) => (
+                    <div key={cert} className="flex items-center space-x-2">
+                      <ShieldCheck className="w-4 h-4 text-emerald-400 shrink-0" />
+                      <span>{cert}</span>
+                    </div>
+                  ))}
                 </div>
-              </div>
+              )}
             </div>
           </div>
-
         </div>
       </section>
-
     </div>
   );
 }

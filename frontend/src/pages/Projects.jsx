@@ -2,10 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, MapPin, Clock } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
 import SkeletonGrid from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
 
 export default function Projects() {
+  const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [allProjects, setAllProjects] = useState([]);
   const [category, setCategory] = useState('All');
   const [isLoading, setIsLoading] = useState(true);
@@ -16,7 +20,7 @@ export default function Projects() {
     }).catch(console.error).finally(() => setIsLoading(false));
   }, []);
 
-  const categories = ['All', 'Residential', 'Commercial', 'Retail'];
+  const categories = ['All', ...new Set(allProjects.map((p) => p.category).filter(Boolean))];
 
   const projects = category === 'All'
     ? allProjects
@@ -26,8 +30,15 @@ export default function Projects() {
     <div className="page-offset pb-20">
       <section className="bg-gradient-to-r from-stone-900 to-[#1A1817] text-white py-20">
         <div className="max-w-7xl mx-auto px-4 text-center">
-          <span className="text-[#C4795A] font-semibold text-sm uppercase tracking-widest">Completed Transformations</span>
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4">Project Portfolio</h1>
+          <span className="text-[#C4795A] font-semibold text-sm uppercase tracking-widest">
+            {copy.projectsHeroBadge || 'Our Work'}
+          </span>
+          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mt-4">
+            {copy.projectsHeroTitle}
+          </h1>
+          {copy.projectsHeroBody && (
+            <p className="text-stone-300 mt-4 max-w-2xl mx-auto text-sm">{copy.projectsHeroBody}</p>
+          )}
         </div>
       </section>
 
@@ -55,7 +66,7 @@ export default function Projects() {
           <EmptyState
             icon="empty"
             title="No projects published yet"
-            description="We're currently showcasing our latest work. Check back soon to see our completed transformations."
+            description="Check back soon for our latest completed work."
           />
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">

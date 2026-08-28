@@ -5,6 +5,8 @@ import ScrollReveal from '../components/ui/ScrollReveal';
 import { apiFetch } from '../services/api';
 import SkeletonGrid from '../components/ui/Skeleton';
 import EmptyState from '../components/ui/EmptyState';
+import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
 
 const categories = [
   { id: 'all', name: 'All Materials' },
@@ -15,6 +17,8 @@ const categories = [
 ];
 
 export default function MaterialsPage() {
+  const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [materials, setMaterials] = useState([]);
   const [activeCategory, setActiveCategory] = useState('all');
   const [loading, setLoading] = useState(true);
@@ -70,14 +74,13 @@ export default function MaterialsPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <ScrollReveal>
             <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
-              Experience Center
+              {copy.homeMaterialsBadge}
             </span>
             <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">
-              Material Catalog
+              {copy.homeMaterialsTitle}
             </h1>
             <p className="text-stone-400 mt-4 max-w-2xl">
-              Explore our premium collection of flooring, marble, tiles, and fixtures. 
-              Quality materials sourced from trusted suppliers for your interior projects.
+              {copy.homeMaterialsBody}
             </p>
           </ScrollReveal>
         </div>

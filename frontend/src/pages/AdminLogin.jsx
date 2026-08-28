@@ -2,9 +2,11 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Lock, Mail, Shield, ArrowRight } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
+import { useSite } from '../context/SiteContext';
 
 export default function AdminLogin() {
   const { login } = useAuth();
+  const { settings } = useSite();
   const navigate = useNavigate();
 
   const [email, setEmail] = useState('');
@@ -36,11 +38,11 @@ export default function AdminLogin() {
         {/* Header */}
         <div className="text-center space-y-2">
           <div className="w-12 h-12 rounded-full bg-[#C4795A] text-white flex items-center justify-center font-serif font-bold text-2xl mx-auto shadow-lg">
-            A
+            {(settings.companyName || 'H').charAt(0)}
           </div>
           <h1 className="font-serif text-2xl font-bold tracking-tight">Staff Portal Login</h1>
           <p className="text-stone-400 text-xs">
-            HAMTS Admin Portal
+            {settings.companyName || 'Admin Portal'}
           </p>
         </div>
 

@@ -60,7 +60,6 @@ export default function Consultation() {
     setLoading(true);
     setErrorMsg('');
 
-    // FR-074: Phone validation
     if (!formData.phone || formData.phone.length < 8) {
       setErrorMsg('Please enter a valid telephone number (e.g. +971 50 123 4567)');
       setLoading(false);

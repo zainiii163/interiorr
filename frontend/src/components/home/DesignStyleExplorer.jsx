@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import ScrollReveal from '../ui/ScrollReveal';
 
-export default function DesignStyleExplorer({ styles = [] }) {
+export default function DesignStyleExplorer({ styles = [], copy = {} }) {
   const [activeId, setActiveId] = useState(styles[0]?._id);
 
   useEffect(() => {
@@ -22,14 +22,14 @@ export default function DesignStyleExplorer({ styles = [] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
           <span className="text-[#5C7A6B] font-semibold text-xs uppercase tracking-widest">
-            Interior Design Styles
+            {copy.homeStylesBadge || 'Interior Design Styles'}
           </span>
           <h2 className="font-serif text-4xl sm:text-5xl font-bold text-stone-900 mt-2">
-            Every Style Executed to Perfection
+            {copy.homeStylesTitle || 'Styles We Execute'}
           </h2>
-          <p className="text-stone-500 text-sm mt-3 max-w-2xl mx-auto">
-            From contemporary to Arabian luxury — select a style to see how we interpret it for Dubai homes.
-          </p>
+          {copy.homeStylesBody && (
+            <p className="text-stone-500 text-sm mt-3 max-w-2xl mx-auto">{copy.homeStylesBody}</p>
+          )}
         </ScrollReveal>
 
         <div className="grid grid-cols-1 lg:grid-cols-[280px_1fr] gap-8 items-stretch">
