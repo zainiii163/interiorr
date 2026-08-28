@@ -10,8 +10,8 @@ export const BRAND_DEFAULTS = {
   mapEmbedUrl: 'https://maps.google.com/maps?q=Al+Murar+Deira+Dubai+UAE&output=embed',
   logoUrl: '/assets/brand-logo.jpg',
   socialLinks: {
-    instagram: 'https://www.instagram.com/hululalmadina',
-    facebook: '',
+    instagram: 'https://www.instagram.com/hululalmadina?igsi=MWw5ZWkxZGp2MGNqMg==',
+    facebook: 'https://www.facebook.com/share/1K6NUaGN8y/',
     linkedin: '',
     youtube: '',
   },

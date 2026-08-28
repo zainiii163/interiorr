@@ -7,7 +7,10 @@ export const CONTACT_ADDRESS =
   import.meta.env.VITE_CONTACT_ADDRESS ||
   'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates';
 export const INSTAGRAM_URL =
-  import.meta.env.VITE_INSTAGRAM_URL || 'https://www.instagram.com/hululalmadina';
+  import.meta.env.VITE_INSTAGRAM_URL ||
+  'https://www.instagram.com/hululalmadina?igsi=MWw5ZWkxZGp2MGNqMg==';
+export const FACEBOOK_URL =
+  import.meta.env.VITE_FACEBOOK_URL || 'https://www.facebook.com/share/1K6NUaGN8y/';
 
 export const ENV_SITE_DEFAULTS = {
   companyName: APP_NAME,
@@ -19,12 +22,12 @@ export const ENV_SITE_DEFAULTS = {
   logoUrl: '/assets/brand-logo.jpg',
   socialMedia: {
     instagram: INSTAGRAM_URL,
-    facebook: '',
+    facebook: FACEBOOK_URL,
     linkedin: '',
   },
   socialLinks: {
     instagram: INSTAGRAM_URL,
-    facebook: '',
+    facebook: FACEBOOK_URL,
     linkedin: '',
   },
 };
