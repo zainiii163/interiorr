@@ -227,9 +227,10 @@ export default function Contact() {
           <iframe
             title="Office Location"
             src={settings.mapEmbedUrl}
-            className="w-full h-full"
+            className="w-full h-full border-0"
             loading="lazy"
             referrerPolicy="no-referrer-when-downgrade"
+            allowFullScreen
           />
         </div>
         )}

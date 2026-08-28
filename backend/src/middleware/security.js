@@ -36,6 +36,7 @@ export function cspHeaders(req, res, next) {
     "img-src 'self' data: blob: https: http:",
     "font-src 'self' https://fonts.gstatic.com",
     "connect-src 'self' https://maps.googleapis.com",
+    "frame-src 'self' https://www.google.com https://maps.google.com https://www.youtube.com https://www.youtube-nocookie.com",
     "frame-ancestors 'none'",
     "base-uri 'self'",
     "form-action 'self'",
