@@ -5,7 +5,7 @@ import ScrollReveal from '../ui/ScrollReveal';
 
 const FILTERS = ['All', 'Residential', 'Commercial', 'Retail'];
 
-export default function ProjectShowcase({ projects = [] }) {
+export default function ProjectShowcase({ projects = [], copy = {} }) {
   const [active, setActive] = useState('All');
 
   const filtered = useMemo(() => {
@@ -23,11 +23,11 @@ export default function ProjectShowcase({ projects = [] }) {
             <div>
               <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">Portfolio</span>
               <h2 className="font-serif text-4xl sm:text-5xl font-bold text-stone-100 mt-2">
-                Featured Fitout Makeovers
+                {copy.homePortfolioTitle || 'Featured Projects'}
               </h2>
-              <p className="text-stone-400 text-sm mt-3 max-w-xl">
-                Residential, commercial, and retail transformations delivered turnkey across Dubai.
-              </p>
+              {copy.homePortfolioBody && (
+                <p className="text-stone-400 text-sm mt-3 max-w-xl">{copy.homePortfolioBody}</p>
+              )}
             </div>
             <Link to="/projects" className="text-[#C4795A] font-semibold flex items-center gap-2 hover:gap-3 transition-all shrink-0">
               View All Projects <ChevronRight className="w-5 h-5" />

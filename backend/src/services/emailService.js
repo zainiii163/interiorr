@@ -19,7 +19,7 @@ function wrapHtml(title, body) {
     <h2 style="color:#1c1917;font-size:16px">${title}</h2>
     ${body}
     <p style="color:#78716c;font-size:12px;margin-top:30px;border-top:1px solid #e7e5e4;padding-top:12px">
-      This is an automated message from the Interior Platform.
+      This is an automated message from Hulul Al Madina Interiors (HAMTS).
     </p>
   </body></html>`;
 }

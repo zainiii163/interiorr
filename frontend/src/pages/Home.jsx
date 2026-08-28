@@ -92,9 +92,9 @@ export default function Home() {
         </section>
       )}
 
-      <ExpertisePillars pillars={expertisePillars} />
+      <ExpertisePillars pillars={expertisePillars} copy={copy} />
 
-      <ProjectShowcase projects={showcaseProjects} />
+      <ProjectShowcase projects={showcaseProjects} copy={copy} />
 
       {(stats.yearsExperience > 0 || stats.completedProjects > 0) && (
         <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white border-y border-stone-800">
@@ -140,7 +140,7 @@ export default function Home() {
 
       <FeatureSplit services={services} />
 
-      <PromiseGrid pillars={promisePillars} />
+      <PromiseGrid pillars={promisePillars} copy={copy} />
 
       <HomeConsultation copy={copy} />
 
@@ -245,7 +245,7 @@ export default function Home() {
 
       <SkillsSection settings={settings} />
 
-      <ProcessGrid pillars={processPillars} />
+      <ProcessGrid pillars={processPillars} copy={copy} />
 
       <section className="py-20 bg-gradient-to-r from-[#1A1817] to-[#2D2A28] text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -295,12 +295,10 @@ export default function Home() {
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center text-white">
           <ScrollReveal>
             <h2 className="font-serif text-4xl sm:text-5xl font-bold mb-4">
-              {settings.finalCtaTitle || settings.ctaBandTitle || 'Ready to Transform Your Property?'}
+              {settings.finalCtaTitle || settings.ctaBandTitle}
             </h2>
             <p className="text-stone-300 text-lg mb-8 max-w-2xl mx-auto">
-              {settings.finalCtaBody ||
-                settings.ctaBandBody ||
-                'Book a free site visit and get a detailed consultation with transparent pricing for your fit-out or renovation.'}
+              {settings.finalCtaBody || settings.ctaBandBody}
             </p>
             <div className="flex flex-col sm:flex-row justify-center gap-4">
               <Link to="/consultation" className="btn-terracotta px-10 py-4 rounded-2xl font-semibold">

@@ -114,7 +114,7 @@ export function formatSettings(settings) {
   delete obj.googleApiKey;
   return {
     ...obj,
-    companyName: obj.companyName || 'Interior Platform',
+    companyName: obj.companyName || 'Hulul Al Madina Interiors',
     socialLinks: social,
     socialMedia: social,
     googleApiKeyConfigured: hasGoogleKey,

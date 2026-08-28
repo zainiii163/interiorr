@@ -4,8 +4,8 @@ import { useSite } from '../context/SiteContext';
 
 export default function Privacy() {
   const { settings } = useSite();
-  const company = settings.companyName || 'Our Company';
-  const email = settings.email || 'info@example.com';
+  const company = settings.companyName;
+  const email = settings.email;
 
   return (
     <div className="page-offset pb-20">
@@ -74,10 +74,14 @@ export default function Privacy() {
             <h2 className="font-serif text-xl font-bold text-stone-900">Contact</h2>
             <p className="mt-3 text-stone-600">
               Questions about this policy? Email{' '}
+              {email ? (
               <a href={`mailto:${email}`} className="text-[#C4795A] font-semibold hover:underline inline-flex items-center gap-1">
                 <Mail className="w-4 h-4" />
                 {email}
               </a>
+              ) : (
+                <Link to="/contact" className="text-[#C4795A] font-semibold hover:underline">contact us</Link>
+              )}
             </p>
           </section>
 

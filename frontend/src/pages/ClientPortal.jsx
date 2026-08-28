@@ -164,8 +164,9 @@ export default function ClientPortal() {
             </span>
           </div>
           <div className="flex items-center gap-2 sm:gap-4 shrink-0">
+            {settings?.whatsapp && (
             <a
-              href={`https://wa.me/${settings?.whatsapp || '971561787007'}`}
+              href={`https://wa.me/${settings.whatsapp.replace(/\+/g, '')}`}
               target="_blank"
               rel="noreferrer"
               className="btn-terracotta px-3 sm:px-4 py-2 rounded-xl text-xs font-semibold flex items-center space-x-2 shadow-md hover:scale-105 transition whitespace-nowrap"
@@ -174,6 +175,7 @@ export default function ClientPortal() {
               <span className="hidden xs:inline">Contact Project Manager</span>
               <span className="xs:hidden">Contact</span>
             </a>
+            )}
           </div>
         </div>
       </header>

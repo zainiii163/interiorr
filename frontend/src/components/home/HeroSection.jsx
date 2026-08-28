@@ -2,21 +2,14 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, MessageCircleMore, ShieldCheck, Clock } from 'lucide-react';
 import ScrollReveal from '../ui/ScrollReveal';
 
-const DEFAULT_BADGES = [
-  'Licensed UAE Technical Services',
-  'Deira · Dubai Based',
-  'Maintenance & Renovation Experts',
-];
-
 export default function HeroSection({ settings }) {
   const whatsapp = settings.whatsapp?.replace(/\+/g, '') || '';
   const heroImage = settings.heroImage;
-  const company = settings.companyName || 'Hulul Al Madina Interiors';
-  const badges =
-    settings.heroTrustBadges?.length > 0 ? settings.heroTrustBadges : DEFAULT_BADGES;
+  const company = settings.companyName;
+  const badges = settings.heroTrustBadges || [];
   const heroAlt = settings.heroTitle
     ? `${company} — ${settings.heroTitle.replace(/\n/g, ' ').slice(0, 80)}`
-    : `${company} interior fit-out and renovation`;
+    : `${company} technical services`;
 
   return (
     <section className="relative min-h-[100svh] flex items-end sm:items-center overflow-hidden bg-stone-900 text-white">
@@ -50,31 +43,31 @@ export default function HeroSection({ settings }) {
 
         <ScrollReveal delay={100}>
           <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-stone-50 max-w-5xl leading-[1.1] mb-6 whitespace-pre-line break-words">
-            {settings.heroTitle || "Dubai's Leading Turnkey Fitout, Joinery & Property Transformation Specialists"}
+            {settings.heroTitle}
           </h1>
         </ScrollReveal>
 
         <ScrollReveal delay={180}>
           <p className="text-base sm:text-xl text-stone-300 max-w-2xl font-light leading-relaxed mb-8">
-            {settings.heroSubtitle ||
-              settings.heroDescription ||
-              'Design • Fitout • Joinery • Decorative Finishes • Property Inspection'}
+            {settings.heroSubtitle || settings.heroDescription}
           </p>
         </ScrollReveal>
 
-        <ScrollReveal delay={220}>
-          <div className="flex flex-wrap gap-2 mb-10">
-            {badges.map((badge) => (
-              <span
-                key={badge}
-                className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-semibold text-stone-200"
-              >
-                <ShieldCheck className="w-3.5 h-3.5 text-[#C4795A]" aria-hidden="true" />
-                {badge}
-              </span>
-            ))}
-          </div>
-        </ScrollReveal>
+        {badges.length > 0 && (
+          <ScrollReveal delay={220}>
+            <div className="flex flex-wrap gap-2 mb-10">
+              {badges.map((badge) => (
+                <span
+                  key={badge}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/10 border border-white/15 text-[11px] font-semibold text-stone-200"
+                >
+                  <ShieldCheck className="w-3.5 h-3.5 text-[#C4795A]" aria-hidden="true" />
+                  {badge}
+                </span>
+              ))}
+            </div>
+          </ScrollReveal>
+        )}
 
         <ScrollReveal delay={260}>
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
@@ -87,7 +80,7 @@ export default function HeroSection({ settings }) {
             </Link>
             {whatsapp && (
               <a
-                href={`https://wa.me/${whatsapp}?text=Hello,%20I%20want%20to%20discuss%20my%20renovation.`}
+                href={`https://wa.me/${whatsapp}?text=Hello,%20I%20want%20to%20discuss%20my%20project.`}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="px-8 py-4 rounded-2xl bg-emerald-600/90 hover:bg-emerald-600 text-white font-semibold border border-emerald-500 inline-flex items-center justify-center gap-3 transition shadow-xl"
@@ -97,17 +90,16 @@ export default function HeroSection({ settings }) {
               </a>
             )}
           </div>
-          <p className="mt-5 inline-flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-400">
-            <span className="inline-flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#C4795A]" aria-hidden="true" />
-              Response within 2 hours
-            </span>
-            <span className="hidden xs:inline text-stone-600">·</span>
-            <span>Free site visit · No obligation · Transparent BOQ pricing</span>
-          </p>
+          {(settings.pageCopy?.consultNextBody || settings.finalCtaBody) && (
+            <p className="mt-5 inline-flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-stone-400">
+              <span className="inline-flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#C4795A]" aria-hidden="true" />
+                {settings.pageCopy?.consultNextBody || settings.finalCtaBody}
+              </span>
+            </p>
+          )}
         </ScrollReveal>
       </div>
     </section>
   );
 }
-

@@ -4,7 +4,7 @@ const siteSettingSchema = new mongoose.Schema(
   {
     companyName: { type: String, default: 'Hulul Al Madina Interiors' },
     tagline: { type: String, default: 'Maintenance • Renovation • Reliable Solutions' },
-    logoUrl: { type: String, default: '/assets/brand-logo.jpg' },
+    logoUrl: { type: String, default: '/logo.jpg' },
     phone: { type: String, default: '+971 56 178 7007' },
     whatsapp: { type: String, default: '971561787007' },
     email: { type: String, default: 'hello.hamts@yahoo.com' },
@@ -25,10 +25,10 @@ const siteSettingSchema = new mongoose.Schema(
       averageRating: { type: Number, default: 4.9 },
     },
     seo: {
-      defaultTitle: { type: String, default: 'Interior Platform | Fit-Out & Renovation Dubai' },
+      defaultTitle: { type: String, default: 'Hulul Al Madina Interiors | HAMTS Technical Services Dubai' },
       defaultDescription: {
         type: String,
-        default: 'Turnkey interior fit-out, joinery, and property renovation in Dubai.',
+        default: 'Hulul Al Madina Interiors (HAMTS) — maintenance, renovation and technical services in Deira, Dubai.',
       },
       ogImage: { type: String, default: '' },
     },

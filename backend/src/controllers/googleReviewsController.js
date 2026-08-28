@@ -13,7 +13,7 @@ const mockGoogleReviews = [
     authorName: 'Sheikh Mansoor Al-Hassan',
     authorTitle: 'Villa Owner, Palm Jumeirah',
     rating: 5,
-    content: 'Exceptional turnkey villa renovation! Aura transformed our Palm Jumeirah estate with custom Italian joinery and immaculate marble finishing. Completed 5 days ahead of schedule.',
+    content: 'Exceptional maintenance and renovation work! HAMTS delivered reliable painting, carpentry and finishing for our property. Completed ahead of schedule.',
     source: 'google',
     externalUrl: 'https://maps.google.com/?cid=123456789',
     authorPhoto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',

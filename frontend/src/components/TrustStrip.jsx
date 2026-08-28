@@ -1,22 +1,27 @@
 import { ShieldCheck, Lock, Star, BadgeCheck, Award } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 
-const DEFAULT_ITEMS = [
-  { icon: ShieldCheck, label: 'Licensed UAE Contractor' },
-  { icon: Lock, label: 'Secure Data & Payments' },
-  { icon: Star, label: '4.9★ Google Reviews' },
-  { icon: BadgeCheck, label: '500+ Projects Delivered' },
-];
+const ICONS = [ShieldCheck, Lock, Star, BadgeCheck];
 
 export default function TrustStrip() {
   const { settings } = useSite();
   const stats = settings.statistics || {};
-  const badges = settings.heroTrustBadges?.length
-    ? settings.heroTrustBadges.slice(0, 4).map((label) => ({ icon: Award, label }))
-    : DEFAULT_ITEMS;
+  const sourceBadges =
+    settings.heroTrustBadges?.length > 0
+      ? settings.heroTrustBadges
+      : settings.certifications?.length > 0
+        ? settings.certifications
+        : [];
+
+  if (!sourceBadges.length) return null;
+
+  const badges = sourceBadges.slice(0, 4).map((label, i) => ({
+    icon: ICONS[i % ICONS.length] || Award,
+    label,
+  }));
 
   if (stats.customerRating) {
-    const ratingIdx = badges.findIndex((b) => b.label.includes('Google') || b.label.includes('★'));
+    const ratingIdx = badges.findIndex((b) => b.label.toLowerCase().includes('review') || b.label.includes('★'));
     if (ratingIdx >= 0) {
       badges[ratingIdx] = { icon: Star, label: `${stats.customerRating}★ Google Reviews` };
     }

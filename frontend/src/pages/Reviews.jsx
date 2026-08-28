@@ -2,11 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Star, MessageSquare, ShieldCheck, CheckCircle2, Globe } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import EmptyState from '../components/ui/EmptyState';
+import { useSite } from '../context/SiteContext';
+import { usePageCopy } from '../utils/pageCopy';
 
 export default function Reviews() {
+  const { settings } = useSite();
+  const copy = usePageCopy(settings);
   const [reviews, setReviews] = useState([]);
   const [filterSource, setFilterSource] = useState('all'); // 'all' | 'google' | 'direct'
-  const [avgRating, setAvgRating] = useState(4.9);
+  const [avgRating, setAvgRating] = useState(settings.statistics?.customerRating || 0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -45,9 +49,11 @@ export default function Reviews() {
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
             Client Satisfaction & Trust
           </span>
-          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">Google Reviews & Testimonials</h1>
+          <h1 className="font-serif text-4xl sm:text-5xl font-bold mt-2">
+            {copy.reviewsHeroTitle || 'Google Reviews & Testimonials'}
+          </h1>
           <p className="text-stone-400 text-sm max-w-xl mx-auto mt-3">
-            Real feedback from luxury villa owners, commercial clients, and penthouse residents in Dubai
+            {copy.reviewsHeroBody || 'Real feedback from clients across Dubai'}
           </p>
 
           {/* Google Business Profile Rating Badge */}

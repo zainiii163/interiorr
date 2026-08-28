@@ -26,7 +26,7 @@ export default function BrandLogo({
   imageClassName = 'h-10 sm:h-12 w-auto max-w-[140px] object-contain bg-white rounded-md p-1',
   showText = true,
 }) {
-  const company = settings?.companyName || 'Hulul Al Madina Interiors';
+  const company = settings?.companyName || '';
   const shortName = company.split(' ').slice(0, 2).join(' ') || company;
   const [imgFailed, setImgFailed] = useState(false);
   const logoSrc = resolveLogoSrc(settings);

@@ -4,7 +4,6 @@ import WhatsAppIcon from '../components/WhatsAppIcon';
 import FormPrivacyNote from '../components/FormPrivacyNote';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
-import { CONTACT_EMAIL } from '../utils/constants';
 
 export default function Contact() {
   const { settings } = useSite();
@@ -75,7 +74,9 @@ export default function Contact() {
             <div>
               <h2 className="font-serif text-3xl font-bold text-stone-900">Get In Touch</h2>
               <p className="text-stone-600 mt-2 text-sm">
-                Our interior consultants and project managers are available Monday through Saturday.
+                {settings.businessHours
+                  ? `Our team is available ${settings.businessHours}.`
+                  : 'Reach us using the details below or send a message.'}
               </p>
             </div>
 
@@ -88,21 +89,25 @@ export default function Contact() {
                 </div>
               </div>
 
-              <a href={`tel:${(settings.phone || CONTACT_PHONE).replace(/[^+\d]/g, '')}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
+              {settings.phone && (
+              <a href={`tel:${settings.phone.replace(/[^+\d]/g, '')}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
                 <Phone className="w-6 h-6 text-[#C4795A] shrink-0 mt-1" />
                 <div>
                   <h4 className="font-serif font-bold text-stone-900 text-base">Telephone</h4>
                   <p className="text-stone-600 text-sm mt-1">{settings.phone}</p>
                 </div>
               </a>
+              )}
 
-              <a href={`mailto:${settings.email || CONTACT_EMAIL}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
+              {settings.email && (
+              <a href={`mailto:${settings.email}`} className="flex items-start space-x-4 p-5 rounded-xl bg-white border border-stone-200 shadow-sm hover:border-[#C4795A] transition">
                 <Mail className="w-6 h-6 text-[#C4795A] shrink-0 mt-1" />
                 <div>
                   <h4 className="font-serif font-bold text-stone-900 text-base">Email Inquiry</h4>
                   <p className="text-stone-600 text-sm mt-1">{settings.email}</p>
                 </div>
               </a>
+              )}
 
               {settings.whatsapp && (
               <a
@@ -113,8 +118,8 @@ export default function Contact() {
               >
                 <WhatsAppIcon className="w-6 h-6 shrink-0" />
                 <div>
-                  <h4 className="font-serif font-bold text-stone-900 text-base">WhatsApp Business (+971)</h4>
-                  <p className="text-stone-600 text-sm mt-1">Chat directly with senior project management</p>
+                  <h4 className="font-serif font-bold text-stone-900 text-base">WhatsApp</h4>
+                  <p className="text-stone-600 text-sm mt-1">{settings.phone || settings.whatsapp}</p>
                 </div>
               </a>
               )}

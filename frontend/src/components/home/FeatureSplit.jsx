@@ -2,15 +2,11 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, ClipboardCheck, Wind } from 'lucide-react';
 import ScrollReveal from '../ui/ScrollReveal';
 
-const DEFAULTS = [
+const PANEL_META = [
   {
     key: 'inspection',
     icon: ClipboardCheck,
-    title: 'Property Snagging & Inspection',
-    description:
-      'Independent inspections for new homes, renovated spaces, and pre-handover units to identify workmanship issues, finishing defects, and hidden snags before they become costly problems.',
-    image:
-      'https://images.unsplash.com/photo-1560518883-ce09059eeffa?auto=format&fit=crop&w=1200&q=80',
+    matchers: ['inspection', 'snagging', 'snag'],
     cta: 'Book an Inspection',
     slug: 'property-inspection',
     tone: 'dark',
@@ -18,11 +14,7 @@ const DEFAULTS = [
   {
     key: 'air',
     icon: Wind,
-    title: 'Indoor Air Quality Protection',
-    description:
-      'Advanced air treatment that creates a healthier indoor environment — targeting mold spores, dust allergens, pet dander, and odors for cleaner living after every fit-out.',
-    image:
-      'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1200&q=80',
+    matchers: ['air quality', 'air-quality', 'shield', 'halo shield'],
     cta: 'Explore Air Quality',
     slug: 'air-quality',
     tone: 'light',
@@ -37,40 +29,38 @@ function pickService(services, matchers) {
 }
 
 export default function FeatureSplit({ services = [] }) {
-  const inspection = pickService(services, ['inspection', 'snagging', 'snag']);
-  const air = pickService(services, ['air quality', 'air-quality', 'shield', 'halo shield']);
+  const panels = PANEL_META.map((meta) => {
+    const service = pickService(services, meta.matchers);
+    if (!service) return null;
+    return {
+      ...meta,
+      title: service.name || service.title,
+      description: service.shortDescription || service.description,
+      image: service.heroImage || service.image,
+      slug: service.slug || meta.slug,
+    };
+  }).filter(Boolean);
 
-  const panels = [
-    {
-      ...DEFAULTS[0],
-      title: inspection?.name || inspection?.title || DEFAULTS[0].title,
-      description: inspection?.shortDescription || inspection?.description || DEFAULTS[0].description,
-      image: inspection?.heroImage || inspection?.image || DEFAULTS[0].image,
-      slug: inspection?.slug || DEFAULTS[0].slug,
-    },
-    {
-      ...DEFAULTS[1],
-      title: air?.name || air?.title || DEFAULTS[1].title,
-      description: air?.shortDescription || air?.description || DEFAULTS[1].description,
-      image: air?.heroImage || air?.image || DEFAULTS[1].image,
-      slug: air?.slug || DEFAULTS[1].slug,
-    },
-  ];
+  if (!panels.length) return null;
 
   return (
     <section className="bg-stone-100">
       <div className="grid grid-cols-1 lg:grid-cols-2">
         {panels.map((panel, index) => {
-          const Icon = DEFAULTS[index].icon;
+          const Icon = panel.icon;
           const isDark = index === 0;
           return (
             <ScrollReveal key={panel.key} delay={index * 100}>
               <div className={`relative min-h-[320px] sm:min-h-[400px] lg:min-h-[480px] flex flex-col justify-end overflow-hidden ${isDark ? 'bg-stone-900 text-white' : 'bg-white text-stone-900'}`}>
-                <img
-                  src={panel.image}
-                  alt={panel.title}
-                  className={`absolute inset-0 w-full h-full object-cover ${isDark ? 'opacity-35' : 'opacity-25'}`}
-                />
+                {panel.image ? (
+                  <img
+                    src={panel.image}
+                    alt={panel.title}
+                    className={`absolute inset-0 w-full h-full object-cover ${isDark ? 'opacity-35' : 'opacity-25'}`}
+                  />
+                ) : (
+                  <div className={`absolute inset-0 ${isDark ? 'bg-stone-900' : 'bg-stone-100'}`} />
+                )}
                 <div
                   className={`absolute inset-0 ${
                     isDark

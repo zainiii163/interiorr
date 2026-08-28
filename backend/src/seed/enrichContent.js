@@ -58,7 +58,7 @@ async function enrich() {
   } else {
     Object.assign(settings, {
       ...BRAND_DEFAULTS,
-      socialLinks: { ...BRAND_DEFAULTS.socialLinks, ...(settings.socialLinks || {}) },
+      socialLinks: { ...BRAND_DEFAULTS.socialLinks },
       seo: { ...BRAND_DEFAULTS.seo, ...(settings.seo || {}) },
       pageCopy: { ...DEFAULT_PAGE_COPY, ...(settings.pageCopy || {}) },
     });

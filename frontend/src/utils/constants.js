@@ -20,15 +20,59 @@ export const ENV_SITE_DEFAULTS = {
   email: CONTACT_EMAIL,
   address: CONTACT_ADDRESS,
   logoUrl: '/logo.jpg',
+  businessHours: 'Mon - Sat: 8:00 AM - 7:00 PM',
+  heroBadge: 'HAMTS · Technical Services Solutions',
+  heroTitle: 'Maintenance, Renovation & Interior Solutions in Dubai',
+  heroSubtitle:
+    'حلول المدينة للخدمات الفنية — Villa, apartment & commercial maintenance, renovation, painting, joinery and reliable technical services across Dubai.',
+  heroDescription:
+    'Trusted Deira-based team for home maintenance, renovation, painting, carpentry, electrical and fit-out work with transparent pricing.',
+  heroTrustBadges: [
+    'Licensed UAE Technical Services',
+    'Deira · Dubai Based',
+    'Maintenance & Renovation Experts',
+  ],
+  aboutTitle: 'Hulul Al Madina — Your Trusted Technical Services Partner',
+  aboutSubtitle: 'حلول المدينة للخدمات الفنية · HAMTS',
+  aboutBody:
+    'Hulul Al Madina Interiors (HAMTS) provides maintenance, renovation, and interior technical services for villas, apartments, and commercial spaces across Dubai.',
+  aboutBullets: [
+    'Maintenance, renovation & painting under one roof',
+    'Villa, apartment & commercial property services',
+    'Transparent quotations and reliable scheduling',
+    'Based in Al Murar, Deira — serving all Dubai',
+  ],
+  certifications: [
+    'UAE Technical Services Provider',
+    'Dubai Municipality Compliant Works',
+    'Residential & Commercial Maintenance',
+  ],
+  mission:
+    'To deliver dependable maintenance and renovation services that keep Dubai properties safe, functional, and beautifully finished.',
+  vision:
+    'To be the most trusted technical services and interiors brand for homeowners and businesses in Deira and across Dubai.',
+  skillsTitle: 'Technical Services We Excel At',
+  skillsBody: 'Skilled tradespeople for everyday maintenance and complete renovation projects.',
+  ctaBandTitle: 'Reliable Maintenance & Renovation in Dubai',
+  ctaBandBody: 'Contact HAMTS for a free site visit and transparent quotation for your property.',
+  finalCtaTitle: 'Ready to Start Your Project?',
+  finalCtaBody: 'Call or WhatsApp our Deira team — we respond within 2 hours on business days.',
+  seo: {
+    defaultTitle: 'Hulul Al Madina Interiors | HAMTS Technical Services Dubai',
+    defaultDescription:
+      'Hulul Al Madina Interiors (HAMTS) — maintenance, renovation and technical services in Deira, Dubai.',
+  },
   socialMedia: {
     instagram: INSTAGRAM_URL,
     facebook: FACEBOOK_URL,
     linkedin: '',
+    youtube: '',
   },
   socialLinks: {
     instagram: INSTAGRAM_URL,
     facebook: FACEBOOK_URL,
     linkedin: '',
+    youtube: '',
   },
 };
 

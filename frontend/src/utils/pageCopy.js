@@ -7,7 +7,21 @@ export const DEFAULT_PAGE_COPY = {
     'HAMTS delivers maintenance, renovation, painting, and technical services for villas, apartments, and commercial properties across Dubai.',
   homeServicesBadge: 'Complete Range',
   homeServicesTitle: 'Our Complete Range of Services',
-  homeServicesBody: 'From concept to completion — design, fit-out, joinery, and property services under one roof.',
+  homeServicesBody: 'Maintenance, renovation, painting, carpentry, electrical and fit-out services under one roof.',
+  homeExpertiseBadge: 'Technical Services',
+  homeExpertiseTitle: 'Maintenance & Renovation Under One Roof',
+  homeExpertiseBody:
+    'From everyday repairs to complete renovation — skilled tradespeople serving villas, apartments and commercial properties across Dubai.',
+  homePromiseBadge: 'Our Promise',
+  homePromiseTitle: 'Reliable Service, Every Time',
+  homePromiseBody:
+    'Transparent pricing, quality workmanship, responsive scheduling, and clear communication from quote to completion.',
+  homeProcessBadge: 'How We Work',
+  homeProcessTitle: 'How We Deliver Every Project',
+  homeProcessBody:
+    'Site visit, detailed quotation, scheduled execution, quality checks, and handover — a straightforward process you can trust.',
+  homePortfolioTitle: 'Featured Projects',
+  homePortfolioBody: 'Recent maintenance, renovation and fit-out work across Dubai.',
   homeReviewsTitle: 'What Our Clients Say',
   homeMaterialsBadge: 'Experience Center',
   homeMaterialsTitle: 'Material Selection Made Simple',
@@ -47,10 +61,14 @@ export const DEFAULT_PAGE_COPY = {
   consultNextBody:
     'A planner contacts you within 2 hours, then we schedule a free site visit and prepare a detailed scope of work.',
   consultCards: [
-    { title: 'Warranty', body: 'Up to 10 years on kitchens, wardrobes and cabinets.' },
-    { title: 'Free basic design', body: '2D and 3D drawings included for confirmed projects.' },
+    { title: 'Warranty', body: 'Quality workmanship backed by our service guarantee.' },
+    { title: 'Free site visit', body: 'Transparent quotation with no obligation.' },
     { title: 'Job applications', body: 'Apply via Careers — inquiry forms are not used for hiring.', link: '/careers' },
   ],
+  reviewsHeroTitle: 'Client Reviews',
+  reviewsHeroBody: 'Feedback from property owners and businesses who trust HAMTS for maintenance and renovation.',
+  projectsHeroTitle: 'Project Portfolio',
+  projectsHeroBody: 'Completed maintenance, renovation and technical services across Dubai.',
 };
 
 export function usePageCopy(settings) {

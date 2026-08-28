@@ -11,7 +11,7 @@ function highlightsFor(pillar) {
   return pillar.description ? [pillar.description] : [];
 }
 
-export default function ExpertisePillars({ pillars = [] }) {
+export default function ExpertisePillars({ pillars = [], copy = {} }) {
   const [activeId, setActiveId] = useState(pillars[0]?._id);
 
   useEffect(() => {
@@ -32,13 +32,13 @@ export default function ExpertisePillars({ pillars = [] }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <ScrollReveal className="text-center mb-14">
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">
-            For Designers & Property Owners
+            {copy.homeExpertiseBadge || 'Technical Services'}
           </span>
           <h2 className="font-serif text-4xl font-bold text-stone-900 mt-2">
-            Joinery, Fit-Out & Design Under One Roof
+            {copy.homeExpertiseTitle || 'Maintenance & Renovation Under One Roof'}
           </h2>
           <p className="text-stone-500 text-sm mt-3 max-w-2xl mx-auto">
-            From in-house carpentry to turnkey execution — the same specialist model Dubai trusts for luxury homes and commercial spaces.
+            {copy.homeExpertiseBody}
           </p>
         </ScrollReveal>
 
