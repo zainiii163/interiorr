@@ -56,7 +56,7 @@ const NAV_SECTIONS = [
 function SidebarContent({ sections, location, settings, brandName, portalSubtitle, user, onNavigate, onLogout }) {
   return (
     <>
-      <div className="p-4 sm:p-6 border-b border-stone-800 flex items-center gap-3 min-w-0">
+      <div className="p-4 sm:p-6 border-b border-stone-800 flex items-center gap-3 min-w-0 shrink-0">
         <BrandLogo
           settings={settings}
           onClick={onNavigate}
@@ -69,7 +69,7 @@ function SidebarContent({ sections, location, settings, brandName, portalSubtitl
         </div>
       </div>
 
-      <div className="p-4 bg-stone-950/60 border-b border-stone-800 flex items-center space-x-3 text-xs">
+      <div className="p-4 bg-stone-950/60 border-b border-stone-800 flex items-center space-x-3 text-xs shrink-0">
         <div className="w-8 h-8 rounded-full bg-stone-800 text-[#C4795A] font-bold flex items-center justify-center uppercase shrink-0">
           {user.name?.charAt(0) || 'U'}
         </div>
@@ -79,7 +79,7 @@ function SidebarContent({ sections, location, settings, brandName, portalSubtitl
         </div>
       </div>
 
-      <nav className="flex-1 p-3 sm:p-4 space-y-5 overflow-y-auto overscroll-contain">
+      <nav className="flex-1 min-h-0 p-3 sm:p-4 space-y-5 overflow-y-auto overscroll-contain">
         {sections.map((section) => (
           <div key={section.label}>
             <div className="px-3 sm:px-4 mb-1 text-[9px] font-bold uppercase tracking-[0.18em] text-stone-500">
@@ -208,7 +208,7 @@ export default function AdminLayout() {
   return (
     <div className="min-h-screen bg-stone-100 flex font-sans">
       {/* Desktop sidebar */}
-      <aside className="hidden lg:flex w-64 bg-stone-900 text-stone-300 flex-col border-r border-stone-800 shrink-0">
+      <aside className="hidden lg:flex w-64 h-screen sticky top-0 bg-stone-900 text-stone-300 flex-col border-r border-stone-800 shrink-0 overflow-hidden">
         <SidebarContent {...sidebarProps} />
       </aside>
 
@@ -222,7 +222,7 @@ export default function AdminLayout() {
         />
       )}
       <aside
-        className={`fixed inset-y-0 left-0 z-50 w-[min(100vw-3rem,18rem)] bg-stone-900 text-stone-300 flex flex-col border-r border-stone-800 transform transition-transform duration-300 lg:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-[min(100vw-3rem,18rem)] h-screen bg-stone-900 text-stone-300 flex flex-col border-r border-stone-800 overflow-hidden transform transition-transform duration-300 lg:hidden ${
           mobileOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >
