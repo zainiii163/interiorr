@@ -114,7 +114,7 @@ export default function AdminSettings() {
           <div className="sm:col-span-2">
             <ImageUploadField
               label="Company Logo"
-              value={settings.logoUrl || '/logo.jpg'}
+              value={settings.logoUrl || ''}
               onChange={(url) => handleChange('logoUrl', url)}
               disabled={!isAdmin}
             />

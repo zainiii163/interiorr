@@ -4,7 +4,7 @@ const siteSettingSchema = new mongoose.Schema(
   {
     companyName: { type: String, default: 'Hulul Al Madina Interiors' },
     tagline: { type: String, default: 'Maintenance • Renovation • Reliable Solutions' },
-    logoUrl: { type: String, default: '/logo.jpg' },
+    logoUrl: { type: String, default: '/assets/brand-logo.jpg' },
     phone: { type: String, default: '+971 56 178 7007' },
     whatsapp: { type: String, default: '971561787007' },
     email: { type: String, default: 'hello.hamts@yahoo.com' },
