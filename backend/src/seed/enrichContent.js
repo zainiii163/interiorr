@@ -107,6 +107,7 @@ async function enrich() {
 
   console.log('Updating partner logos...');
   const partners = loadJson('partners.json');
+  const seedNames = partners.map((partner) => partner.name);
   for (const partner of partners) {
     await Partner.findOneAndUpdate(
       { name: partner.name },
@@ -114,6 +115,7 @@ async function enrich() {
       { upsert: true }
     );
   }
+  await Partner.updateMany({ name: { $nin: seedNames } }, { $set: { isActive: false } });
 
   console.log('Adding review photos where missing...');
   const reviews = await Review.find({ $or: [{ authorPhoto: '' }, { authorPhoto: { $exists: false } }] });
