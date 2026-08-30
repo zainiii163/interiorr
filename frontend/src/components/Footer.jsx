@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { MapPin, Phone, Mail, Clock, Instagram, Facebook, Linkedin, ShieldCheck, Lock } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, Instagram, Facebook, Linkedin, ShieldCheck, Lock, Navigation2 } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 import { usePageCopy } from '../utils/pageCopy';
 import { apiFetch } from '../services/api';
@@ -117,7 +117,18 @@ export default function Footer() {
               {settings.address && (
                 <li className="flex items-start space-x-4">
                   <MapPin className="w-6 h-6 text-[#C4795A] shrink-0 mt-0.5" />
-                  <span>{settings.address}</span>
+                  <span>
+                    <span>{settings.address}</span>
+                    <a
+                      href={`https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(settings.address)}`}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="mt-1.5 inline-flex items-center gap-1 text-xs font-semibold text-[#C4795A] hover:underline"
+                    >
+                      <Navigation2 className="w-3.5 h-3.5" />
+                      View on Google Maps
+                    </a>
+                  </span>
                 </li>
               )}
               {settings.phone && (

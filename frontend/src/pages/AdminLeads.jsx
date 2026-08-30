@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { Search, Filter, MessageSquare, Phone, ChevronRight } from 'lucide-react';
+import { Search, ChevronRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
 
 export default function AdminLeads() {

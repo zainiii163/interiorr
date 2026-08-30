@@ -14,13 +14,17 @@ function ensureConfigured() {
 }
 
 export async function uploadImageBuffer(buffer, { folder = 'interior', filename } = {}) {
+  return uploadBuffer(buffer, { folder, filename, resourceType: 'image' });
+}
+
+export async function uploadBuffer(buffer, { folder = 'interior', filename, resourceType = 'image' } = {}) {
   if (!ensureConfigured()) return null;
 
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
       {
         folder,
-        resource_type: 'image',
+        resource_type: resourceType,
         public_id: filename ? filename.replace(/\.[^.]+$/, '') : undefined,
       },
       (error, result) => {
@@ -73,6 +77,19 @@ export async function saveResumeLocally(file) {
   const full = path.join(dir, safe);
   await fs.writeFile(full, file.buffer);
   return `/uploads/resumes/${safe}`;
+}
+
+export async function saveMediaLocally(file) {
+  const fs = await import('fs/promises');
+  const path = await import('path');
+  const { fileURLToPath } = await import('url');
+  const __dirname = path.dirname(fileURLToPath(import.meta.url));
+  const dir = path.join(__dirname, '..', '..', 'uploads', 'media');
+  await fs.mkdir(dir, { recursive: true });
+  const safe = `${Date.now()}-${(file.originalname || 'media').replace(/[^a-zA-Z0-9._-]/g, '_')}`;
+  const full = path.join(dir, safe);
+  await fs.writeFile(full, file.buffer);
+  return `/uploads/media/${safe}`;
 }
 
 export function getUploadMode() {

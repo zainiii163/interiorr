@@ -5,6 +5,7 @@ import { apiFetch } from '../services/api';
 import EmptyState from '../components/ui/EmptyState';
 import { useSite } from '../context/SiteContext';
 import { usePageCopy } from '../utils/pageCopy';
+import { fallbackImage } from '../utils/fallbackImage';
 
 export default function DesignStyles() {
   const { settings } = useSite();
@@ -65,9 +66,10 @@ export default function DesignStyles() {
               >
                 <div className="h-64 overflow-hidden">
                   <img
-                    src={style.image}
+                    src={style.image || fallbackImage}
                     alt={style.name}
                     loading="lazy"
+                    onError={(e) => { e.currentTarget.src = fallbackImage; }}
                     className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 </div>

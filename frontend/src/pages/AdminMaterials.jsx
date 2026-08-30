@@ -29,7 +29,7 @@ export default function AdminMaterials() {
 
   const fetchMaterials = async () => {
     try {
-      const res = await apiFetch('/materials');
+      const res = await apiFetch('/materials?includeInactive=true');
       if (res.success) setMaterials(res.data);
     } catch (e) {
       console.error(e);

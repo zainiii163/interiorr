@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Star, CheckCircle } from 'lucide-react';
+import { Plus, Edit, Trash2, Star } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import ImageUploadField from '../components/admin/ImageUploadField';

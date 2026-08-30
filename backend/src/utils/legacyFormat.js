@@ -136,8 +136,9 @@ export function formatSettings(settings) {
 
 export function parseSettingsInput(body = {}) {
   const payload = { ...body };
-  if (payload.statistics && !payload.stats) {
+  if (payload.statistics && typeof payload.statistics === 'object') {
     payload.stats = {
+      ...(payload.stats || {}),
       yearsExperience: payload.statistics.yearsExperience,
       projectsCompleted: payload.statistics.completedProjects,
       employees: payload.statistics.teamMembers,
@@ -243,9 +244,11 @@ export function parseQuoteInput(body = {}) {
   if (payload.status && QUOTE_STATUS_FROM_FRONTEND[payload.status]) {
     payload.status = QUOTE_STATUS_FROM_FRONTEND[payload.status];
   }
+  if (payload.lead) {
+    delete payload.leadName;
+    delete payload.leadEmail;
+  }
   delete payload.leadId;
-  delete payload.leadName;
-  delete payload.leadEmail;
   delete payload.items;
   return payload;
 }

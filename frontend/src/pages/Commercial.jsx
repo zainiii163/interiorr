@@ -15,7 +15,7 @@ export default function Commercial() {
 
   useEffect(() => {
     Promise.all([
-      apiFetch('/projects'),
+      apiFetch('/projects?limit=999'),
       apiFetch('/services'),
       apiFetch('/faqs?page=commercial'),
     ])

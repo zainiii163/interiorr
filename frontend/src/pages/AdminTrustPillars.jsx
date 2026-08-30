@@ -2,6 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { Plus, Edit, Trash2 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { getPillarIcon } from '../utils/pillarIcons';
+
+const ICON_OPTIONS = [
+  'ShieldCheck', 'ClipboardList', 'CalendarCheck', 'BadgeDollarSign', 'PencilRuler',
+  'FileCheck2', 'Hammer', 'Building2', 'Paintbrush', 'Users', 'Shield', 'Award',
+  'Building', 'Star', 'Sparkles', 'Receipt', 'Package', 'HardHat', 'Palette',
+  'Wrench', 'MapPin', 'Search', 'CheckCircle2', 'Handshake', 'HeartHandshake',
+];
 
 const emptyForm = {
   title: '',
@@ -11,6 +19,11 @@ const emptyForm = {
   section: 'promise',
   order: 0,
 };
+
+function IconRenderer({ name }) {
+  const Icon = getPillarIcon(name);
+  return <Icon className="w-4 h-4" />;
+}
 
 export default function AdminTrustPillars() {
   const { isAdmin } = useAuth();
@@ -114,7 +127,12 @@ export default function AdminTrustPillars() {
                 <td className="py-3.5 px-4 font-bold text-stone-900">{p.title}</td>
                 <td className="py-3.5 px-4 text-stone-500 max-w-xs truncate">{p.description}</td>
                 <td className="py-3.5 px-4 capitalize">{p.section || 'promise'}</td>
-                <td className="py-3.5 px-4">{p.icon}</td>
+                <td className="py-3.5 px-4">
+                  <span className="inline-flex items-center gap-1.5 text-[#C4795A]">
+                    <IconRenderer name={p.icon} />
+                  </span>
+                  {p.icon}
+                </td>
                 <td className="py-3.5 px-4">{p.order}</td>
                 <td className="py-3.5 px-4 text-right space-x-2">
                   <button onClick={() => openEdit(p)} className="p-1.5 rounded bg-stone-100 hover:bg-stone-200"><Edit className="w-3.5 h-3.5" /></button>
@@ -155,8 +173,12 @@ export default function AdminTrustPillars() {
                   </select>
                 </div>
                 <div>
-                  <label className="block font-bold mb-1">Lucide Icon Name</label>
-                  <input type="text" value={formData.icon} onChange={(e) => setFormData({ ...formData, icon: e.target.value })} className="w-full px-3 py-2 border rounded-xl" placeholder="ShieldCheck" />
+                  <label className="block font-bold mb-1">Icon</label>
+                  <select value={formData.icon} onChange={(e) => setFormData({ ...formData, icon: e.target.value })} className="w-full px-3 py-2 border rounded-xl bg-white">
+                    {ICON_OPTIONS.map((name) => (
+                      <option key={name} value={name}>{name}</option>
+                    ))}
+                  </select>
                 </div>
               </div>
               <div>

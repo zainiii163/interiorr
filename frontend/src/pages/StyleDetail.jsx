@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { CheckCircle2, ArrowRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { fallbackImage } from '../utils/fallbackImage';
 
 export default function StyleDetail() {
   const { slug } = useParams();
@@ -30,7 +31,7 @@ export default function StyleDetail() {
   return (
     <div className="page-offset pb-20">
       <section className="relative h-[55vh] flex items-center justify-center bg-stone-900 text-white overflow-hidden">
-        <img src={style.image} alt={style.name} className="absolute inset-0 w-full h-full object-cover opacity-40" />
+        <img src={style.image || fallbackImage} alt={style.name} onError={(e) => { e.currentTarget.src = fallbackImage; }} className="absolute inset-0 w-full h-full object-cover opacity-40" />
         <div className="absolute inset-0 bg-gradient-to-t from-stone-950 via-stone-950/40 to-transparent" />
         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
           <span className="text-[#C4795A] font-semibold text-xs uppercase tracking-widest">Signature Aesthetic</span>

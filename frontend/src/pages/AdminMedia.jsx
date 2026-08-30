@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Trash2, Play, Image as ImageIcon, Video, Upload } from 'lucide-react';
-import { apiFetch } from '../services/api';
+import { Plus, Trash2, Image as ImageIcon, Video, Upload } from 'lucide-react';
+import { apiFetch, apiBaseUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminMedia() {
@@ -95,10 +95,11 @@ export default function AdminMedia() {
 
     setUploading(true);
     try {
+      const isVideo = file.type.startsWith('video/');
       const formData = new FormData();
-      formData.append('image', file);
+      formData.append(isVideo ? 'file' : 'image', file);
 
-      const res = await fetch('/api/v1/uploads/image', {
+      const res = await fetch(`${apiBaseUrl}${isVideo ? '/uploads/media' : '/uploads/image'}`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
@@ -110,8 +111,9 @@ export default function AdminMedia() {
       if (data.success) {
         setFormData(prev => ({
           ...prev,
+          type: isVideo ? 'video' : 'image',
           url: data.data.url,
-          thumbnail: data.data.url, // Use same image as thumbnail for now
+          thumbnail: isVideo ? (prev.thumbnail || '') : data.data.url,
         }));
       } else {
         throw new Error(data.message || 'Upload failed');

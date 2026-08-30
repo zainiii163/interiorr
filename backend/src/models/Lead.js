@@ -15,7 +15,7 @@ const leadSchema = new mongoose.Schema(
     phone: { type: String, required: true, trim: true },
     propertyType: {
       type: String,
-      enum: ['villa', 'apartment', 'office', 'commercial', 'retail', 'other'],
+      enum: ['villa', 'apartment', 'penthouse', 'office', 'commercial', 'warehouse', 'retail', 'other'],
       default: 'villa',
     },
     service: { type: mongoose.Schema.Types.ObjectId, ref: 'Service' },

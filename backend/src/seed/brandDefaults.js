@@ -8,7 +8,7 @@ export const BRAND_DEFAULTS = {
   address: 'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates',
   businessHours: 'Mon - Sat: 8:00 AM - 7:00 PM',
   mapEmbedUrl:
-    'https://www.openstreetmap.org/export/embed.html?bbox=55.3050%2C25.2650%2C55.3450%2C25.2850&layer=mapnik&marker=25.275%2C55.325',
+    'https://www.google.com/maps?q=Office%20No.%20277-18-2%2C%20Al%20Murar%2C%20Deira%20Dubai%2C%20United%20Arab%20Emirates&z=15&output=embed',
   logoUrl: '/logo.jpg',
   socialLinks: {
     instagram: 'https://www.instagram.com/hululalmadina?igsi=MWw5ZWkxZGp2MGNqMg==',

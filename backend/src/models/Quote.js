@@ -14,7 +14,9 @@ const lineItemSchema = new mongoose.Schema(
 
 const quoteSchema = new mongoose.Schema(
   {
-    lead: { type: mongoose.Schema.Types.ObjectId, ref: 'Lead', required: true },
+    lead: { type: mongoose.Schema.Types.ObjectId, ref: 'Lead' },
+    leadName: { type: String, default: '' },
+    leadEmail: { type: String, default: '' },
     quoteNumber: { type: String, unique: true },
     lineItems: [lineItemSchema],
     subtotal: { type: Number, default: 0 },

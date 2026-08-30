@@ -1,5 +1,7 @@
 const API_BASE = import.meta.env.VITE_API_URL || '/api/v1';
 
+export const apiBaseUrl = API_BASE;
+
 export const getAuthToken = () => {
   try {
     return localStorage.getItem('token');

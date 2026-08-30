@@ -19,7 +19,6 @@ export default function HeroSection({ settings }) {
             src={heroImage}
             alt={heroAlt}
             className="w-full h-full object-cover ken-burns opacity-50"
-            fetchPriority="high"
           />
         ) : (
           <div className="w-full h-full bg-gradient-to-br from-stone-800 to-stone-950" />

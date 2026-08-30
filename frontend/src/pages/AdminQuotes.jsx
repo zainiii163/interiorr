@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { Plus, Trash2, FileText, Download, Loader2, Mail } from 'lucide-react';
-import { apiFetch } from '../services/api';
+import { apiFetch, apiBaseUrl } from '../services/api';
 import { useAuth } from '../context/AuthContext';
 
 export default function AdminQuotes() {
@@ -147,7 +147,7 @@ export default function AdminQuotes() {
   const handleDownloadPDF = async (quoteId, quoteNumber) => {
     setDownloadingPDF(quoteId);
     try {
-      const response = await fetch(`/api/v1/quotes/${quoteId}/pdf`, {
+      const response = await fetch(`${apiBaseUrl}/quotes/${quoteId}/pdf`, {
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('token')}`,
         },

@@ -1,6 +1,7 @@
 import React from 'react';
 import { CheckCircle2 } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
+import { fallbackImage } from '../utils/fallbackImage';
 
 export default function About() {
   const { settings } = useSite();
@@ -73,8 +74,9 @@ export default function About() {
           {aboutImage && (
             <div className="relative">
               <img
-                src={aboutImage}
-                alt={company}
+                src={aboutImage || fallbackImage}
+                alt={`${company} team`}
+                onError={(e) => { e.currentTarget.src = fallbackImage; }}
                 className="rounded-2xl shadow-2xl object-cover h-[240px] sm:h-[360px] lg:h-[450px] w-full"
               />
             </div>

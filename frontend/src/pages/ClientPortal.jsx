@@ -61,6 +61,8 @@ export default function ClientPortal() {
     }
   };
 
+  const quoteStatus = (data?.quote?.status || '').toLowerCase();
+
   useEffect(() => {
     if (activeCode) {
       fetchPortalData(activeCode);
@@ -237,8 +239,8 @@ export default function ClientPortal() {
                       Ref: {data.quote.quoteNumber}
                     </span>
                     <span className={`px-3 py-1 text-[10px] font-bold uppercase tracking-wider rounded-full ${
-                      data.quote.status === 'accepted' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' :
-                      data.quote.status === 'rejected' ? 'bg-rose-950 text-rose-400 border border-rose-800' :
+                      quoteStatus === 'accepted' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' :
+                      quoteStatus === 'rejected' ? 'bg-rose-950 text-rose-400 border border-rose-800' :
                       'bg-amber-950 text-amber-400 border border-amber-800'
                     }`}>
                       {data.quote.status}
@@ -425,7 +427,7 @@ export default function ClientPortal() {
                       <p className="mt-0.5">Instant booking confirmation upon digital acceptance</p>
                     </div>
 
-                    {data.quote.status !== 'accepted' && (
+                    {quoteStatus !== 'accepted' && (
                       <div className="flex items-center space-x-3 w-full sm:w-auto">
                         <button
                           onClick={() => setRejectModalOpen(true)}
@@ -444,7 +446,7 @@ export default function ClientPortal() {
                       </div>
                     )}
 
-                    {data.quote.status === 'accepted' && (
+                    {quoteStatus === 'accepted' && (
                       <div className="flex items-center space-x-2 text-emerald-400 text-xs font-bold bg-emerald-950/60 px-4 py-3 rounded-xl border border-emerald-800">
                         <CheckCircle2 className="w-4 h-4" />
                         <span>Quote Accepted & Contract Confirmed</span>

@@ -30,6 +30,18 @@ export const createCheckoutSession = asyncHandler(async (req, res) => {
     env.frontendUrl && env.frontendUrl !== 'same-origin'
       ? env.frontendUrl
       : req.headers.origin || 'http://localhost:5173';
+
+  if (quote.paymentStatus === 'paid') {
+    res.status(200).json(
+      new ApiResponse(200, {
+        url: `${clientOrigin}/portal/${quote.accessCode}`,
+        sessionId: quote.stripeCheckoutSessionId || '',
+        mode: 'already_paid',
+      }, 'This quote has already been accepted and paid. No additional payment is required.')
+    );
+    return;
+  }
+
   const stripe = await getStripe();
 
   if (stripe) {

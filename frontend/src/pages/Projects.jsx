@@ -15,7 +15,7 @@ export default function Projects() {
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    apiFetch('/projects').then((res) => {
+    apiFetch('/projects?limit=999').then((res) => {
       if (res.success) setAllProjects(res.data);
     }).catch(console.error).finally(() => setIsLoading(false));
   }, []);

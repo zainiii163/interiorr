@@ -4,7 +4,7 @@ import WhatsAppIcon from '../components/WhatsAppIcon';
 import FormPrivacyNote from '../components/FormPrivacyNote';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
-import { googleMapsSearchUrl } from '../utils/mapEmbed';
+import { googleMapsEmbedUrl, googleMapsSearchUrl, OSM_MAP_EMBED_URL } from '../utils/mapEmbed';
 
 export default function Contact() {
   const { settings } = useSite();
@@ -17,6 +17,9 @@ export default function Contact() {
   const [loading, setLoading] = useState(false);
   const [successMsg, setSuccessMsg] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
+
+  const mapEmbedUrl = settings.mapEmbedUrl || googleMapsEmbedUrl(settings.address);
+  const mapSrc = settings.mapEmbedUrl === OSM_MAP_EMBED_URL ? googleMapsEmbedUrl(settings.address) : mapEmbedUrl;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -223,12 +226,19 @@ export default function Contact() {
 
         </div>
 
-        {settings.mapEmbedUrl && (
+        {mapSrc && (
         <div className="mt-16 space-y-3">
+          <div className="flex items-center justify-between px-2">
+            <h3 className="font-serif text-xl font-bold text-stone-900 flex items-center gap-2">
+              <MapPin className="w-5 h-5 text-[#C4795A]" />
+              Our Location
+            </h3>
+            <p className="text-xs text-stone-500 hidden sm:block">{settings.address || 'Dubai, UAE'}</p>
+          </div>
           <div className="rounded-2xl overflow-hidden shadow-lg border border-stone-200 bg-stone-200 h-80 sm:h-96">
             <iframe
-              title="Office Location"
-              src={settings.mapEmbedUrl}
+              title="Office Location on Google Maps"
+              src={mapSrc}
               className="w-full h-full border-0"
               loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
@@ -242,7 +252,7 @@ export default function Contact() {
               rel="noreferrer"
               className="font-semibold text-[#C4795A] hover:underline"
             >
-              Open directions in Google Maps →
+              Get directions in Google Maps →
             </a>
           </p>
         </div>

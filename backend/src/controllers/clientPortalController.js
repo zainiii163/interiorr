@@ -202,10 +202,9 @@ export const updateProjectTimeline = asyncHandler(async (req, res) => {
   const project = await Project.findById(projectId);
   if (!project) throw new ApiError(404, 'Project not found');
 
-  if (Array.isArray(timeline)) {
-    project.timeline = timeline;
-    await project.save();
-  }
+  if (!Array.isArray(timeline)) throw new ApiError(400, 'timeline must be an array');
+  project.timeline = timeline;
+  await project.save();
 
   res.status(200).json(new ApiResponse(200, project.timeline, 'Project timeline updated successfully'));
 });

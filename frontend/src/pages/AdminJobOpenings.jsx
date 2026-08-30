@@ -11,29 +11,43 @@ export default function AdminJobOpenings() {
   const [showModal, setShowModal] = useState(false);
   const [editId, setEditId] = useState(null);
   const [formData, setFormData] = useState(emptyForm);
+  const [errorMsg, setErrorMsg] = useState('');
 
   const fetchOpenings = async () => {
-    const res = await apiFetch('/job-openings');
-    if (res.success) setOpenings(res.data);
+    try {
+      const res = await apiFetch('/job-openings');
+      if (res.success) setOpenings(res.data);
+    } catch (e) {
+      setErrorMsg(e.message || 'Failed to load job openings.');
+    }
   };
 
   useEffect(() => { fetchOpenings(); }, []);
 
-  const openCreate = () => { setEditId(null); setFormData({ ...emptyForm, order: openings.length + 1 }); setShowModal(true); };
-  const openEdit = (o) => { setEditId(o._id); setFormData({ title: o.title, type: o.type, location: o.location, description: o.description, order: o.order, isActive: o.isActive }); setShowModal(true); };
+  const openCreate = () => { setEditId(null); setErrorMsg(''); setFormData({ ...emptyForm, order: openings.length + 1 }); setShowModal(true); };
+  const openEdit = (o) => { setEditId(o._id); setErrorMsg(''); setFormData({ title: o.title, type: o.type, location: o.location, description: o.description, order: o.order, isActive: o.isActive }); setShowModal(true); };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (editId) await apiFetch(`/job-openings/${editId}`, { method: 'PUT', body: JSON.stringify(formData) });
-    else await apiFetch('/job-openings', { method: 'POST', body: JSON.stringify(formData) });
-    setShowModal(false);
-    fetchOpenings();
+    setErrorMsg('');
+    try {
+      if (editId) await apiFetch(`/job-openings/${editId}`, { method: 'PUT', body: JSON.stringify(formData) });
+      else await apiFetch('/job-openings', { method: 'POST', body: JSON.stringify(formData) });
+      setShowModal(false);
+      fetchOpenings();
+    } catch (err) {
+      setErrorMsg(err.message || 'Save failed.');
+    }
   };
 
   const handleDelete = async (id) => {
     if (!window.confirm('Delete this job opening?')) return;
-    await apiFetch(`/job-openings/${id}`, { method: 'DELETE' });
-    fetchOpenings();
+    try {
+      await apiFetch(`/job-openings/${id}`, { method: 'DELETE' });
+      fetchOpenings();
+    } catch (e) {
+      setErrorMsg(e.message || 'Delete failed.');
+    }
   };
 
   return (
@@ -78,6 +92,9 @@ export default function AdminJobOpenings() {
         <div className="modal-overlay">
           <div className="modal-panel max-w-lg space-y-4">
             <h2 className="font-serif text-xl font-bold">{editId ? 'Edit Opening' : 'Add Opening'}</h2>
+            {errorMsg && (
+              <div className="p-3 rounded-xl bg-rose-50 text-rose-800 border border-rose-200 text-xs">{errorMsg}</div>
+            )}
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <input type="text" required placeholder="Job title" value={formData.title} onChange={(e) => setFormData({ ...formData, title: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />
               <input type="text" placeholder="Type (Full Time)" value={formData.type} onChange={(e) => setFormData({ ...formData, type: e.target.value })} className="w-full px-3 py-2 border rounded-xl" />

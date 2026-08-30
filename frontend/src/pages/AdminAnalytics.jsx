@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { 
-  TrendingUp, DollarSign, Users, Award, Star, PieChart, 
-  BarChart3, ShieldCheck, ArrowUpRight, ArrowDownRight, RefreshCw, CheckCircle2, FileText
+  TrendingUp, Users, Award, Star, PieChart, 
+  BarChart3, ShieldCheck, ArrowUpRight, RefreshCw, CheckCircle2, FileText
 } from 'lucide-react';
 import { apiFetch } from '../services/api';
 

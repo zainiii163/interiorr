@@ -10,7 +10,11 @@ const siteSettingSchema = new mongoose.Schema(
     email: { type: String, default: 'hello.hamts@yahoo.com' },
     address: { type: String, default: 'Office No. 277-18-2, Al Murar, Deira Dubai, United Arab Emirates' },
     businessHours: { type: String, default: 'Mon - Sat: 8:00 AM - 7:00 PM' },
-    mapEmbedUrl: { type: String, default: '' },
+    mapEmbedUrl: {
+      type: String,
+      default:
+        'https://www.google.com/maps?q=Office%20No.%20277-18-2%2C%20Al%20Murar%2C%20Deira%20Dubai%2C%20United%20Arab%20Emirates&z=15&output=embed',
+    },
     socialLinks: {
       facebook: { type: String, default: '' },
       instagram: { type: String, default: '' },

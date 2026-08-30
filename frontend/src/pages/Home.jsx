@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { ArrowRight, Star, ChevronRight } from 'lucide-react';
 import { useSite } from '../context/SiteContext';
 import { apiFetch } from '../services/api';
+import { fallbackImage } from '../utils/fallbackImage';
 import HeroSection from '../components/home/HeroSection';
 import TrustStrip from '../components/TrustStrip';
 import ExpertisePillars from '../components/home/ExpertisePillars';
@@ -209,7 +210,7 @@ export default function Home() {
                     <div className="mt-6 pt-4 border-t border-stone-200 flex flex-col xs:flex-row xs:items-center xs:justify-between gap-3">
                       <div className="flex items-center gap-3">
                         {rev.authorPhoto ? (
-                          <img src={rev.authorPhoto} alt="" className="w-10 h-10 rounded-full object-cover" />
+                          <img src={rev.authorPhoto} alt="" onError={(e) => { e.currentTarget.src = fallbackImage; }} className="w-10 h-10 rounded-full object-cover" />
                         ) : (
                           <div className="w-10 h-10 rounded-full bg-stone-100 text-[#C4795A] font-bold flex items-center justify-center">
                             {(rev.customerName || 'C').charAt(0)}

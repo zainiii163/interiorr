@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { MapPin, Clock, CheckCircle2, ArrowRight } from 'lucide-react';
 import { apiFetch } from '../services/api';
+import { fallbackImage } from '../utils/fallbackImage';
 
 export default function ProjectDetail() {
   const { slug } = useParams();
@@ -62,7 +63,7 @@ export default function ProjectDetail() {
         
         {/* Cover Image */}
         <div className="rounded-2xl overflow-hidden shadow-2xl max-h-[600px]">
-          <img src={project.coverImage} alt={project.title} className="w-full h-full object-cover" />
+          <img src={project.coverImage || fallbackImage} alt={project.title} onError={(e) => { e.currentTarget.src = fallbackImage; }} className="w-full h-full object-cover" />
         </div>
 
         {hasBeforeAfter && (

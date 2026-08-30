@@ -3,7 +3,7 @@ import rateLimit from 'express-rate-limit';
 import * as c from '../controllers/contentController.js';
 import { syncGoogleReviews, getGoogleReviewsStats } from '../controllers/googleReviewsController.js';
 import { protect, authorize, optionalProtect } from '../middleware/auth.js';
-import { uploadImage } from '../middleware/upload.js';
+import { uploadImage, upload } from '../middleware/upload.js';
 import { validateQuote, validateReview, validateDesignStyle, validateService, validateProject } from '../middleware/validate.js';
 
 const router = Router();
@@ -85,6 +85,7 @@ router.delete('/materials/:id', protect, authorize('admin'), c.deleteMaterial);
 
 // Uploads
 router.post('/uploads/image', protect, writeLimiter, uploadImage.single('image'), c.uploadImage);
+router.post('/uploads/media', protect, writeLimiter, upload.single('file'), c.uploadMedia);
 
 // Dashboard
 router.get('/dashboard/stats', protect, c.getDashboardStats);

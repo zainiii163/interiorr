@@ -16,7 +16,7 @@ import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 import { slugify } from '../utils/slugify.js';
-import { uploadImageBuffer, toDataUrl } from '../services/uploadService.js';
+import { uploadImageBuffer, uploadBuffer, toDataUrl, saveMediaLocally } from '../services/uploadService.js';
 import { isCloudinaryConfigured } from '../config/cloudinary.js';
 import { generateQuotePDF } from '../services/pdfService.js';
 import { applyReorder } from '../utils/reorder.js';
@@ -267,7 +267,7 @@ export const listQuotes = asyncHandler(async (req, res) => {
 
 export const createQuote = asyncHandler(async (req, res) => {
   const parsed = parseQuoteInput(req.body);
-  if (!parsed.lead) throw new ApiError(400, 'Lead is required');
+  if (!parsed.lead && !parsed.leadName) throw new ApiError(400, 'A lead or client name is required');
 
   const year = new Date().getFullYear();
   const count = await Quote.countDocuments();
@@ -278,13 +278,15 @@ export const createQuote = asyncHandler(async (req, res) => {
     total: (item.quantity || 1) * (item.unitPrice || 0),
   }));
   const subtotal = lineItems.reduce((s, i) => s + i.total, 0);
-  const tax = parsed.tax ?? subtotal * 0.05;
   const discount = parsed.discount || 0;
-  const grandTotal = subtotal + tax - discount;
+  const taxableBase = Math.max(0, subtotal - discount);
+  const tax = parsed.tax ?? taxableBase * 0.05;
+  const grandTotal = taxableBase + tax;
 
   const quote = await Quote.create({
     ...parsed,
     quoteNumber,
+    validUntil: parsed.validUntil || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000),
     accessCode: 'P-' + crypto.randomBytes(4).toString('hex').toUpperCase(),
     lineItems,
     subtotal,
@@ -313,7 +315,7 @@ export const updateQuote = asyncHandler(async (req, res) => {
   }
   if (parsed.tax !== undefined) quote.tax = parsed.tax;
   if (parsed.discount !== undefined) quote.discount = parsed.discount;
-  quote.grandTotal = quote.subtotal + quote.tax - quote.discount;
+  quote.grandTotal = Math.max(0, quote.subtotal - quote.discount) + quote.tax;
   if (parsed.status) quote.status = parsed.status;
   if (parsed.notes !== undefined) quote.notes = parsed.notes;
   if (parsed.validUntil) quote.validUntil = parsed.validUntil;
@@ -374,7 +376,8 @@ export const exportQuotePDF = asyncHandler(async (req, res) => {
 export const emailQuoteToClient = asyncHandler(async (req, res) => {
   const quote = await Quote.findById(req.params.id).populate('lead', 'fullName email phone');
   if (!quote) throw new ApiError(404, 'Quote not found');
-  if (!quote.lead?.email) throw new ApiError(400, 'Lead has no email address');
+  const clientEmail = quote.lead?.email || quote.leadEmail;
+  if (!clientEmail) throw new ApiError(400, 'Client has no email address');
 
   if (!quote.accessCode) {
     quote.accessCode = 'P-' + crypto.randomBytes(4).toString('hex').toUpperCase();
@@ -388,10 +391,14 @@ export const emailQuoteToClient = asyncHandler(async (req, res) => {
     'http://localhost:5173';
   const portalUrl = `${origin}/portal/${quote.accessCode}`;
 
+  const leadInfo = quote.lead
+    ? { fullName: quote.lead.fullName, email: quote.lead.email, phone: quote.lead.phone }
+    : { fullName: quote.leadName, email: quote.leadEmail, phone: '' };
+
   const { sendQuoteToClient } = await import('../services/emailService.js');
   const sent = await sendQuoteToClient({
     quote,
-    lead: quote.lead,
+    lead: leadInfo,
     portalUrl,
     companyName: settings?.companyName || 'AURA Interiors',
   });
@@ -452,7 +459,8 @@ export const reorderMedia = asyncHandler(async (req, res) => {
 
 // Materials
 export const listMaterials = asyncHandler(async (req, res) => {
-  const filter = { isActive: true };
+  const includeInactive = req.query.includeInactive === 'true';
+  const filter = includeInactive ? {} : { isActive: true };
   if (req.query.category) filter.category = req.query.category;
   if (req.query.featured === 'true') filter.isFeatured = true;
   
@@ -530,6 +538,50 @@ export const uploadImage = asyncHandler(async (req, res) => {
         publicId: result.public_id,
         provider: 'cloudinary',
       })
+    );
+    return;
+  }
+
+  const base64 = toDataUrl(req.file);
+  res.status(200).json(
+    new ApiResponse(200, {
+      url: base64,
+      provider: 'local',
+      warning: 'Cloudinary not configured — image stored as data URL. Set CLOUDINARY_* env vars for production.',
+    }, 'Image uploaded (local mode)')
+  );
+});
+
+// Upload image OR video (Cloudinary when configured, otherwise local storage)
+export const uploadMedia = asyncHandler(async (req, res) => {
+  if (!req.file) throw new ApiError(400, 'No file uploaded');
+
+  const isVideo = String(req.file.mimetype || '').startsWith('video/');
+
+  if (isCloudinaryConfigured()) {
+    const result = await uploadBuffer(req.file.buffer, {
+      folder: 'interior',
+      filename: req.file.originalname,
+      resourceType: isVideo ? 'video' : 'image',
+    });
+    res.status(200).json(
+      new ApiResponse(200, {
+        url: result.secure_url,
+        publicId: result.public_id,
+        provider: 'cloudinary',
+      })
+    );
+    return;
+  }
+
+  if (isVideo) {
+    const url = await saveMediaLocally(req.file);
+    res.status(200).json(
+      new ApiResponse(200, {
+        url,
+        provider: 'local',
+        warning: 'Cloudinary not configured — video saved to local storage.',
+      }, 'Video uploaded (local mode)')
     );
     return;
   }

@@ -2,7 +2,7 @@ import { User } from '../models/User.js';
 import { ApiError } from '../utils/ApiError.js';
 import { ApiResponse } from '../utils/ApiResponse.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
-import { validatePasswordStrength } from '../middleware/validate.js';
+import { validatePasswordStrength, isValidEmail } from '../middleware/validate.js';
 
 function formatUser(user) {
   const obj = user.toObject ? user.toObject() : { ...user };
@@ -83,7 +83,13 @@ export const updateUser = asyncHandler(async (req, res) => {
     if (name.length > 100) throw new ApiError(400, 'Name is too long');
     user.name = name.trim();
   }
-  if (email) user.email = email.toLowerCase().trim();
+  if (email) {
+    const newEmail = email.toLowerCase().trim();
+    if (!isValidEmail(newEmail)) throw new ApiError(400, 'Invalid email format');
+    const duplicate = await User.findOne({ email: newEmail, _id: { $ne: user._id } });
+    if (duplicate) throw new ApiError(400, 'User with this email already exists');
+    user.email = newEmail;
+  }
   if (role) {
     if (!['admin', 'manager', 'editor'].includes(role)) {
       throw new ApiError(400, 'Role must be admin, manager, or editor');

@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import * as c from '../controllers/clientPortalController.js';
-import { protect } from '../middleware/auth.js';
+import { protect, authorize } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -20,6 +20,6 @@ router.post('/quote/:id/accept', portalLimiter, c.acceptQuote);
 router.post('/quote/:id/reject', portalLimiter, c.rejectQuote);
 
 // Admin timeline update
-router.put('/projects/:projectId/timeline', protect, c.updateProjectTimeline);
+router.put('/projects/:projectId/timeline', protect, authorize('admin', 'manager', 'editor'), c.updateProjectTimeline);
 
 export default router;

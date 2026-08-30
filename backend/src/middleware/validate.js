@@ -44,7 +44,7 @@ function stripHtml(str) {
   return str
     .replace(/<script\b[^<]*(?:(?!<\/script>)<[^<]*)*<\/script>/gi, '')
     .replace(/<iframe\b[^<]*(?:(?!<\/iframe>)<[^<]*)*<\/iframe>/gi, '')
-    .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, true)
+    .replace(/<object\b[^<]*(?:(?!<\/object>)<[^<]*)*<\/object>/gi, '')
     .replace(/<embed\b[^<]*>/gi, '')
     .replace(/on\w+\s*=\s*["'][^"']*["']/gi, '')
     .replace(/javascript:/gi, '')
@@ -119,11 +119,11 @@ function deepSanitize(obj, maxDepth = 5) {
   if (typeof obj !== 'object') return obj;
 
   if (Array.isArray(obj)) {
-    return obj.slice(0, 100).map((item) => deepSanitize(item, maxDepth - 1));
+    return obj.slice(0, 500).map((item) => deepSanitize(item, maxDepth - 1));
   }
 
   const clean = {};
-  const keys = Object.keys(obj).slice(0, 50);
+  const keys = Object.keys(obj).slice(0, 500);
   for (const key of keys) {
     if (key.startsWith('$') || key.startsWith('_')) continue;
     clean[key] = deepSanitize(obj[key], maxDepth - 1);
@@ -251,12 +251,33 @@ export const validateUserCreate = validate({
   role: { type: 'enum', enum: ENUMS.role },
 });
 
-export const validateQuote = validate({
-  lead: { required: true, type: 'objectId' },
-  lineItems: { type: 'isArray' },
-  tax: { type: 'number' },
-  discount: { type: 'number' },
+export const validateUserUpdate = validate({
+  name: { type: 'string', maxLength: LIMITS.name },
+  email: { type: 'email' },
+  password: { type: 'string', minLength: 8, maxLength: LIMITS.password },
+  role: { type: 'enum', enum: ENUMS.role },
 });
+
+export const validateQuote = (req, res, next) => {
+  const body = req.body || {};
+  const leadValue = body.lead ?? body.leadId;
+  const hasCustomClient = typeof body.leadName === 'string' && Boolean(body.leadName.trim());
+  if (!leadValue && !hasCustomClient) {
+    throw new ApiError(400, 'A lead or client name is required');
+  }
+  if (leadValue && !isValidObjectId(String(leadValue))) {
+    throw new ApiError(400, 'lead must be a valid ID');
+  }
+  return validate({
+    leadId: { type: 'objectId' },
+    leadName: { type: 'string', maxLength: LIMITS.name },
+    leadEmail: { type: 'email' },
+    lineItems: { type: 'isArray' },
+    items: { type: 'isArray' },
+    tax: { type: 'number' },
+    discount: { type: 'number' },
+  })(req, res, next);
+};
 
 export const validateJobApplication = validate({
   fullName: { required: true, type: 'string', maxLength: LIMITS.name },
@@ -265,21 +286,37 @@ export const validateJobApplication = validate({
   position: { required: true, type: 'string', maxLength: LIMITS.title },
 });
 
-export const validateReview = validate({
-  authorName: { required: true, type: 'string', maxLength: LIMITS.name },
-  rating: { required: true, type: 'number' },
-  content: { type: 'string', maxLength: LIMITS.description },
-});
+export const validateReview = (req, res, next) => {
+  const body = req.body || {};
+  const hasAuthor = typeof body.customerName === 'string' && body.customerName.trim();
+  const hasLegacyAuthor = typeof body.authorName === 'string' && body.authorName.trim();
+  if (!hasAuthor && !hasLegacyAuthor) {
+    throw new ApiError(400, 'customerName is required');
+  }
+  return validate({
+    authorName: { type: 'string', maxLength: LIMITS.name },
+    customerName: { type: 'string', maxLength: LIMITS.name },
+    rating: { required: true, type: 'number' },
+    content: { type: 'string', maxLength: LIMITS.description },
+  })(req, res, next);
+};
 
 export const validateDesignStyle = validate({
   name: { required: true, type: 'string', maxLength: LIMITS.title },
 });
 
-export const validateService = validate({
-  title: { required: true, type: 'string', maxLength: LIMITS.title },
-  shortDescription: { type: 'string', maxLength: LIMITS.description },
-  fullDescription: { type: 'string', maxLength: 10000 },
-});
+export const validateService = (req, res, next) => {
+  const body = req.body || {};
+  const titleValue = body.title ?? body.name;
+  if (typeof titleValue !== 'string' || !titleValue.trim()) {
+    throw new ApiError(400, 'title is required');
+  }
+  return validate({
+    name: { type: 'string', maxLength: LIMITS.title },
+    shortDescription: { type: 'string', maxLength: LIMITS.description },
+    fullDescription: { type: 'string', maxLength: 10000 },
+  })(req, res, next);
+};
 
 export const validateProject = validate({
   title: { required: true, type: 'string', maxLength: LIMITS.title },

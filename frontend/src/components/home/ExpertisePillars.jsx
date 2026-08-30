@@ -62,7 +62,7 @@ export default function ExpertisePillars({ pillars = [], copy = {} }) {
                       isActive ? 'bg-white/10' : 'bg-white shadow-md'
                     }`}
                   >
-                    <Icon className={`w-7 h-7 ${isActive ? 'text-[#C4795A]' : 'text-[#C4795A]'}`} />
+                    <Icon className="w-7 h-7 text-[#C4795A]" />
                   </div>
                   <h3 className={`font-serif text-xl font-bold mb-3 ${isActive ? 'text-white' : 'text-stone-900'}`}>
                     {pillar.title}
