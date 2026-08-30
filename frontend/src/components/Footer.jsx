@@ -176,6 +176,8 @@ export default function Footer() {
           <p className="text-center sm:text-left">© {new Date().getFullYear()} {settings.companyName}. All rights reserved.</p>
           <div className="flex flex-wrap justify-center gap-4 sm:gap-6">
             <Link to="/privacy" className="hover:text-stone-300 transition font-medium">Privacy Policy</Link>
+            <Link to="/pricing" className="hover:text-stone-300 transition font-medium">Membership</Link>
+            <Link to="/login" className="hover:text-stone-300 transition font-medium">Client Login</Link>
             <Link to="/contact" className="hover:text-stone-300 transition font-medium">Contact</Link>
             <Link to="/admin/login" className="hover:text-stone-400 transition text-stone-600 text-xs">Staff Login</Link>
           </div>

@@ -15,9 +15,10 @@ import { JobApplication } from '../models/JobApplication.js';
 import { JobOpening } from '../models/JobOpening.js';
 import { NavItem } from '../models/NavItem.js';
 import { Faq } from '../models/Faq.js';
+import { Membership } from '../models/Membership.js';
 import { slugify } from '../utils/slugify.js';
 import { DEFAULT_PAGE_COPY, SERVICE_IMAGES } from './pageCopy.js';
-import { BRAND_DEFAULTS } from './brandDefaults.js';
+import { BRAND_DEFAULTS, MEMBERSHIP_DEFAULTS } from './brandDefaults.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -102,6 +103,9 @@ export async function seedData() {
   });
 
   await Faq.insertMany(loadJson('faqs.json'));
+
+  await Membership.insertMany(MEMBERSHIP_DEFAULTS);
+  console.log('Memberships seeded.');
 
   const lead = await Lead.create({
     fullName: 'Sarah Al Maktoum',

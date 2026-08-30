@@ -5,6 +5,7 @@ import MegaMenuPanel from './MegaMenuPanel';
 import BrandLogo from './BrandLogo';
 import { useSite } from '../context/SiteContext';
 import { useAuth } from '../context/AuthContext';
+import { useCustomerAuth } from '../context/CustomerAuthContext';
 import { apiFetch } from '../services/api';
 import { resolveMegaMenuChildren, isMegaMenuItem } from '../utils/megaMenu';
 
@@ -30,7 +31,7 @@ function Logo({ settings, onClick }) {
   return <BrandLogo settings={settings} onClick={onClick} />;
 }
 
-function NavActions({ user, onNavigate, phone }) {
+function NavActions({ user, customer, onNavigate, onCustomerLogout, phone }) {
   return (
     <div className="flex items-center gap-2 sm:gap-3 shrink-0">
       {phone && (
@@ -52,6 +53,32 @@ function NavActions({ user, onNavigate, phone }) {
           Dashboard
         </Link>
       )}
+      {customer && (
+        <>
+          <Link
+            to="/my-projects"
+            onClick={onNavigate}
+            className="hidden 2xl:inline-flex text-xs font-bold px-3 py-2 rounded-lg border border-stone-700 text-stone-200 hover:bg-stone-800 transition whitespace-nowrap"
+          >
+            My Projects
+          </Link>
+          <button
+            onClick={onCustomerLogout}
+            className="hidden 2xl:inline-flex text-xs font-semibold px-3 py-2 rounded-lg text-stone-300 hover:text-white transition whitespace-nowrap"
+          >
+            Logout
+          </button>
+        </>
+      )}
+      {!customer && (
+        <Link
+          to="/login"
+          onClick={onNavigate}
+          className="hidden 2xl:inline-flex text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap"
+        >
+          Login
+        </Link>
+      )}
       <Link
         to="/consultation"
         onClick={onNavigate}
@@ -68,6 +95,7 @@ function NavActions({ user, onNavigate, phone }) {
 export default function Navbar() {
   const { settings } = useSite();
   const { user } = useAuth();
+  const { customer, logout: logoutCustomer } = useCustomerAuth();
   const location = useLocation();
   const headerRef = useRef(null);
 
@@ -229,7 +257,7 @@ export default function Navbar() {
               <div />
             )}
 
-            <NavActions user={user} onNavigate={closeMegaMenu} phone={settings.phone} />
+            <NavActions user={user} customer={customer} onNavigate={closeMegaMenu} onCustomerLogout={logoutCustomer} phone={settings.phone} />
           </div>
         </div>
 
@@ -303,6 +331,31 @@ export default function Navbar() {
                   className="block text-center py-3 rounded-xl border border-stone-700 text-stone-300 font-semibold"
                 >
                   Admin Dashboard
+                </Link>
+              )}
+              {customer ? (
+                <>
+                  <Link
+                    to="/my-projects"
+                    onClick={() => setIsOpen(false)}
+                    className="block text-center py-3 rounded-xl border border-stone-700 text-stone-300 font-semibold"
+                  >
+                    My Projects
+                  </Link>
+                  <button
+                    onClick={async () => { setIsOpen(false); await logoutCustomer(); }}
+                    className="block w-full text-center py-3 rounded-xl border border-stone-700 text-stone-300 font-semibold"
+                  >
+                    Log Out
+                  </button>
+                </>
+              ) : (
+                <Link
+                  to="/login"
+                  onClick={() => setIsOpen(false)}
+                  className="block text-center py-3 rounded-xl border border-stone-700 text-stone-300 font-semibold"
+                >
+                  Login
                 </Link>
               )}
               <Link

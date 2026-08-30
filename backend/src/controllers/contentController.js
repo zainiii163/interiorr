@@ -7,6 +7,7 @@ import { SiteSetting } from '../models/SiteSetting.js';
 import { Quote } from '../models/Quote.js';
 import { Media } from '../models/Media.js';
 import { Lead } from '../models/Lead.js';
+import { Customer } from '../models/Customer.js';
 import { Project } from '../models/Project.js';
 import { JobApplication } from '../models/JobApplication.js';
 import { Material } from '../models/Material.js';
@@ -283,6 +284,18 @@ export const createQuote = asyncHandler(async (req, res) => {
   const tax = parsed.tax ?? taxableBase * 0.05;
   const grandTotal = taxableBase + tax;
 
+  // Link to a registered customer by email, if one exists.
+  let customerId = null;
+  let clientEmail = parsed.leadEmail;
+  if (parsed.lead) {
+    const lead = await Lead.findById(parsed.lead).select('email');
+    if (lead?.email) clientEmail = lead.email;
+  }
+  if (clientEmail) {
+    const match = await Customer.findOne({ email: String(clientEmail).toLowerCase().trim() }).select('_id');
+    if (match) customerId = match._id;
+  }
+
   const quote = await Quote.create({
     ...parsed,
     quoteNumber,
@@ -293,6 +306,7 @@ export const createQuote = asyncHandler(async (req, res) => {
     tax,
     discount,
     grandTotal,
+    customer: customerId,
     createdBy: req.user._id,
   });
 

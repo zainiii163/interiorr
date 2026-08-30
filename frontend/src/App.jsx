@@ -1,6 +1,7 @@
 import React, { Suspense, lazy } from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider } from './context/AuthContext';
+import { CustomerAuthProvider } from './context/CustomerAuthContext';
 import { SiteProvider } from './context/SiteContext';
 import PublicLayout from './components/PublicLayout';
 import AdminLayout from './components/AdminLayout';
@@ -23,6 +24,11 @@ import Careers from './pages/Careers';
 import Commercial from './pages/Commercial';
 import ClientPortal from './pages/ClientPortal';
 import PaymentSuccess from './pages/PaymentSuccess';
+import CustomerLogin from './pages/CustomerLogin';
+import CustomerSignup from './pages/CustomerSignup';
+import MyProjects from './pages/MyProjects';
+import VerifyEmail from './pages/VerifyEmail';
+import Pricing from './pages/Pricing';
 
 // Admin Pages (lazy loaded — reduce initial bundle size)
 const AdminLogin = lazy(() => import('./pages/AdminLogin'));
@@ -74,67 +80,74 @@ function App() {
   return (
     <SiteProvider>
       <AuthProvider>
-        <div className="min-h-screen flex flex-col">
-          <Routes>
-            <Route path="/portal" element={<ClientPortal />} />
-            <Route path="/portal/:code" element={<ClientPortal />} />
-            <Route path="/payment/success" element={<PaymentSuccess />} />
+        <CustomerAuthProvider>
+          <div className="min-h-screen flex flex-col">
+            <Routes>
+              <Route path="/portal" element={<ClientPortal />} />
+              <Route path="/portal/:code" element={<ClientPortal />} />
+              <Route path="/payment/success" element={<PaymentSuccess />} />
+              <Route path="/login" element={<CustomerLogin />} />
+              <Route path="/signup" element={<CustomerSignup />} />
+              <Route path="/my-projects" element={<MyProjects />} />
+              <Route path="/verify-email" element={<VerifyEmail />} />
 
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/services/:slug" element={<ServiceDetail />} />
-              <Route path="/projects" element={<Projects />} />
-              <Route path="/projects/:slug" element={<ProjectDetail />} />
-              <Route path="/design-styles" element={<DesignStyles />} />
-              <Route path="/design-styles/:slug" element={<StyleDetail />} />
-              <Route path="/materials" element={<Materials />} />
-              <Route path="/reviews" element={<Reviews />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/consultation" element={<Consultation />} />
-              <Route path="/book-consultation" element={<Navigate to="/consultation" replace />} />
-              <Route path="/careers" element={<Careers />} />
-              <Route path="/commercial" element={<Commercial />} />
-              <Route path="*" element={
-                <Suspense fallback={<PublicFallback />}>
-                  <NotFound />
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/services" element={<Services />} />
+                <Route path="/services/:slug" element={<ServiceDetail />} />
+                <Route path="/projects" element={<Projects />} />
+                <Route path="/projects/:slug" element={<ProjectDetail />} />
+                <Route path="/design-styles" element={<DesignStyles />} />
+                <Route path="/design-styles/:slug" element={<StyleDetail />} />
+                <Route path="/materials" element={<Materials />} />
+                <Route path="/reviews" element={<Reviews />} />
+                <Route path="/pricing" element={<Pricing />} />
+                <Route path="/contact" element={<Contact />} />
+                <Route path="/privacy" element={<Privacy />} />
+                <Route path="/consultation" element={<Consultation />} />
+                <Route path="/book-consultation" element={<Navigate to="/consultation" replace />} />
+                <Route path="/careers" element={<Careers />} />
+                <Route path="/commercial" element={<Commercial />} />
+                <Route path="*" element={
+                  <Suspense fallback={<PublicFallback />}>
+                    <NotFound />
+                  </Suspense>
+                } />
+              </Route>
+
+              <Route path="/admin/login" element={
+                <Suspense fallback={<AdminFallback />}>
+                  <AdminLogin />
                 </Suspense>
               } />
-            </Route>
-
-            <Route path="/admin/login" element={
-              <Suspense fallback={<AdminFallback />}>
-                <AdminLogin />
-              </Suspense>
-            } />
-            <Route path="/admin" element={<AdminLayout />}>
-              <Route index element={<Navigate to="/admin/dashboard" replace />} />
-              <Route path="dashboard" element={<Suspense fallback={<AdminFallback />}><AdminDashboard /></Suspense>} />
-              <Route path="analytics" element={<Suspense fallback={<AdminFallback />}><AdminAnalytics /></Suspense>} />
-              <Route path="leads" element={<Suspense fallback={<AdminFallback />}><AdminLeads /></Suspense>} />
-              <Route path="leads/:id" element={<Suspense fallback={<AdminFallback />}><LeadDetailAdmin /></Suspense>} />
-              <Route path="services" element={<Suspense fallback={<AdminFallback />}><AdminServices /></Suspense>} />
-              <Route path="projects" element={<Suspense fallback={<AdminFallback />}><AdminProjects /></Suspense>} />
-              <Route path="quotes" element={<Suspense fallback={<AdminFallback />}><AdminQuotes /></Suspense>} />
-              <Route path="design-styles" element={<Suspense fallback={<AdminFallback />}><AdminDesignStyles /></Suspense>} />
-              <Route path="reviews" element={<Suspense fallback={<AdminFallback />}><AdminReviews /></Suspense>} />
-              <Route path="partners" element={<Suspense fallback={<AdminFallback />}><AdminPartners /></Suspense>} />
-              <Route path="materials" element={<Suspense fallback={<AdminFallback />}><AdminMaterials /></Suspense>} />
-              <Route path="media" element={<Suspense fallback={<AdminFallback />}><AdminMedia /></Suspense>} />
-              <Route path="faqs" element={<Suspense fallback={<AdminFallback />}><AdminFaqs /></Suspense>} />
-              <Route path="pages" element={<Suspense fallback={<AdminFallback />}><AdminPages /></Suspense>} />
-              <Route path="trust-pillars" element={<Suspense fallback={<AdminFallback />}><AdminTrustPillars /></Suspense>} />
-              <Route path="applications" element={<Suspense fallback={<AdminFallback />}><AdminJobApplications /></Suspense>} />
-              <Route path="job-openings" element={<Suspense fallback={<AdminFallback />}><AdminJobOpenings /></Suspense>} />
-              <Route path="navigation" element={<Suspense fallback={<AdminFallback />}><AdminNavigation /></Suspense>} />
-              <Route path="settings" element={<Suspense fallback={<AdminFallback />}><AdminSettings /></Suspense>} />
-              <Route path="users" element={<Suspense fallback={<AdminFallback />}><AdminUsers /></Suspense>} />
-              <Route path="*" element={<Suspense fallback={<AdminFallback />}><NotFound admin /></Suspense>} />
-            </Route>
-          </Routes>
-        </div>
+              <Route path="/admin" element={<AdminLayout />}>
+                <Route index element={<Navigate to="/admin/dashboard" replace />} />
+                <Route path="dashboard" element={<Suspense fallback={<AdminFallback />}><AdminDashboard /></Suspense>} />
+                <Route path="analytics" element={<Suspense fallback={<AdminFallback />}><AdminAnalytics /></Suspense>} />
+                <Route path="leads" element={<Suspense fallback={<AdminFallback />}><AdminLeads /></Suspense>} />
+                <Route path="leads/:id" element={<Suspense fallback={<AdminFallback />}><LeadDetailAdmin /></Suspense>} />
+                <Route path="services" element={<Suspense fallback={<AdminFallback />}><AdminServices /></Suspense>} />
+                <Route path="projects" element={<Suspense fallback={<AdminFallback />}><AdminProjects /></Suspense>} />
+                <Route path="quotes" element={<Suspense fallback={<AdminFallback />}><AdminQuotes /></Suspense>} />
+                <Route path="design-styles" element={<Suspense fallback={<AdminFallback />}><AdminDesignStyles /></Suspense>} />
+                <Route path="reviews" element={<Suspense fallback={<AdminFallback />}><AdminReviews /></Suspense>} />
+                <Route path="partners" element={<Suspense fallback={<AdminFallback />}><AdminPartners /></Suspense>} />
+                <Route path="materials" element={<Suspense fallback={<AdminFallback />}><AdminMaterials /></Suspense>} />
+                <Route path="media" element={<Suspense fallback={<AdminFallback />}><AdminMedia /></Suspense>} />
+                <Route path="faqs" element={<Suspense fallback={<AdminFallback />}><AdminFaqs /></Suspense>} />
+                <Route path="pages" element={<Suspense fallback={<AdminFallback />}><AdminPages /></Suspense>} />
+                <Route path="trust-pillars" element={<Suspense fallback={<AdminFallback />}><AdminTrustPillars /></Suspense>} />
+                <Route path="applications" element={<Suspense fallback={<AdminFallback />}><AdminJobApplications /></Suspense>} />
+                <Route path="job-openings" element={<Suspense fallback={<AdminFallback />}><AdminJobOpenings /></Suspense>} />
+                <Route path="navigation" element={<Suspense fallback={<AdminFallback />}><AdminNavigation /></Suspense>} />
+                <Route path="settings" element={<Suspense fallback={<AdminFallback />}><AdminSettings /></Suspense>} />
+                <Route path="users" element={<Suspense fallback={<AdminFallback />}><AdminUsers /></Suspense>} />
+                <Route path="*" element={<Suspense fallback={<AdminFallback />}><NotFound admin /></Suspense>} />
+              </Route>
+            </Routes>
+          </div>
+        </CustomerAuthProvider>
       </AuthProvider>
     </SiteProvider>
   );

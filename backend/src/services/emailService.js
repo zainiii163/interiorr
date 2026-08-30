@@ -104,3 +104,16 @@ export async function sendQuoteToClient({ quote, lead, portalUrl, companyName = 
   );
   return sendMail({ to: lead.email, subject, text, html });
 }
+
+export async function sendCustomerVerification({ to, name, verifyUrl }) {
+  const subject = 'Please verify your email address';
+  const text = `Hi ${name},\n\nPlease verify your email to activate your account by clicking the link below:\n${verifyUrl}\n\n— AURA Interiors`;
+  const html = wrapHtml(
+    subject,
+    `<p>Hi <strong>${name}</strong>,</p>
+     <p>Thanks for creating your account. Please verify your email to activate it.</p>
+     <p><a href="${verifyUrl}" style="display:inline-block;background:#C4795A;color:#fff;padding:10px 18px;border-radius:8px;text-decoration:none;font-weight:bold">Verify my email</a></p>
+     <p style="color:#78716c;font-size:12px">This link expires in 24 hours. If you didn't create this account, you can ignore this email.</p>`
+  );
+  return sendMail({ to, subject, text, html });
+}

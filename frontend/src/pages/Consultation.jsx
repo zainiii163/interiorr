@@ -13,6 +13,7 @@ export default function Consultation() {
   const initialService = searchParams.get('service') || '';
   const materialHint = searchParams.get('material') || '';
   const styleHint = searchParams.get('style') || '';
+  const membershipHint = searchParams.get('membership') || '';
 
   const [activeServices, setActiveServices] = useState([]);
   const [servicesLoading, setServicesLoading] = useState(true);
@@ -26,6 +27,7 @@ export default function Consultation() {
     message: [
       materialHint ? `Interested in material: ${materialHint}.` : '',
       styleHint ? `Preferred design style: ${styleHint}.` : '',
+      membershipHint ? `Membership plan of interest: ${membershipHint}.` : '',
     ]
       .filter(Boolean)
       .join(' '),

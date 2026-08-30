@@ -1,6 +1,8 @@
 import { Router } from 'express';
 import rateLimit from 'express-rate-limit';
 import authRoutes from './authRoutes.js';
+import customerAuthRoutes from './customerAuthRoutes.js';
+import membershipRoutes from './membershipRoutes.js';
 import leadRoutes from './leadRoutes.js';
 import serviceRoutes from './serviceRoutes.js';
 import projectRoutes from './projectRoutes.js';
@@ -46,6 +48,8 @@ router.get('/integrations/status', (req, res) => {
 });
 
 router.use('/auth', authRoutes);
+router.use('/customers/auth', customerAuthRoutes);
+router.use('/memberships', membershipRoutes);
 router.use('/leads', leadRoutes);
 router.use('/services', serviceRoutes);
 router.use('/projects', projectRoutes);

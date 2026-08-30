@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import { env } from '../config/env.js';
 import { User } from '../models/User.js';
+import { Customer } from '../models/Customer.js';
 import { ApiError } from '../utils/ApiError.js';
 import { asyncHandler } from '../utils/asyncHandler.js';
 
@@ -44,6 +45,46 @@ export const optionalProtect = asyncHandler(async (req, res, next) => {
     const decoded = jwt.verify(token, env.jwtAccessSecret);
     const user = await User.findById(decoded.id);
     if (user?.isActive) req.user = user;
+  } catch {
+    // Ignore invalid tokens on public routes
+  }
+  next();
+});
+
+/** Requires a valid, active, verified customer account (public-facing users). */
+export const protectCustomer = asyncHandler(async (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer ')) {
+    throw new ApiError(401, 'Authentication required');
+  }
+
+  const token = header.split(' ')[1];
+  let decoded;
+  try {
+    decoded = jwt.verify(token, env.jwtAccessSecret);
+  } catch {
+    throw new ApiError(401, 'Invalid or expired token');
+  }
+
+  const customer = await Customer.findById(decoded.id);
+  if (!customer || !customer.isActive) {
+    throw new ApiError(401, 'Customer not found or inactive');
+  }
+
+  req.customer = customer;
+  next();
+});
+
+/** Sets req.customer when a valid customer token is present; public access still allowed. */
+export const optionalProtectCustomer = asyncHandler(async (req, res, next) => {
+  const header = req.headers.authorization;
+  if (!header?.startsWith('Bearer ')) return next();
+
+  const token = header.split(' ')[1];
+  try {
+    const decoded = jwt.verify(token, env.jwtAccessSecret);
+    const customer = await Customer.findById(decoded.id);
+    if (customer?.isActive) req.customer = customer;
   } catch {
     // Ignore invalid tokens on public routes
   }

@@ -68,3 +68,54 @@ export const BRAND_DEFAULTS = {
   finalCtaTitle: 'Ready to Start Your Project?',
   finalCtaBody: 'Call or WhatsApp our Deira team — we respond within 2 hours on business days.',
 };
+
+export const MEMBERSHIP_DEFAULTS = [
+  {
+    name: 'Essential Care',
+    slug: 'essential-care',
+    tagline: 'For homeowners who want reliable, routine maintenance on their schedule.',
+    price: 0,
+    billingInterval: 'one-time',
+    isFeatured: false,
+    order: 1,
+    features: [
+      'Priority response for maintenance requests',
+      'Quarterly home maintenance checklist',
+      'Discounted painting & repair call-outs',
+      'Free basic design consult (1-hour)',
+    ],
+  },
+  {
+    name: 'Preferred Access',
+    slug: 'preferred-access',
+    tagline: 'Our most popular plan — front-of-line scheduling and project perks.',
+    price: 999,
+    billingInterval: 'monthly',
+    isFeatured: true,
+    order: 2,
+    features: [
+      'Priority scheduling — skip the queue',
+      '5% discount on all renovation & fit-out quotes',
+      'Dedicated project coordinator',
+      'Free site inspection & snagging report',
+      'Members-only seasonal offers',
+    ],
+  },
+  {
+    name: 'VIP Retainer',
+    slug: 'vip-retainer',
+    tagline: 'A dedicated team on call for villas, offices and multi-property owners.',
+    price: 4999,
+    billingInterval: 'monthly',
+    isFeatured: false,
+    order: 3,
+    features: [
+      'Dedicated planner + assigned crew',
+      '10% discount on all quotes',
+      'Priority 24-hour emergency response',
+      'Annual maintenance contract included',
+      'Quarterly deep-clean & inspection visits',
+      'After-hours concierge support',
+    ],
+  },
+];
