@@ -58,13 +58,13 @@ function NavActions({ user, customer, onNavigate, onCustomerLogout, phone }) {
           <Link
             to="/my-projects"
             onClick={onNavigate}
-            className="hidden 2xl:inline-flex text-xs font-bold px-3 py-2 rounded-lg border border-stone-700 text-stone-200 hover:bg-stone-800 transition whitespace-nowrap"
+            className="hidden xl:inline-flex text-xs font-bold px-3 py-2 rounded-lg border border-stone-700 text-stone-200 hover:bg-stone-800 transition whitespace-nowrap"
           >
             My Projects
           </Link>
           <button
             onClick={onCustomerLogout}
-            className="hidden 2xl:inline-flex text-xs font-semibold px-3 py-2 rounded-lg text-stone-300 hover:text-white transition whitespace-nowrap"
+            className="hidden xl:inline-flex text-xs font-semibold px-3 py-2 rounded-lg text-stone-300 hover:text-white transition whitespace-nowrap"
           >
             Logout
           </button>
@@ -74,7 +74,7 @@ function NavActions({ user, customer, onNavigate, onCustomerLogout, phone }) {
         <Link
           to="/login"
           onClick={onNavigate}
-          className="hidden 2xl:inline-flex text-xs font-semibold text-stone-300 hover:text-white transition whitespace-nowrap"
+          className="hidden xl:inline-flex text-xs font-semibold px-3 py-2 rounded-lg border border-stone-700 text-stone-200 hover:bg-stone-800 transition whitespace-nowrap"
         >
           Login
         </Link>
