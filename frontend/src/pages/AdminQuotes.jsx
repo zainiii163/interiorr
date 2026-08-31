@@ -233,7 +233,7 @@ export default function AdminQuotes() {
             </div>
             <div className="text-right">
               <span className="text-stone-400 uppercase">Valid Until:</span>
-              <div className="font-bold text-stone-900">{new Date(selectedQuote.validUntil).toLocaleDateString()}</div>
+              <div className="font-bold text-stone-900">{selectedQuote.validUntil ? new Date(selectedQuote.validUntil).toLocaleDateString() : 'N/A'}</div>
               <div className="text-stone-500">Currency: {selectedQuote.currency}</div>
             </div>
           </div>

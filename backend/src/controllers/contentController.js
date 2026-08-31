@@ -362,6 +362,7 @@ export const exportQuotePDF = asyncHandler(async (req, res) => {
     }
   }
 
+  const settings = await SiteSetting.findOne();
   const quoteData = {
     quoteNumber: quote.quoteNumber,
     leadName: quote.lead?.fullName || 'Client',
@@ -376,6 +377,10 @@ export const exportQuotePDF = asyncHandler(async (req, res) => {
     createdAt: quote.createdAt,
     validUntil: quote.validUntil,
     notes: quote.notes,
+    companyName: settings?.companyName || 'Hulul Al Madina Interiors',
+    companyAddress: settings?.address || 'Dubai, United Arab Emirates',
+    companyEmail: settings?.email || '',
+    companyPhone: settings?.phone || '',
   };
 
   const pdfBuffer = await generateQuotePDF(quoteData);

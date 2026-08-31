@@ -16,17 +16,23 @@ export const generateQuotePDF = async (quoteData) => {
       doc.on('error', reject);
 
       // Company branding
-      doc.fontSize(24).font('Helvetica-Bold').fill('#1A1817').text('INTERIOR DESIGN & FIT-OUT', 50, 50);
-      doc.fontSize(10).font('Helvetica').fill('#666').text('Dubai, United Arab Emirates', 50, 80);
-      doc.fontSize(10).font('Helvetica').fill('#666').text('contact@interior.com | +971 4 XXX XXXX', 50, 95);
+      const companyName = quoteData.companyName || 'Hulul Al Madina Interiors';
+      const companyAddress = quoteData.companyAddress || 'Dubai, United Arab Emirates';
+      const companyContact = [quoteData.companyEmail, quoteData.companyPhone].filter(Boolean).join(' | ') || '';
+      
+      doc.fontSize(24).font('Helvetica-Bold').fill('#1A1817').text(companyName, 50, 50);
+      doc.fontSize(10).font('Helvetica').fill('#666').text(companyAddress, 50, 80);
+      if (companyContact) {
+        doc.fontSize(10).font('Helvetica').fill('#666').text(companyContact, 50, 95);
+      }
 
       // Quote title and number
       doc.fontSize(18).font('Helvetica-Bold').fill('#C4795A').text('OFFICIAL QUOTATION', 400, 50, { align: 'right' });
       doc.fontSize(12).font('Helvetica-Bold').fill('#1A1817').text(`Quote #: ${quoteData.quoteNumber}`, 400, 75, { align: 'right' });
       
       // Date and validity
-      const issueDate = quoteData.createdAt ? new Date(quoteData.createdAt).toLocaleDateString() : new Date().toLocaleDateString();
-      const validUntil = quoteData.validUntil ? new Date(quoteData.validUntil).toLocaleDateString() : 'N/A';
+      const issueDate = quoteData.createdAt ? new Date(quoteData.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : new Date().toLocaleDateString('en-GB');
+      const validUntil = quoteData.validUntil ? new Date(quoteData.validUntil).toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' }) : 'N/A';
       
       doc.fontSize(10).font('Helvetica').fill('#666').text(`Issue Date: ${issueDate}`, 400, 95, { align: 'right' });
       doc.fontSize(10).font('Helvetica').fill('#666').text(`Valid Until: ${validUntil}`, 400, 110, { align: 'right' });
@@ -131,8 +137,9 @@ export const generateQuotePDF = async (quoteData) => {
       });
 
       // Footer
+      const footerEmail = quoteData.companyEmail || 'hello.hamts@yahoo.com';
       doc.fontSize(8).font('Helvetica').fill('#999');
-      doc.text('Thank you for your business. For questions, contact us at contact@interior.com', 50, 750, { align: 'center' });
+      doc.text(`Thank you for your business. For questions, contact us at ${footerEmail}`, 50, 750, { align: 'center' });
 
       doc.end();
     } catch (error) {
