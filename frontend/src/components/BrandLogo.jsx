@@ -28,7 +28,9 @@ export default function BrandLogo({
   showTagline = true,
 }) {
   const company = settings?.companyName || '';
-  const shortName = company || '';
+  const nameParts = company.split(' ');
+  const line1 = nameParts.slice(0, -1).join(' ') || company;
+  const line2 = nameParts.slice(-1).join('') || '';
   const [imgFailed, setImgFailed] = useState(false);
   const logoSrc = resolveLogoSrc(settings);
 
@@ -54,10 +56,15 @@ export default function BrandLogo({
     <Link to="/" onClick={onClick} className={`flex items-center gap-3 group min-w-0 shrink-0 ${className}`}>
       {content}
       {showText && (
-        <div className="min-w-0 hidden sm:block max-w-[200px] xl:max-w-[260px]">
-          <span className="block font-serif text-base xl:text-lg font-bold tracking-wide text-white group-hover:text-[#F58220] transition-colors truncate">
-            {shortName}
+        <div className="min-w-0 hidden sm:block max-w-[180px] xl:max-w-[220px]">
+          <span className="block font-serif text-sm xl:text-base font-bold tracking-wide text-white group-hover:text-[#F58220] transition-colors leading-tight">
+            {line1}
           </span>
+          {line2 && (
+            <span className="block font-serif text-sm xl:text-base font-bold tracking-wide text-white group-hover:text-[#F58220] transition-colors leading-tight">
+              {line2}
+            </span>
+          )}
           {showTagline && settings?.tagline && (
             <span className="block text-[10px] tracking-widest text-stone-400 uppercase font-sans font-semibold truncate max-w-[220px] 2xl:max-w-[320px]">
               {settings.tagline}
