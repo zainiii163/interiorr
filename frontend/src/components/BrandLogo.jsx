@@ -25,6 +25,7 @@ export default function BrandLogo({
   className = '',
   imageClassName = 'h-10 sm:h-12 w-auto max-w-[140px] object-contain bg-white rounded-md p-1',
   showText = true,
+  showTagline = true,
 }) {
   const company = settings?.companyName || '';
   const shortName = company.split(' ').slice(0, 2).join(' ') || company;
@@ -57,7 +58,7 @@ export default function BrandLogo({
           <span className="block font-serif text-lg font-bold tracking-wide text-white group-hover:text-[#F58220] transition-colors truncate">
             {shortName}
           </span>
-          {settings?.tagline && (
+          {showTagline && settings?.tagline && (
             <span className="block text-[10px] tracking-widest text-stone-400 uppercase font-sans font-semibold truncate max-w-[220px] 2xl:max-w-[280px]">
               {settings.tagline}
             </span>

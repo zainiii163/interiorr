@@ -28,12 +28,12 @@ function NavLinkItem({ link, isActive, onClick, className }) {
 }
 
 function Logo({ settings, onClick }) {
-  return <BrandLogo settings={settings} onClick={onClick} />;
+  return <BrandLogo settings={settings} onClick={onClick} showTagline={false} />;
 }
 
 function NavActions({ user, customer, onNavigate, onCustomerLogout, phone }) {
   return (
-    <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+    <div className="flex items-center gap-2 sm:gap-3 shrink-0 pl-3 border-l border-stone-700/50">
       {phone && (
         <a
           href={`tel:${phone.replace(/[^\d+]/g, '')}`}
