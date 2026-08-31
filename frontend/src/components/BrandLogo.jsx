@@ -28,7 +28,7 @@ export default function BrandLogo({
   showTagline = true,
 }) {
   const company = settings?.companyName || '';
-  const shortName = company.split(' ').slice(0, 2).join(' ') || company;
+  const shortName = company || '';
   const [imgFailed, setImgFailed] = useState(false);
   const logoSrc = resolveLogoSrc(settings);
 
@@ -54,12 +54,12 @@ export default function BrandLogo({
     <Link to="/" onClick={onClick} className={`flex items-center gap-3 group min-w-0 shrink-0 ${className}`}>
       {content}
       {showText && (
-        <div className="min-w-0 hidden sm:block">
-          <span className="block font-serif text-lg font-bold tracking-wide text-white group-hover:text-[#F58220] transition-colors truncate">
+        <div className="min-w-0 hidden sm:block max-w-[200px] xl:max-w-[260px]">
+          <span className="block font-serif text-base xl:text-lg font-bold tracking-wide text-white group-hover:text-[#F58220] transition-colors truncate">
             {shortName}
           </span>
           {showTagline && settings?.tagline && (
-            <span className="block text-[10px] tracking-widest text-stone-400 uppercase font-sans font-semibold truncate max-w-[220px] 2xl:max-w-[280px]">
+            <span className="block text-[10px] tracking-widest text-stone-400 uppercase font-sans font-semibold truncate max-w-[220px] 2xl:max-w-[320px]">
               {settings.tagline}
             </span>
           )}
